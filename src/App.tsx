@@ -1,0 +1,67 @@
+import { BrowserRouter, Link, Route, Routes } from 'react-router';
+import { AuthProvider } from './auth/AuthProvider';
+import { RedirectIfSignedIn } from './auth/guards';
+import { BrowseMark } from './components/Brand';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { ToastProvider } from './components/Toast';
+import { TooltipLayer } from './components/TooltipLayer';
+import { AuthPage } from './pages/AuthPage';
+import { HandoffPage } from './pages/HandoffPage';
+import { HomePage } from './search/HomePage';
+import { SearchPage } from './search/SearchPage';
+import { SecurityLayer } from './security/SecurityLayer';
+import { ThemeProvider } from './theme/ThemeProvider';
+import { WhatsNew } from './whatsnew/WhatsNew';
+
+export function App() {
+  return (
+    <ThemeProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <ErrorBoundary>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/search" element={<SearchPage />} />
+                <Route
+                  path="/signin"
+                  element={
+                    <RedirectIfSignedIn>
+                      <AuthPage mode="signin" />
+                    </RedirectIfSignedIn>
+                  }
+                />
+                <Route
+                  path="/signup"
+                  element={
+                    <RedirectIfSignedIn>
+                      <AuthPage mode="signup" />
+                    </RedirectIfSignedIn>
+                  }
+                />
+                <Route path="/auth/handoff" element={<HandoffPage />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ErrorBoundary>
+          </BrowserRouter>
+          <TooltipLayer />
+          <WhatsNew />
+          <SecurityLayer />
+        </AuthProvider>
+      </ToastProvider>
+    </ThemeProvider>
+  );
+}
+
+function NotFound() {
+  return (
+    <div className="empty-state" style={{ minHeight: '100%', justifyContent: 'center' }}>
+      <BrowseMark size={72} />
+      <h2>We could not find that page</h2>
+      <p>The link may be wrong, or the page may have moved.</p>
+      <Link to="/" className="elum-btn elum-btn--primary">
+        Go to Browse
+      </Link>
+    </div>
+  );
+}
