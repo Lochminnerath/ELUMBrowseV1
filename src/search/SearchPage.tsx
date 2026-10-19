@@ -7,11 +7,13 @@ import { googleWebUrl, siteHue } from './google';
 import { rememberSearch, safeSearch } from './local';
 import { SearchBox } from './SearchBox';
 import './browse.css';
+import { useFavicon } from '../lib/favicon';
 
 type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'done'; page: Page; results: SearchResult[] };
 
 /** /search?q=…&kind=images: Google's results, shown the ELUM way, without AI. */
 export function SearchPage() {
+  useFavicon('/favicons/search.svg');
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const q = (params.get('q') ?? '').trim();
