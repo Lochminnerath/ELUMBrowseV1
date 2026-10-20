@@ -1,11 +1,21 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { coverAddress, describe, resolveElum } from '../browser/places';
 import { recentSearches } from './local';
 
 interface SearchBoxProps {
   initial?: string;
   size?: 'large' | 'compact';
   autoFocus?: boolean;
-  onSearch(q: string): void;
+  /** `web` is true when someone chose to search the web for words that also name an ELUM app. */
+  onSearch(q: string, web?: boolean): void;
+}
+
+interface Option {
+  key: string;
+  text: string;
+  hint?: string;
+  kind: 'place' | 'web' | 'recent';
+  value: string;
 }
 
 /**
@@ -35,19 +45,31 @@ export function SearchBox({ initial = '', size = 'large', autoFocus, onSearch }:
   }, []);
 
   const typed = value.trim().toLowerCase();
-  const suggestions = open ? recentSearches().filter((q) => q.toLowerCase() !== typed && q.toLowerCase().startsWith(typed)).slice(0, 6) : [];
+  // Words that name an ELUM app open it; the first two options say so, and offer the web instead.
+  const place = typed ? resolveElum(typed) : null;
+  const placeOptions: Option[] = place
+    ? [
+        { key: 'place', kind: 'place', value: value.trim(), text: `Open ${describe(place).kind === 'app' ? `ELUM ${describe(place).title}` : describe(place).title}`, hint: coverAddress(place) },
+        { key: 'web', kind: 'web', value: value.trim(), text: `Search the web for “${value.trim()}”` },
+      ]
+    : [];
+  const recent: Option[] = recentSearches()
+    .filter((q) => q.toLowerCase() !== typed && q.toLowerCase().startsWith(typed))
+    .slice(0, 6)
+    .map((q) => ({ key: `r-${q}`, kind: 'recent', value: q, text: q }));
+  const suggestions = open ? [...placeOptions, ...recent] : [];
 
-  const go = (q: string) => {
-    const clean = q.replace(/\s+/g, ' ').trim();
+  const go = (option: Pick<Option, 'kind' | 'value'>) => {
+    const clean = option.value.replace(/\s+/g, ' ').trim();
     if (!clean) return;
     setOpen(false);
     setActive(-1);
     input.current?.blur();
-    onSearch(clean);
+    onSearch(clean, option.kind === 'web');
   };
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    go(active >= 0 ? suggestions[active] : value);
+    go(active >= 0 ? suggestions[active] : { kind: 'recent', value });
   };
 
   return (
@@ -106,21 +128,23 @@ export function SearchBox({ initial = '', size = 'large', autoFocus, onSearch }:
         </svg>
       </button>
       {suggestions.length > 0 && (
-        <ul className="searchbox__list" id={listId} role="listbox" aria-label="Recent searches">
-          {suggestions.map((q, i) => (
+        <ul className="searchbox__list" id={listId} role="listbox" aria-label="Suggestions">
+          {suggestions.map((o, i) => (
             <li
-              key={q}
+              key={o.key}
               id={`${listId}-${i}`}
               role="option"
               aria-selected={i === active}
               className="searchbox__option"
+              data-kind={o.kind}
               onMouseDown={(e) => {
                 e.preventDefault();
-                go(q);
+                go(o);
               }}
             >
               <span className="searchbox__option-dot" aria-hidden="true" />
-              {q}
+              <span className="searchbox__option-text">{o.text}</span>
+              {o.hint && <span className="searchbox__option-hint">{o.hint}</span>}
             </li>
           ))}
         </ul>

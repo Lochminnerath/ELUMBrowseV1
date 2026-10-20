@@ -1,7 +1,7 @@
 import { createClient, type Session as AuthSession, type SupabaseClient } from '@supabase/supabase-js';
 import type { BrowseApi, NotificationsApi } from '../client';
 import { ApiError } from '../errors';
-import type { AppNotification, PublicUser, SearchInput, SearchPage, Session, SignInInput, SignUpInput, User } from '../types';
+import type { AppNotification, ElumStatus, PublicUser, SearchInput, SearchPage, Session, SignInInput, SignUpInput, User } from '../types';
 import { checkSignUp, cleanName, handleProblem, isEmail, MIN_PASSWORD } from '../validation';
 import { cookieStorage, usableCookieDomain } from './cookieStorage';
 import { PENDING_ROLE, tokenRole } from '../../security/approvals';
@@ -391,6 +391,12 @@ export class SupabaseApi implements BrowseApi {
       throw toApiError(body?.error ?? null, 'Search is not answering. Try again in a moment.');
     }
     if (!data?.data) throw new ApiError('server', 'Search is not answering. Try again in a moment.');
+    return data.data;
+  }
+
+  async status(): Promise<ElumStatus | null> {
+    const { data, error } = await this.sb.functions.invoke<{ data?: ElumStatus }>('elum-status', { body: {} });
+    if (error || !data?.data) throw new ApiError('server', 'The status check is not answering. Try again in a moment.');
     return data.data;
   }
 }

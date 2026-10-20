@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
+import { useGo } from '../browser/BrowserShell';
 import { api, errorMessage, type SearchKind, type SearchPage as Page, type SearchResult } from '../api';
 import { Loader } from '../components/Loader';
 import { BrowseHeader } from './BrowseHeader';
@@ -22,6 +23,7 @@ export function SearchPage() {
   useFavicon('/favicons/search.svg');
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const go = useGo();
   const q = (params.get('q') ?? '').trim();
   const kind: SearchKind = params.get('kind') === 'images' ? 'images' : 'web';
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -69,7 +71,7 @@ export function SearchPage() {
   return (
     <div className="browse">
       <BrowseHeader compact>
-        <SearchBox initial={q} size="compact" onSearch={(next) => navigate(`/search?q=${encodeURIComponent(next)}${kind === 'images' ? '&kind=images' : ''}`)} />
+        <SearchBox initial={q} size="compact" onSearch={(next, web) => go(next, { web, kind: kind === 'images' ? 'images' : undefined })} />
       </BrowseHeader>
       <nav className="browse-tabs" aria-label="Kinds of results">
         {tab('web', 'All')}

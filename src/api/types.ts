@@ -82,6 +82,22 @@ export interface SearchPage {
   hidden: number;
 }
 
+/** What /status shows: the elum-status function's answer (supabase/functions/_shared/status.ts). */
+export type Health = 'up' | 'slow' | 'down';
+export interface StatusCheck {
+  id: string;
+  name: string;
+  group: 'apps' | 'platform' | 'search';
+  health: Health;
+  ms: number;
+  note: string;
+}
+export interface ElumStatus {
+  checkedAt: string;
+  overall: Health;
+  checks: StatusCheck[];
+}
+
 export type ServiceId = 'write' | 'type' | 'browse' | 'make' | 'store';
 
 export interface AppNotification {

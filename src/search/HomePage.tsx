@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { useGo } from '../browser/BrowserShell';
 import { BrowseMark } from '../components/Brand';
 import { DeleteIcon } from '../components/icons/ElumIcons';
 import { BrowseHeader } from './BrowseHeader';
@@ -9,7 +10,7 @@ import './browse.css';
 
 /** Browse's front page: the mark, the box, and your recent searches from this browser. */
 export function HomePage() {
-  const navigate = useNavigate();
+  const go = useGo();
   const [recent, setRecent] = useState(recentSearches);
   const [safe, setSafe] = useState(safeSearch);
   const [paused, setPaused] = useState(historyPaused);
@@ -18,7 +19,7 @@ export function HomePage() {
     document.title = 'ELUM Browse';
   }, []);
 
-  const search = (q: string) => navigate(`/search?q=${encodeURIComponent(q)}`);
+  const search = (q: string, web?: boolean) => go(q, { web });
 
   return (
     <div className="browse">
@@ -95,7 +96,7 @@ export function HomePage() {
       </main>
       <footer className="browse-foot">
         <span>
-          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link>
+          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link>
         </span>
         <span className="muted">Searches go to Google to find results. ELUM does not keep them.</span>
       </footer>

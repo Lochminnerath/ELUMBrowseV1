@@ -30,6 +30,7 @@
   flex: 1;
   min-width: 0;
   display: flex;
+  justify-content: center;
 }
 .browse-bar__end {
   flex: none;
@@ -140,10 +141,32 @@
   background: var(--browse-mist);
 }
 .searchbox__option-dot {
+  flex: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   border: 2px solid var(--browse-line);
+}
+.searchbox__option-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.searchbox__option-hint {
+  margin-left: auto;
+  padding-left: 12px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+/* Opening an ELUM app: a filled disc, and the address it opens. */
+.searchbox__option[data-kind='place'] .searchbox__option-dot {
+  border-color: var(--browse);
+  background: var(--browse);
+}
+.searchbox__option[data-kind='place'] .searchbox__option-text {
+  font-weight: 700;
 }
 
 /* ---- Front page ---- */
@@ -152,7 +175,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 7vh 20px 40px;
+  /* Centred in the space between the bar and the footer, a little above the middle. */
+  justify-content: center;
+  padding: 24px 20px 9vh;
   gap: 14px;
   text-align: center;
 }
@@ -291,7 +316,7 @@
 .browse-tabs {
   display: flex;
   gap: 4px;
-  padding: 8px 20px 0 calc(20px + 34px + 16px);
+  padding: 8px max(20px, calc((100% - 720px) / 2)) 0;
   border-bottom: 1px solid var(--hairline);
 }
 .browse-tab {
@@ -309,7 +334,8 @@
 .browse-results {
   width: 100%;
   max-width: 760px;
-  padding: 18px 20px 48px calc(20px + 34px + 16px);
+  margin: 0 auto;
+  padding: 18px 20px 48px;
 }
 .browse-results__loading {
   display: grid;

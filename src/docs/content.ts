@@ -152,12 +152,14 @@ export const PRODUCTS: Words[] = [
     features: [
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches, your device', text: 'Recent searches stay on this device only. Forget one, or all of them, at any time.' },
-      { symbol: 'link', title: 'Your browser’s search box', text: 'Add Browse as a search engine and search from the address bar.' },
-      { symbol: 'open', title: 'On Google when you want', text: 'Every search links to the same search on Google, with web results only.' },
+      { symbol: 'open', title: 'ELUM apps, right here', text: 'Type write, type, make or account, or an address such as make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
+      { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
     ],
     tips: [
       'Recent searches appear as you type. Use the arrow keys to pick one.',
-      'The tab shows the Browse search symbol on results.',
+      'Want the web instead? Pick Search the web under the box when your words name an ELUM app.',
+      'Click a group to fold it away; your tabs and groups are still there next time.',
+      'Is ELUM working? Browse’s Status page checks every app.',
     ],
   },
   {
