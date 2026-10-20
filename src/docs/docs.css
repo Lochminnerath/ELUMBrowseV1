@@ -596,6 +596,225 @@
   }
 }
 
+/* ---- Guides and troubleshooting ---- */
+.docs-nav__disc--help::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+}
+.docs-nav__disc--help::after {
+  content: '?';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--browse-deep);
+}
+.docs-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 14px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.docs-jump a {
+  color: color-mix(in srgb, var(--app, var(--browse)) 70%, var(--ink));
+}
+.docs-h2-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.docs-more {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--browse-deep);
+}
+.docs-guides {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+.docs-guide {
+  padding: 20px 22px;
+  border-radius: 22px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+}
+.docs-guide h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+.docs-guide ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.docs-guide li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--ink-muted);
+}
+.docs-guide li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 8px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--app, var(--browse));
+}
+.docs-trouble-intro {
+  margin: -8px 0 16px;
+  font-size: 15px;
+}
+.docs-trouble-intro a {
+  color: inherit;
+  font-weight: 600;
+}
+.docs-troubles {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.docs-trouble {
+  border-radius: 18px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  transition: border-color 200ms ease;
+}
+.docs-trouble[open] {
+  border-color: color-mix(in srgb, var(--app, var(--browse)) 45%, var(--hairline));
+}
+.docs-trouble summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+}
+.docs-trouble summary::-webkit-details-marker {
+  display: none;
+}
+.docs-trouble summary::after {
+  content: '';
+  margin-left: auto;
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--ink-muted);
+  border-bottom: 2px solid var(--ink-muted);
+  transform: rotate(45deg);
+  transition: transform 200ms ease;
+}
+.docs-trouble[open] summary::after {
+  transform: rotate(225deg);
+}
+.docs-trouble__problem {
+  min-width: 0;
+}
+.docs-trouble__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 18px 18px;
+  font-size: 15px;
+  line-height: 24px;
+}
+.docs-trouble__body p {
+  margin: 0;
+}
+.docs-trouble__body ol {
+  margin: 4px 0 0;
+  padding-left: 20px;
+}
+.docs-trouble__body li + li {
+  margin-top: 4px;
+}
+.docs-trouble__label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--app, var(--browse)) 70%, var(--ink));
+}
+.docs-trouble__says {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--surface-glass);
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.docs-hero--help {
+  grid-template-columns: 1fr;
+}
+.docs-help-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: -24px;
+}
+.docs-help-search {
+  width: 100%;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--hairline);
+  background: var(--surface-glass);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+}
+.docs-help-search:focus {
+  outline: none;
+  border-color: var(--browse);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--browse) 22%, transparent);
+}
+.docs-help-apps {
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
+.docs-help-count {
+  margin: -32px 0 -24px;
+  font-size: 14px;
+}
+.docs-help-none {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+.docs-help-none h2,
+.docs-help-none p {
+  margin: 0;
+}
+@media (max-width: 760px) {
+  .docs-guides {
+    grid-template-columns: 1fr;
+  }
+  .docs-help-apps {
+    border-radius: 18px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .docs-hero,
   .docs-apps > li,

@@ -4,7 +4,7 @@ import { BrowserShell } from './browser/BrowserShell';
 import { RedirectIfSignedIn } from './auth/guards';
 import { BrowseMark } from './components/Brand';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { DocsHome, ProductDoc } from './docs/DocsPages';
+import { DocsHome, ProductDoc, TroubleshootingPage } from './docs/DocsPages';
 import { ToastProvider } from './components/Toast';
 import { TooltipLayer } from './components/TooltipLayer';
 import { AuthPage } from './pages/AuthPage';
@@ -29,6 +29,7 @@ export function App() {
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/status" element={<StatusPage />} />
                 <Route path="/docs" element={<DocsHome />} />
+                <Route path="/docs/troubleshooting" element={<TroubleshootingPage />} />
                 <Route path="/docs/:product" element={<ProductDoc />} />
                 <Route
                   path="/signin"

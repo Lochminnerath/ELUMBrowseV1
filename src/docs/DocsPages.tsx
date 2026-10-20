@@ -1,5 +1,5 @@
-import { useEffect, type ComponentType, type CSSProperties, type ReactNode } from 'react';
-import { Link, Navigate, NavLink, useParams } from 'react-router';
+import { useEffect, useMemo, type ComponentType, type CSSProperties, type ReactNode } from 'react';
+import { Link, Navigate, NavLink, useLocation, useParams, useSearchParams } from 'react-router';
 import { ElumLockup } from '../components/Brand';
 import { ElumLauncher } from '../components/ElumLauncher';
 import * as Icons from '../components/icons/ElumIcons';
@@ -7,6 +7,7 @@ import type { IconProps } from '../components/icons/ElumIcons';
 import { ACCOUNT_HOME, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { BASICS, PRODUCTS, type Feature, type ProductId, type Symbol } from './content';
+import { COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES, type Trouble } from './help';
 import './docs.css';
 
 const URLS: Record<ProductId, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', store: STORE_URL, account: ACCOUNT_HOME };
@@ -97,6 +98,10 @@ function DocsShell({ children }: { children: ReactNode }) {
             <span className="docs-nav__disc docs-nav__disc--home" aria-hidden="true" />
             Start here
           </NavLink>
+          <NavLink to="/docs/troubleshooting" className="docs-nav__link">
+            <span className="docs-nav__disc docs-nav__disc--help" aria-hidden="true" />
+            Troubleshooting
+          </NavLink>
           {PRODUCTS.map((p) => (
             <NavLink key={p.id} to={`/docs/${p.id}`} className="docs-nav__link" style={{ '--app': p.color } as CSSProperties}>
               <AppMark id={p.id} size={22} />
@@ -177,6 +182,18 @@ export function DocsHome() {
           ))}
         </ul>
       </section>
+
+      <section aria-labelledby="docs-common">
+        <div className="docs-h2-row">
+          <h2 id="docs-common" className="docs-h2">
+            When something goes wrong
+          </h2>
+          <Link to="/docs/troubleshooting" className="docs-more">
+            All troubleshooting
+          </Link>
+        </div>
+        <TroubleList troubles={COMMON_TROUBLES.slice(0, 5)} />
+      </section>
     </DocsShell>
   );
 }
@@ -186,6 +203,11 @@ export function ProductDoc() {
   const { product } = useParams();
   const p = PRODUCTS.find((x) => x.id === product);
   useTitle(p ? `${p.name} · ELUM Docs` : 'ELUM Docs');
+  const { hash } = useLocation();
+  // A link to a section (/docs/make#troubleshooting) opens at that section.
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
+  }, [product, hash]);
   if (!p) return <Navigate to="/docs" replace />;
   const others = PRODUCTS.filter((x) => x.id !== p.id);
   return (
@@ -203,6 +225,10 @@ export function ProductDoc() {
             </p>
             <h1>{p.headline}</h1>
             <p className="docs-lede">{p.intro}</p>
+            <p className="docs-jump">
+              <a href="#guides">Everything {p.name} does</a>
+              <a href="#troubleshooting">Troubleshooting</a>
+            </p>
             <OpenApp id={p.id} className="elum-btn elum-btn--primary docs-open">
               Open {p.name}
             </OpenApp>
@@ -250,6 +276,35 @@ export function ProductDoc() {
           </ul>
         </section>
 
+        <section aria-labelledby="docs-guides" id="guides">
+          <h2 id="docs-guides" className="docs-h2">
+            Everything {p.name} does
+          </h2>
+          <div className="docs-guides">
+            {GUIDES[p.id].map((g) => (
+              <section key={g.title} className="docs-guide">
+                <h3>{g.title}</h3>
+                <ul>
+                  {g.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="docs-trouble" id="troubleshooting">
+          <h2 id="docs-trouble" className="docs-h2">
+            Troubleshooting {p.name}
+          </h2>
+          <p className="docs-trouble-intro muted">
+            Find the problem, or the message on your screen. For problems in every app, such as signing in, see{' '}
+            <Link to="/docs/troubleshooting">Troubleshooting</Link>.
+          </p>
+          <TroubleList troubles={TROUBLES[p.id]} />
+        </section>
+
         <section aria-labelledby="docs-next">
           <h2 id="docs-next" className="docs-h2">
             More of ELUM
@@ -269,6 +324,104 @@ export function ProductDoc() {
           </ul>
         </section>
       </div>
+    </DocsShell>
+  );
+}
+
+/** Problems as an accordion: the problem, the message, why, and what to do. */
+function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductId | null)[] }) {
+  return (
+    <ul className="docs-troubles">
+      {troubles.map((t, i) => {
+        const app = apps?.[i] ? PRODUCTS.find((p) => p.id === apps[i]) : null;
+        return (
+          <li key={`${apps?.[i] ?? ''}${t.problem}`} style={app ? ({ '--app': app.color } as CSSProperties) : undefined}>
+            <details className="docs-trouble">
+              <summary>
+                {app && <AppMark id={app.id} size={20} />}
+                <span className="docs-trouble__problem">{t.problem}</span>
+              </summary>
+              <div className="docs-trouble__body">
+                {t.says && (
+                  <p className="docs-trouble__says">
+                    <span className="docs-trouble__label">You see</span>“{t.says}”
+                  </p>
+                )}
+                <p>
+                  <span className="docs-trouble__label">Why</span>
+                  {t.why}
+                </p>
+                <div>
+                  <span className="docs-trouble__label">What to do</span>
+                  <ol>
+                    {t.fix.map((f) => (
+                      <li key={f}>{f}</li>
+                    ))}
+                  </ol>
+                </div>
+              </div>
+            </details>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** /docs/troubleshooting: every problem in every app, searchable, by app. */
+export function TroubleshootingPage() {
+  useTitle('Troubleshooting · ELUM Docs');
+  const [params, setParams] = useSearchParams();
+  const q = params.get('q') ?? '';
+  const app = (params.get('app') ?? 'all') as ProductId | 'all' | 'every';
+  const found = useMemo(() => searchTroubles(q).filter((x) => app === 'all' || (app === 'every' ? x.product === null : x.product === app)), [q, app]);
+  const set = (next: { q?: string; app?: string }) => {
+    const merged = { q, app, ...next };
+    const out: Record<string, string> = {};
+    if (merged.q) out.q = merged.q;
+    if (merged.app && merged.app !== 'all') out.app = merged.app;
+    setParams(out, { replace: true });
+  };
+  return (
+    <DocsShell>
+      <section className="docs-hero docs-hero--help">
+        <div className="docs-hero__text">
+          <p className="docs-eyebrow">ELUM Docs</p>
+          <h1>Troubleshooting</h1>
+          <p className="docs-lede">Find your problem, or type the message on your screen. Each answer says why it happens and what to do.</p>
+        </div>
+      </section>
+      <div className="docs-help-tools">
+        <input
+          className="docs-help-search"
+          type="search"
+          value={q}
+          onChange={(e) => set({ q: e.target.value })}
+          placeholder="Describe the problem, or paste the message"
+          aria-label="Search troubleshooting"
+        />
+        <div className="segmented docs-help-apps" role="group" aria-label="Which app">
+          {[{ id: 'all', name: 'All' }, { id: 'every', name: 'Every app' }, ...PRODUCTS.map((p) => ({ id: p.id, name: p.name }))].map((x) => (
+            <button key={x.id} type="button" aria-pressed={app === x.id} onClick={() => set({ app: x.id })}>
+              {x.name}
+            </button>
+          ))}
+        </div>
+      </div>
+      <p className="docs-help-count muted" aria-live="polite">
+        {found.length === 1 ? '1 answer' : `${found.length} answers`}
+      </p>
+      {found.length ? (
+        <TroubleList troubles={found.map((x) => x.trouble)} apps={found.map((x) => x.product)} />
+      ) : (
+        <div className="docs-help-none">
+          <h2>No answer matches that yet</h2>
+          <p>Try fewer words, or check ELUM Status to see whether a service is down.</p>
+          <Link to="/status" className="elum-btn elum-btn--primary">
+            ELUM Status
+          </Link>
+        </div>
+      )}
     </DocsShell>
   );
 }
