@@ -3,7 +3,7 @@
  * pages that show them are in DocsPages.tsx. Keep each step to something people can do today.
  */
 
-export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'account';
+export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account';
 
 /** Which ELUM symbol a feature card shows (see components/icons/ElumIcons.tsx). */
 export type Symbol =
@@ -152,7 +152,7 @@ export const PRODUCTS: Words[] = [
     features: [
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches, your device', text: 'Recent searches stay on this device only. Forget one, or all of them, at any time.' },
-      { symbol: 'open', title: 'ELUM apps, right here', text: 'Type write, type, make or account, or an address such as make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
+      { symbol: 'open', title: 'ELUM apps, right here', text: 'Type write, type, make, store or account, or an address such as make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
       { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and typed addresses open in a Browse tab. Sites that refuse to be shown inside other sites open as a clean reading view, with the original a click away.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
     ],
@@ -162,6 +162,27 @@ export const PRODUCTS: Words[] = [
       'Click a group to fold it away; your tabs and groups are still there next time.',
       'Is ELUM working? Browse’s Status page checks every app.',
     ],
+  },
+  {
+    id: 'store',
+    name: 'Store',
+    color: '#e9b949',
+    mist: '#fcf5e1',
+    kind: 'Apps and more',
+    headline: 'Find your way round Store',
+    intro: 'Every ELUM app in one place, free with your ELUM account, and templates that open straight in Make.',
+    steps: [
+      { title: 'Look around', text: 'Store shows every ELUM app: what it does, what is new, and whether it is working right now. Search finds apps and templates.' },
+      { title: 'Get an app', text: 'Choose Get and the app is added to your ELUM account. Signed out, Store asks you to sign in first, then finishes getting it.' },
+      { title: 'Open it', text: 'Open takes you to the app already signed in. The arrow beside it opens the app in a Browse tab or a window of its own.' },
+    ],
+    features: [
+      { symbol: 'new', title: 'Templates for Make', text: 'Pick a pitch deck, lesson slides, a poster or a post, and Make opens with it ready to edit.' },
+      { symbol: 'saved', title: 'Your apps', text: 'See the apps in your account and when you last used each, on any device.' },
+      { symbol: 'verified', title: 'Free with your account', text: 'Every ELUM app is free. ELUM Account comes with every account.' },
+      { symbol: 'visible', title: 'How it is running', text: 'Each app shows whether it is working right now, from the same check as Browse’s Status page.' },
+    ],
+    tips: ['Press / to jump to Store’s search box.', 'Type store in Browse to open Store in a Browse tab.'],
   },
   {
     id: 'account',

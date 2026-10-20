@@ -226,7 +226,7 @@
   top: 50%;
   left: 50%;
   margin: -22px;
-  transform: rotate(calc(var(--i) * 72deg)) translateY(-95px) rotate(calc(var(--i) * -72deg));
+  transform: rotate(calc(var(--i) * 60deg)) translateY(-95px) rotate(calc(var(--i) * -60deg));
 }
 .docs-orbit__disc .docs-mark {
   animation: docs-spin 40s linear infinite reverse;
@@ -245,7 +245,7 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 14px;
 }
 .docs-apps > li {

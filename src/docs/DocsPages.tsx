@@ -4,12 +4,12 @@ import { ElumLockup } from '../components/Brand';
 import { ElumLauncher } from '../components/ElumLauncher';
 import * as Icons from '../components/icons/ElumIcons';
 import type { IconProps } from '../components/icons/ElumIcons';
-import { ACCOUNT_HOME, MAKE_URL, openElsewhere, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { ACCOUNT_HOME, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { BASICS, PRODUCTS, type Feature, type ProductId, type Symbol } from './content';
 import './docs.css';
 
-const URLS: Record<ProductId, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', account: ACCOUNT_HOME };
+const URLS: Record<ProductId, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', store: STORE_URL, account: ACCOUNT_HOME };
 
 const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   new: Icons.NewIcon,
@@ -108,7 +108,7 @@ function DocsShell({ children }: { children: ReactNode }) {
       </div>
       <footer className="docs-foot">
         <span>Made by you. Runs without AI.</span>
-        <span className="muted">ELUM Write, Type, Make, Browse and Account.</span>
+        <span className="muted">ELUM Write, Type, Make, Browse, Store and Account.</span>
       </footer>
     </div>
   );
@@ -145,7 +145,7 @@ export function DocsHome() {
         <div className="docs-hero__text">
           <p className="docs-eyebrow">ELUM Docs</p>
           <h1>Start here</h1>
-          <p className="docs-lede">Everything you need to get going with ELUM: one account, five apps, and how they work together.</p>
+          <p className="docs-lede">Everything you need to get going with ELUM: one account, six apps, and how they work together.</p>
         </div>
       </section>
 

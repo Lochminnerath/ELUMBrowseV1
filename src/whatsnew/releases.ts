@@ -29,6 +29,16 @@ export const APP_NAME = 'Browse';
 
 export const RELEASES: Release[] = [
   {
+    id: '2026-10-20-store',
+    date: '20 October 2026',
+    title: 'ELUM Store, in Browse',
+    intro: 'Every ELUM app in one place. Type store to open it in a Browse tab.',
+    features: [
+      { title: 'Store in a tab', text: 'Type store, or store.elum.services, and ELUM Store opens in a Browse tab, signed in.', art: 'spark' },
+      { title: 'Open apps in Browse', text: 'In Store, the arrow beside Open opens any ELUM app in a Browse tab.', art: 'devices' },
+    ],
+  },
+  {
     id: '2026-10-20-pages',
     date: '20 October 2026',
     title: 'Pages stay in Browse',

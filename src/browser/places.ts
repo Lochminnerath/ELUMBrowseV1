@@ -1,11 +1,11 @@
-import { ACCOUNT_HOME, MAKE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { ACCOUNT_HOME, MAKE_URL, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 
 /**
  * The places Browse knows: ELUM apps it opens inside its own tabs, and its own pages. Each ELUM
  * app is shown under its elum.services address (write.elum.services), whatever site serves it.
  */
 
-export type ElumApp = 'write' | 'type' | 'make' | 'account';
+export type ElumApp = 'write' | 'type' | 'make' | 'account' | 'store';
 
 export interface AppInfo {
   id: ElumApp;
@@ -22,6 +22,7 @@ export const ELUM_APPS: Record<ElumApp, AppInfo> = {
   type: { id: 'type', name: 'Type', color: '#3fc4a0', url: TYPE_URL, host: 'type.elum.services' },
   make: { id: 'make', name: 'Make', color: '#ec7fa9', url: MAKE_URL, host: 'make.elum.services' },
   account: { id: 'account', name: 'Account', color: '#94c858', url: ACCOUNT_HOME, host: 'account.elum.services' },
+  store: { id: 'store', name: 'Store', color: '#e9b949', url: STORE_URL, host: 'store.elum.services' },
 };
 
 const isApp = (v: string): v is ElumApp => v in ELUM_APPS;
@@ -33,6 +34,7 @@ const NAMES: Record<string, string> = {
   make: '/app/make',
   account: '/app/account',
   accounts: '/app/account',
+  store: '/app/store',
   browse: '/',
   search: '/',
   docs: '/docs',

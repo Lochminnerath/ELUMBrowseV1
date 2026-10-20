@@ -280,8 +280,8 @@ export class SupabaseApi implements BrowseApi {
       throw new ApiError('approval_required', 'Approve this sign-in on a device you are already signed in to.');
     }
     const profile = await this.profileFor(session.user.id);
-    // Tell the platform this account uses Make. Optional: older databases lack the function.
-    void this.sb.rpc('elum_join_service', { p_service: 'make' }).then(() => undefined, () => undefined);
+    // Tell the platform this account uses Browse. Optional: older databases lack the function.
+    void this.sb.rpc('elum_join_service', { p_service: 'browse' }).then(() => undefined, () => undefined);
     return { user: { ...toUser(profile), pictureUrl: await this.pictureUrl(profile.id) } };
   }
 

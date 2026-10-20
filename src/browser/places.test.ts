@@ -5,6 +5,8 @@ group('resolveElum', () => {
   it('opens ELUM apps named in a search', () => {
     expect(resolveElum('write')).toBe('/app/write');
     expect(resolveElum('  Make ')).toBe('/app/make');
+    expect(resolveElum('elum store')).toBe('/app/store');
+    expect(resolveElum('store.elum.services/apps/make')).toBe('/app/store/apps/make');
     expect(resolveElum('elum type')).toBe('/app/type');
     expect(resolveElum('ELUMAccount')).toBe('/app/account');
     expect(resolveElum('elum accounts')).toBe('/app/account');
