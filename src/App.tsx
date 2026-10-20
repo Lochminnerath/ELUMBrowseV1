@@ -1,14 +1,17 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router';
 import { AuthProvider } from './auth/AuthProvider';
+import { BrowserShell } from './browser/BrowserShell';
 import { RedirectIfSignedIn } from './auth/guards';
 import { BrowseMark } from './components/Brand';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { DocsHome, ProductDoc } from './docs/DocsPages';
 import { ToastProvider } from './components/Toast';
 import { TooltipLayer } from './components/TooltipLayer';
 import { AuthPage } from './pages/AuthPage';
 import { HandoffPage } from './pages/HandoffPage';
 import { HomePage } from './search/HomePage';
 import { SearchPage } from './search/SearchPage';
+import { StatusPage } from './status/StatusPage';
 import { SecurityLayer } from './security/SecurityLayer';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { WhatsNew } from './whatsnew/WhatsNew';
@@ -20,9 +23,13 @@ export function App() {
         <AuthProvider>
           <BrowserRouter>
             <ErrorBoundary>
+              <BrowserShell>
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/status" element={<StatusPage />} />
+                <Route path="/docs" element={<DocsHome />} />
+                <Route path="/docs/:product" element={<ProductDoc />} />
                 <Route
                   path="/signin"
                   element={
@@ -40,8 +47,11 @@ export function App() {
                   }
                 />
                 <Route path="/auth/handoff" element={<HandoffPage />} />
+                {/* ELUM apps show in the shell's frames. */}
+                <Route path="/app/*" element={null} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              </BrowserShell>
             </ErrorBoundary>
           </BrowserRouter>
           <TooltipLayer />

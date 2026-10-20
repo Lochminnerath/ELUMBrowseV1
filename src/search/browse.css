@@ -30,6 +30,7 @@
   flex: 1;
   min-width: 0;
   display: flex;
+  justify-content: center;
 }
 .browse-bar__end {
   flex: none;
@@ -140,10 +141,32 @@
   background: var(--browse-mist);
 }
 .searchbox__option-dot {
+  flex: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   border: 2px solid var(--browse-line);
+}
+.searchbox__option-text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.searchbox__option-hint {
+  margin-left: auto;
+  padding-left: 12px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+/* Opening an ELUM app: a filled disc, and the address it opens. */
+.searchbox__option[data-kind='place'] .searchbox__option-dot {
+  border-color: var(--browse);
+  background: var(--browse);
+}
+.searchbox__option[data-kind='place'] .searchbox__option-text {
+  font-weight: 700;
 }
 
 /* ---- Front page ---- */
@@ -152,7 +175,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 7vh 20px 40px;
+  /* Centred in the space between the bar and the footer, a little above the middle. */
+  justify-content: center;
+  padding: 24px 20px 9vh;
   gap: 14px;
   text-align: center;
 }
@@ -291,7 +316,7 @@
 .browse-tabs {
   display: flex;
   gap: 4px;
-  padding: 8px 20px 0 calc(20px + 34px + 16px);
+  padding: 8px max(20px, calc((100% - 720px) / 2)) 0;
   border-bottom: 1px solid var(--hairline);
 }
 .browse-tab {
@@ -309,7 +334,8 @@
 .browse-results {
   width: 100%;
   max-width: 760px;
-  padding: 18px 20px 48px calc(20px + 34px + 16px);
+  margin: 0 auto;
+  padding: 18px 20px 48px;
 }
 .browse-results__loading {
   display: grid;
@@ -601,4 +627,166 @@
 .switch:focus-visible {
   outline: 2px solid var(--browse);
   outline-offset: 2px;
+}
+
+/* ---- Google's Programmable Search Element, drawn the ELUM way ---- */
+.browse-google-element {
+  min-height: 160px;
+}
+.browse-google-element .gsc-control-cse,
+.browse-google-element .gsc-control-wrapper-cse,
+.browse-google-element .gsc-results-wrapper-nooverlay,
+.browse-google-element .gsc-results-wrapper-visible {
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  font-family: var(--font-sans) !important;
+  color: var(--ink) !important;
+}
+.browse-google-element .gsc-control-cse * {
+  font-family: inherit;
+}
+/* Browse has its own tabs, and its own way of ordering. */
+.browse-google-element .gsc-tabsArea,
+.browse-google-element .gsc-orderby-container,
+.browse-google-element .gsc-refinementsArea {
+  display: none !important;
+}
+.browse-google-element .gsc-above-wrapper-area {
+  border: 0 !important;
+  padding: 0 0 6px !important;
+}
+.browse-google-element .gsc-result-info {
+  padding: 0 !important;
+  font-size: 13px !important;
+  color: var(--ink-muted) !important;
+}
+.browse-google-element .gsc-table-result,
+.browse-google-element .gsc-thumbnail-inside,
+.browse-google-element .gsc-url-top {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.browse-google-element .gsc-webResult.gsc-result {
+  position: relative;
+  margin: 0 !important;
+  padding: 14px 0 16px !important;
+  border: 0 !important;
+  background: transparent !important;
+  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* Each result's site gets the ELUM disc in front of its address. */
+.browse-google-element .gsc-webResult.gsc-result .gsc-url-top {
+  display: flex;
+  align-items: center;
+}
+.browse-google-element .gsc-webResult.gsc-result .gsc-url-top::before {
+  content: '';
+  flex: none;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--browse);
+  box-shadow: 4px 4px 0 -1px color-mix(in srgb, var(--browse) 45%, transparent);
+  vertical-align: 1px;
+}
+.browse-google-element .gs-title,
+.browse-google-element .gs-title * {
+  height: auto !important;
+  font-family: var(--font-display, inherit) !important;
+  font-size: 20px !important;
+  line-height: 28px !important;
+  color: var(--action) !important;
+  text-decoration: none !important;
+}
+.browse-google-element a.gs-title:hover,
+.browse-google-element a.gs-title:hover * {
+  text-decoration: underline !important;
+}
+.browse-google-element .gs-title b,
+.browse-google-element .gs-snippet b {
+  font-weight: 700 !important;
+}
+.browse-google-element .gs-visibleUrl,
+.browse-google-element .gs-visibleUrl-short,
+.browse-google-element .gs-visibleUrl-breadcrumb,
+.browse-google-element .gs-visibleUrl-breadcrumb span {
+  font-size: 13px !important;
+  color: var(--ink-muted) !important;
+}
+.browse-google-element .gs-snippet {
+  margin-top: 4px !important;
+  font-size: 15px !important;
+  line-height: 23px !important;
+  color: var(--ink) !important;
+}
+.browse-google-element .gs-image-box img,
+.browse-google-element .gs-web-image-box img {
+  border-radius: 12px !important;
+  border: 0 !important;
+}
+.browse-google-element .gsc-adBlock,
+.browse-google-element .gsc-adBlockNoHeight {
+  margin-bottom: 8px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+/* Page numbers as ELUM discs. */
+.browse-google-element .gsc-cursor-box {
+  margin: 20px 0 0 !important;
+  text-align: left !important;
+}
+.browse-google-element .gsc-cursor-page {
+  display: inline-grid !important;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-right: 6px !important;
+  border-radius: 50%;
+  background: transparent !important;
+  color: var(--ink) !important;
+  font-size: 14px !important;
+  text-decoration: none !important;
+  transition: background 160ms ease;
+}
+.browse-google-element .gsc-cursor-page:hover {
+  background: var(--browse-mist) !important;
+}
+.browse-google-element .gsc-cursor-current-page {
+  background: var(--browse) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+}
+.browse-google-element .gs-no-results-result .gs-snippet {
+  margin: 0 !important;
+  padding: 18px 20px !important;
+  border: 1px solid var(--hairline) !important;
+  border-radius: 18px;
+  background: var(--browse-mist) !important;
+}
+.browse-google-element .gcsc-find-more-on-google {
+  color: var(--action) !important;
+}
+.browse-google-element .gcsc-find-more-on-google-magnifier {
+  fill: currentColor !important;
+}
+.browse-google-element .gcsc-more-maybe-branding-root,
+.browse-google-element .gcsc-branding {
+  margin-top: 12px !important;
+}
+/* Pictures: a grid of rounded tiles. */
+.browse-google-element--images .gsc-imageResult {
+  border-radius: 14px !important;
+  overflow: hidden;
+  background: var(--browse-mist) !important;
+}
+.browse-google-element--images .gsc-imageResult:hover {
+  box-shadow: 0 10px 24px rgba(20, 26, 46, 0.14) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .browse-google-element .gsc-webResult.gsc-result {
+    animation: none;
+  }
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
+import { useGo } from '../browser/BrowserShell';
 import { BrowseMark } from '../components/Brand';
 import { DeleteIcon } from '../components/icons/ElumIcons';
 import { BrowseHeader } from './BrowseHeader';
@@ -9,7 +10,7 @@ import './browse.css';
 
 /** Browse's front page: the mark, the box, and your recent searches from this browser. */
 export function HomePage() {
-  const navigate = useNavigate();
+  const go = useGo();
   const [recent, setRecent] = useState(recentSearches);
   const [safe, setSafe] = useState(safeSearch);
   const [paused, setPaused] = useState(historyPaused);
@@ -18,7 +19,7 @@ export function HomePage() {
     document.title = 'ELUM Browse';
   }, []);
 
-  const search = (q: string) => navigate(`/search?q=${encodeURIComponent(q)}`);
+  const search = (q: string, web?: boolean) => go(q, { web });
 
   return (
     <div className="browse">
@@ -30,7 +31,7 @@ export function HomePage() {
           <BrowseMark size={112} />
         </div>
         <h1 className="browse-home__title">Search the web. Just the web.</h1>
-        <p className="browse-home__lede">Results from Google, without AI answers, AI Overviews or Gemini. Built by people.</p>
+        <p className="browse-home__lede">Results from Google, without AI answers, AI Overviews or Gemini. Made by you.</p>
         <SearchBox onSearch={search} autoFocus />
 
         {recent.length > 0 && (
@@ -94,7 +95,9 @@ export function HomePage() {
         </div>
       </main>
       <footer className="browse-foot">
-        <span>Built by people. Runs without AI.</span>
+        <span>
+          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link>
+        </span>
         <span className="muted">Searches go to Google to find results. ELUM does not keep them.</span>
       </footer>
     </div>

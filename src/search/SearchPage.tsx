@@ -1,21 +1,29 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
+import { useGo } from '../browser/BrowserShell';
 import { api, errorMessage, type SearchKind, type SearchPage as Page, type SearchResult } from '../api';
 import { Loader } from '../components/Loader';
 import { BrowseHeader } from './BrowseHeader';
 import { googleWebUrl, siteHue } from './google';
 import { rememberSearch, safeSearch } from './local';
+import { GOOGLE_CSE_ID, GoogleElementResults } from './googleElement';
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
 
-type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'done'; page: Page; results: SearchResult[] };
+type State =
+  | { status: 'loading' }
+  | { status: 'error'; message: string }
+  | { status: 'done'; page: Page; results: SearchResult[] }
+  /** Google's Programmable Search Element draws the results itself (googleElement.tsx). */
+  | { status: 'element'; hidden: number };
 
 /** /search?q=…&kind=images: Google's results, shown the ELUM way, without AI. */
 export function SearchPage() {
   useFavicon('/favicons/search.svg');
   const [params] = useSearchParams();
   const navigate = useNavigate();
+  const go = useGo();
   const q = (params.get('q') ?? '').trim();
   const kind: SearchKind = params.get('kind') === 'images' ? 'images' : 'web';
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -30,6 +38,10 @@ export function SearchPage() {
     document.title = `${q} · ELUM Browse`;
     rememberSearch(q);
     const id = ++run.current;
+    if (GOOGLE_CSE_ID) {
+      setState({ status: 'element', hidden: 0 });
+      return;
+    }
     setState({ status: 'loading' });
     api.search({ q, kind, start: 1, safe: safeSearch() }).then(
       (page) => id === run.current && setState({ status: 'done', page, results: page.results }),
@@ -59,7 +71,7 @@ export function SearchPage() {
   return (
     <div className="browse">
       <BrowseHeader compact>
-        <SearchBox initial={q} size="compact" onSearch={(next) => navigate(`/search?q=${encodeURIComponent(next)}${kind === 'images' ? '&kind=images' : ''}`)} />
+        <SearchBox initial={q} size="compact" onSearch={(next, web) => go(next, { web, kind: kind === 'images' ? 'images' : undefined })} />
       </BrowseHeader>
       <nav className="browse-tabs" aria-label="Kinds of results">
         {tab('web', 'All')}
@@ -80,6 +92,19 @@ export function SearchPage() {
               Search on Google instead
             </a>
           </div>
+        )}
+
+        {state.status === 'element' && (
+          <>
+            <GoogleElementResults
+              q={q}
+              kind={kind}
+              safe={safeSearch()}
+              onHidden={(hidden) => setState((s) => (s.status === 'element' && s.hidden !== hidden ? { status: 'element', hidden } : s))}
+              onError={(message) => setState({ status: 'error', message })}
+            />
+            <HiddenNote count={state.hidden} />
+          </>
         )}
 
         {state.status === 'done' && !state.page.configured && <NotConnected q={q} kind={kind} />}
@@ -110,13 +135,7 @@ export function SearchPage() {
                 </ol>
               </>
             )}
-            {state.page.hidden > 0 && (
-              <p className="browse-hidden">
-                <span className="browse-hidden__dot" aria-hidden="true" />
-                {state.page.hidden === 1 ? 'One result was' : `${state.page.hidden} results were`} left out because {state.page.hidden === 1 ? 'it leads' : 'they lead'} to AI chat
-                products.
-              </p>
-            )}
+            <HiddenNote count={state.page.hidden} />
             {state.page.next && (
               <div className="browse-more">
                 <button type="button" className="elum-btn elum-btn--secondary" onClick={() => void loadMore()} disabled={more}>
@@ -138,6 +157,17 @@ export function SearchPage() {
         )}
       </main>
     </div>
+  );
+}
+
+/** How many results were left out for leading to AI chat products. */
+function HiddenNote({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <p className="browse-hidden">
+      <span className="browse-hidden__dot" aria-hidden="true" />
+      {count === 1 ? 'One result was' : `${count} results were`} left out because {count === 1 ? 'it leads' : 'they lead'} to AI chat products.
+    </p>
   );
 }
 

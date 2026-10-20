@@ -15,6 +15,7 @@ interface ImportMetaEnv {
   readonly VITE_ELUM_TYPE_URL?: string;
   /** Where Browse itself is hosted. Defaults to https://elumbrowse.netlify.app. */
   readonly VITE_ELUM_BROWSE_URL?: string;
+  readonly VITE_GOOGLE_CSE_ID?: string;
   /** Where Make is hosted. Defaults to https://elummake.netlify.app. */
   readonly VITE_ELUM_MAKE_URL?: string;
 }

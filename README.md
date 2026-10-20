@@ -26,18 +26,28 @@ account menu and sign-in approvals.
 
 ## Connect Google search
 
-Browse works before this step: it then offers Google's web-only results page for each search.
+Results come from Google's **Programmable Search Element** (`src/search/googleElement.tsx`), which
+needs no API key. Browse uses engine `61de32450a25e4731` unless `VITE_GOOGLE_CSE_ID` names another.
+Browse draws the results in its own style, hides any that lead to AI chat products, and links every
+search to Google's web-only results page (`udm=14`, no AI Overview).
 
-1. In the Google Cloud console, create (or pick) a project and enable the **Custom Search API**.
-   Create an **API key** and restrict it to that API.
-2. At programmablesearchengine.google.com, create a search engine set to **Search the entire web**,
-   and copy its **Search engine ID**.
-3. In Supabase > Edge Functions > Secrets, add `GOOGLE_SEARCH_KEY` (the key) and
-   `GOOGLE_SEARCH_CX` (the engine ID).
+In the Programmable Search control panel (programmablesearchengine.google.com):
 
-The key never reaches the browser: the `browse-search` edge function calls Google. Google gives
-100 searches a day free and charges beyond that; the function also limits each address to 300
-searches an hour.
+- Under **Sites to search**, list the sites the engine covers. Engines made since January 2026 can
+  list up to 50 sites; older engines may still have **Search the entire web**, until 1 January 2027.
+- Turn **Image search** on for the Images tab, and set **SafeSearch** as you like (Browse can
+  turn it on per search).
+
+**The Custom Search JSON API** (the `browse-search` edge function) is the other way in. Google has
+closed it to new customers and ends it on 1 January 2027. If you already have a key: in Supabase >
+Edge Functions > Secrets, add `GOOGLE_SEARCH_KEY` and `GOOGLE_SEARCH_CX`, then build with
+`VITE_GOOGLE_CSE_ID` set empty. The key never reaches the browser, and each address is limited to
+300 searches an hour.
+
+## ELUM Docs
+
+`/docs` is ELUM's starting page, and `/docs/write`, `/docs/type`, `/docs/make`, `/docs/browse` and
+`/docs/account` start you off with each app. The words are in `src/docs/content.ts`.
 
 ## Run it
 
