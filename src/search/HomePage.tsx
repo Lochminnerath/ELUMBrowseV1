@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { BrowseMark } from '../components/Brand';
 import { DeleteIcon } from '../components/icons/ElumIcons';
 import { BrowseHeader } from './BrowseHeader';
@@ -30,7 +30,7 @@ export function HomePage() {
           <BrowseMark size={112} />
         </div>
         <h1 className="browse-home__title">Search the web. Just the web.</h1>
-        <p className="browse-home__lede">Results from Google, without AI answers, AI Overviews or Gemini. Built by people.</p>
+        <p className="browse-home__lede">Results from Google, without AI answers, AI Overviews or Gemini. Made by you.</p>
         <SearchBox onSearch={search} autoFocus />
 
         {recent.length > 0 && (
@@ -94,7 +94,9 @@ export function HomePage() {
         </div>
       </main>
       <footer className="browse-foot">
-        <span>Built by people. Runs without AI.</span>
+        <span>
+          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link>
+        </span>
         <span className="muted">Searches go to Google to find results. ELUM does not keep them.</span>
       </footer>
     </div>

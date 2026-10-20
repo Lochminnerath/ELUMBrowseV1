@@ -3,6 +3,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import { RedirectIfSignedIn } from './auth/guards';
 import { BrowseMark } from './components/Brand';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { DocsHome, ProductDoc } from './docs/DocsPages';
 import { ToastProvider } from './components/Toast';
 import { TooltipLayer } from './components/TooltipLayer';
 import { AuthPage } from './pages/AuthPage';
@@ -23,6 +24,8 @@ export function App() {
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/search" element={<SearchPage />} />
+                <Route path="/docs" element={<DocsHome />} />
+                <Route path="/docs/:product" element={<ProductDoc />} />
                 <Route
                   path="/signin"
                   element={
