@@ -15,7 +15,6 @@ import { StatusPage } from './status/StatusPage';
 import { SecurityLayer } from './security/SecurityLayer';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { WhatsNew } from './whatsnew/WhatsNew';
-import { QuietSignIn } from './components/QuietSignIn';
 
 export function App() {
   return (
@@ -23,7 +22,6 @@ export function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
-            <QuietSignIn />
             <ErrorBoundary>
               <BrowserShell>
               <Routes>

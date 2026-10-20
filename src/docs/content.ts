@@ -214,7 +214,7 @@ export const PRODUCTS: Words[] = [
 /** The basics that hold across every app, for the docs home. */
 export const BASICS: Feature[] = [
   { symbol: 'verified', title: 'One account', text: 'Your ELUM Account works in every app, with the same name, picture and people.' },
-  { symbol: 'open', title: 'Sign in once', text: 'Sign in to one ELUM app and the rest open already signed in. Moving between them never asks again.' },
+  { symbol: 'open', title: 'Sign in once', text: 'Sign in to one ELUM app, and the others open already signed in when you move to them from the apps window.' },
   { symbol: 'link', title: 'The apps window', text: 'The dots at the top of every app open your ELUM apps, so you can jump between them in one click.' },
   { symbol: 'new', title: 'What’s new', text: 'After an update, each app shows you a short tour. You can watch it again from your account menu.' },
 ];

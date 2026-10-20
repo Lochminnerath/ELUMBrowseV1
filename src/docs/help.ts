@@ -586,7 +586,7 @@ export const COMMON_TROUBLES: Trouble[] = [
     why: 'Each ELUM app is its own website. When you move between them, ELUM Account passes your sign-in along, and that hand-over didn’t happen this time.',
     fix: [
       'Open the other app from the apps window (the dots at the top of every app). It opens signed in.',
-      'Or just reload the app. If you’re signed in to ELUM Account, it signs you in on its own.',
+      'Or choose Sign in. If you’re already signed in to ELUM Account, you come straight back signed in, without typing anything.',
       'If it asks you to sign in, use the same ELUM account. If you keep going round in circles, wait a minute and try again.',
     ],
   },
