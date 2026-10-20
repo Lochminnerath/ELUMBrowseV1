@@ -6,6 +6,9 @@ import { Popover } from '../components/Popover';
 import * as Icons from '../components/icons/ElumIcons';
 import type { IconProps } from '../components/icons/ElumIcons';
 import { useFavicon } from '../lib/favicon';
+import { api } from '../api';
+import { useAuth } from '../auth/AuthProvider';
+import { Loader } from '../components/Loader';
 import { openElsewhere } from '../lib/elum';
 import { asWebAddress, coverAddress, describe, frameUrl, resolveElum, webPath } from './places';
 import {
@@ -158,20 +161,50 @@ function Surfaces({ activeId, onSurface, reloads }: { activeId: string; onSurfac
         }
         const src = frameUrl(t.path);
         if (!src) return null;
-        return (
-          <iframe
-            key={`${t.id}:${reloads[t.id] ?? 0}`}
-            className="browser__frame"
-            src={src}
-            title={`ELUM ${place.title}`}
-            hidden={t.id !== activeId}
-            allow="clipboard-read; clipboard-write; fullscreen"
-            allowFullScreen
-          />
-        );
+        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={`ELUM ${place.title}`} hidden={t.id !== activeId} />;
       })}
     </div>
   );
+}
+
+/** App sites Browse has already signed in to during this visit. */
+const signedFrames = new Set<string>();
+
+/**
+ * An ELUM app in a tab. Signed in to Browse, the app arrives signed in too: the first time each app
+ * opens in this visit, Browse asks ELUM Account for a one-time sign-in and loads the app through
+ * it. The app keeps that sign-in for the rest of the visit, so later tabs load it directly.
+ */
+function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: boolean }) {
+  const { status } = useAuth();
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (status === 'loading') return;
+    const target = new URL(src);
+    if (status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
+      setUrl(src);
+      return;
+    }
+    let live = true;
+    api.handoff(`${target.origin}/auth/handoff`, target.pathname + target.search).then(
+      (signed) => {
+        signedFrames.add(target.origin);
+        if (live) setUrl(signed);
+      },
+      () => live && setUrl(src),
+    );
+    return () => {
+      live = false;
+    };
+  }, [src, status]);
+  if (!url) {
+    return (
+      <div className="browser__frame browser__frame--waiting" hidden={hidden}>
+        <Loader size={40} label="Signing you in" />
+      </div>
+    );
+  }
+  return <iframe className="browser__frame" src={url} title={title} hidden={hidden} allow="clipboard-read; clipboard-write; fullscreen" allowFullScreen />;
 }
 
 /** Over an app or a web page: its address, reload, and a window of its own. */
