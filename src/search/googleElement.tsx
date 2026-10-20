@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import { isAiLink } from "../../supabase/functions/_shared/search";
-import type { SearchKind } from "../api";
+import { useEffect, useRef } from 'react';
+import { isAiLink } from '../../supabase/functions/_shared/search';
+import type { SearchKind } from '../api';
 
 /**
  * Google's results through the Programmable Search Element (cse.google.com/cse.js), drawn inside
@@ -9,8 +9,7 @@ import type { SearchKind } from "../api";
  * the browse-search edge function (Custom Search JSON API) instead.
  */
 const configured = import.meta.env.VITE_GOOGLE_CSE_ID;
-export const GOOGLE_CSE_ID =
-  configured === undefined ? "61de32450a25e4731" : configured.trim();
+export const GOOGLE_CSE_ID = configured === undefined ? '61de32450a25e4731' : configured.trim();
 
 interface CseElement {
   execute(query: string): void;
@@ -20,12 +19,7 @@ interface CseApi {
   search: {
     cse: {
       element: {
-        render(options: {
-          div: string;
-          tag: string;
-          gname: string;
-          attributes?: Record<string, unknown>;
-        }): void;
+        render(options: { div: string; tag: string; gname: string; attributes?: Record<string, unknown> }): void;
         getElement(gname: string): CseElement | undefined;
       };
     };
@@ -33,10 +27,7 @@ interface CseApi {
 }
 declare global {
   interface Window {
-    __gcse?: {
-      parsetags: "explicit" | "onload";
-      initializationCallback?: () => void;
-    };
+    __gcse?: { parsetags: 'explicit' | 'onload'; initializationCallback?: () => void };
     google?: CseApi;
   }
 }
@@ -51,25 +42,22 @@ const ANSWER_MS = 10_000;
 export function loadGoogleElement(cx = GOOGLE_CSE_ID): Promise<CseApi> {
   if (window.google?.search?.cse) return Promise.resolve(window.google);
   loading ??= new Promise<CseApi>((resolve, reject) => {
-    window.__gcse = {
-      parsetags: "explicit",
-      initializationCallback: () => resolve(window.google!),
-    };
-    const script = document.createElement("script");
+    window.__gcse = { parsetags: 'explicit', initializationCallback: () => resolve(window.google!) };
+    const script = document.createElement('script');
     script.async = true;
     script.src = `https://cse.google.com/cse.js?cx=${encodeURIComponent(cx)}`;
     script.onerror = () => {
       loading = null;
       script.remove();
-      reject(new Error("Google search could not be reached."));
+      reject(new Error('Google search could not be reached.'));
     };
     document.head.append(script);
   });
   return loading;
 }
 
-const TITLE_LINK = "a.gs-title";
-const RESULT = ".gsc-webResult.gsc-result, .gsc-imageResult";
+const TITLE_LINK = 'a.gs-title';
+const RESULT = '.gsc-webResult.gsc-result, .gsc-imageResult';
 
 /** Leaves out results that lead to AI chat products, and says how many went. */
 export function hideAiResults(root: HTMLElement): number {
@@ -85,18 +73,13 @@ export function hideAiResults(root: HTMLElement): number {
 }
 
 /** What Google did with a search: drew results, found nothing, or did not answer. */
-export type Outcome = "results" | "empty" | "failed";
+export type Outcome = 'results' | 'empty' | 'failed';
 
 /** Reads what Google drew into `root`, or null while it is still working. */
 export function readOutcome(root: HTMLElement): Outcome | null {
-  if (
-    root.querySelector(
-      ".gsc-webResult.gsc-result .gs-title a, .gsc-imageResult a",
-    )
-  )
-    return "results";
-  if (root.querySelector(".gs-no-results-result")) return "empty";
-  if (root.querySelector(".gs-error-result")) return "failed";
+  if (root.querySelector('.gsc-webResult.gsc-result .gs-title a, .gsc-imageResult a')) return 'results';
+  if (root.querySelector('.gs-no-results-result')) return 'empty';
+  if (root.querySelector('.gs-error-result')) return 'failed';
   return null;
 }
 
@@ -112,14 +95,7 @@ interface Props {
 }
 
 /** One search, shown with Google's Programmable Search Element. */
-export function GoogleElementResults({
-  q,
-  kind,
-  safe,
-  onHidden,
-  onError,
-  onOutcome,
-}: Props) {
+export function GoogleElementResults({ q, kind, safe, onHidden, onError, onOutcome }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const report = useRef(onHidden);
   report.current = onHidden;
@@ -143,38 +119,35 @@ export function GoogleElementResults({
       if (outcome) settle(outcome);
     });
     observer.observe(root, { childList: true, subtree: true });
-    const timer = window.setTimeout(
-      () => settle(readOutcome(root) ?? "failed"),
-      ANSWER_MS,
-    );
+    const timer = window.setTimeout(() => settle(readOutcome(root) ?? 'failed'), ANSWER_MS);
     const gname = `browse-google-${++rendered}`;
     loadGoogleElement().then(
       (google) => {
         if (!live) return;
         root.replaceChildren();
-        const div = document.createElement("div");
+        const div = document.createElement('div');
         div.id = gname;
         root.append(div);
         try {
           google.search.cse.element.render({
             div: gname,
-            tag: "searchresults-only",
+            tag: 'searchresults-only',
             gname,
             attributes: {
-              linkTarget: "_self",
+              linkTarget: '_self',
               overlayResults: false,
               enableHistory: false,
               enableOrderBy: false,
-              enableImageSearch: kind === "images",
-              defaultToImageSearch: kind === "images",
-              disableWebSearch: kind === "images",
-              safeSearch: safe ? "active" : "off",
-              imageSearchLayout: "popup",
+              enableImageSearch: kind === 'images',
+              defaultToImageSearch: kind === 'images',
+              disableWebSearch: kind === 'images',
+              safeSearch: safe ? 'active' : 'off',
+              imageSearchLayout: 'popup',
             },
           });
           google.search.cse.element.getElement(gname)?.execute(q);
         } catch {
-          settle("failed");
+          settle('failed');
         }
       },
       (e: Error) => {
@@ -189,10 +162,5 @@ export function GoogleElementResults({
     };
   }, [q, kind, safe]);
 
-  return (
-    <div
-      ref={box}
-      className={`browse-google-element browse-google-element--${kind}`}
-    />
-  );
+  return <div ref={box} className={`browse-google-element browse-google-element--${kind}`} />;
 }

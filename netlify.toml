@@ -15,10 +15,13 @@
   status = 200
 
 # Searches stay private: no address of the results page goes to the sites people open.
+# Google's search element turns away requests that carry no referrer and shows "no results", so
+# Browse sends its origin (elumbrowse.netlify.app), never the page or the search: a site opened from
+# a result learns at most that it came from Browse.
 [[headers]]
   for = "/*"
   [headers.values]
-    Referrer-Policy = "no-referrer"
+    Referrer-Policy = "strict-origin"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Permissions-Policy = "interest-cohort=()"
