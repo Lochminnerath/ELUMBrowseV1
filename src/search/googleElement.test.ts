@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { hideAiResults } from './googleElement';
+import { hideAiResults, readOutcome } from './googleElement';
 
 function result(href: string) {
   return `<div class="gsc-webResult gsc-result"><div class="gs-title"><a class="gs-title" href="${href}">x</a></div></div>`;
@@ -24,5 +24,16 @@ describe('hideAiResults', () => {
     root.innerHTML = result('https://aistudio.google.com/');
     expect(hideAiResults(root)).toBe(1);
     expect(hideAiResults(root)).toBe(1);
+  });
+});
+
+describe('readOutcome', () => {
+  const root = (html: string) => Object.assign(document.createElement('div'), { innerHTML: html });
+
+  it('tells results from nothing found and from errors, and waits otherwise', () => {
+    expect(readOutcome(root(result('https://en.wikipedia.org/wiki/Otter')))).toBe('results');
+    expect(readOutcome(root('<div class="gs-no-results-result">No results</div>'))).toBe('empty');
+    expect(readOutcome(root('<div class="gs-error-result">Error</div>'))).toBe('failed');
+    expect(readOutcome(root('<div class="gsc-control-cse"></div>'))).toBeNull();
   });
 });

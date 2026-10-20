@@ -6,7 +6,7 @@ import { Loader } from '../components/Loader';
 import { BrowseHeader } from './BrowseHeader';
 import { googleWebUrl, siteHue } from './google';
 import { rememberSearch, safeSearch } from './local';
-import { GOOGLE_CSE_ID, GoogleElementResults } from './googleElement';
+import { GOOGLE_CSE_ID, GoogleElementResults, type Outcome } from './googleElement';
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
@@ -16,7 +16,7 @@ type State =
   | { status: 'error'; message: string }
   | { status: 'done'; page: Page; results: SearchResult[] }
   /** Google's Programmable Search Element draws the results itself (googleElement.tsx). */
-  | { status: 'element'; hidden: number };
+  | { status: 'element'; hidden: number; outcome: Outcome | null };
 
 /** /search?q=…&kind=images: Google's results, shown the ELUM way, without AI. */
 export function SearchPage() {
@@ -39,7 +39,7 @@ export function SearchPage() {
     rememberSearch(q);
     const id = ++run.current;
     if (GOOGLE_CSE_ID) {
-      setState({ status: 'element', hidden: 0 });
+      setState({ status: 'element', hidden: 0, outcome: null });
       return;
     }
     setState({ status: 'loading' });
@@ -96,13 +96,18 @@ export function SearchPage() {
 
         {state.status === 'element' && (
           <>
-            <GoogleElementResults
-              q={q}
-              kind={kind}
-              safe={safeSearch()}
-              onHidden={(hidden) => setState((s) => (s.status === 'element' && s.hidden !== hidden ? { status: 'element', hidden } : s))}
-              onError={(message) => setState({ status: 'error', message })}
-            />
+            {/* Google draws into this; when it has nothing to show, Browse says so in its own words below. */}
+            <div hidden={state.outcome === 'empty' || state.outcome === 'failed'}>
+              <GoogleElementResults
+                q={q}
+                kind={kind}
+                safe={safeSearch()}
+                onHidden={(hidden) => setState((s) => (s.status === 'element' && s.hidden !== hidden ? { ...s, hidden } : s))}
+                onError={(message) => setState({ status: 'error', message })}
+                onOutcome={(outcome) => setState((s) => (s.status === 'element' ? { ...s, outcome } : s))}
+              />
+            </div>
+            {(state.outcome === 'empty' || state.outcome === 'failed') && <NoGoogleResults q={q} kind={kind} failed={state.outcome === 'failed'} />}
             <HiddenNote count={state.hidden} />
           </>
         )}
@@ -209,6 +214,28 @@ function ImageGrid({ results }: { results: SearchResult[] }) {
 }
 
 /** Before the Google key is set: say so plainly and offer Google's web-only results page. */
+/** Google answered inside Browse with nothing, or not at all: the same search on Google is a click away. */
+function NoGoogleResults({ q, kind, failed }: { q: string; kind: SearchKind; failed: boolean }) {
+  return (
+    <div className="browse-note browse-note--setup" role="status">
+      <span className="browse-note__discs" aria-hidden="true">
+        <span />
+        <span />
+      </span>
+      <h2>{failed ? 'Google did not answer inside Browse' : `Google found nothing for “${q}” here`}</h2>
+      <p>
+        {failed
+          ? 'It may be busy, or something on this device is blocking it.'
+          : 'Browse searches through your ELUM search engine, which may only cover some sites.'}{' '}
+        Open the same search on Google, with web results only: no AI Overview and no AI Mode.
+      </p>
+      <a className="elum-btn elum-btn--primary" href={googleWebUrl(q, kind)} rel="noreferrer">
+        Search “{q}” on Google
+      </a>
+    </div>
+  );
+}
+
 function NotConnected({ q, kind }: { q: string; kind: SearchKind }) {
   return (
     <div className="browse-note browse-note--setup">
