@@ -150,7 +150,7 @@ export function DocsHome() {
         <div className="docs-hero__text">
           <p className="docs-eyebrow">ELUM Docs</p>
           <h1>Start here</h1>
-          <p className="docs-lede">Everything you need to get going with ELUM: one account, six apps, and how they work together.</p>
+          <p className="docs-lede">Everything you need to get started with ELUM: one account, six apps, and how they all work together.</p>
         </div>
       </section>
 
@@ -186,10 +186,10 @@ export function DocsHome() {
       <section aria-labelledby="docs-common">
         <div className="docs-h2-row">
           <h2 id="docs-common" className="docs-h2">
-            When something goes wrong
+            If something goes wrong
           </h2>
           <Link to="/docs/troubleshooting" className="docs-more">
-            All troubleshooting
+            See all answers
           </Link>
         </div>
         <TroubleList troubles={COMMON_TROUBLES.slice(0, 5)} />
@@ -226,7 +226,7 @@ export function ProductDoc() {
             <h1>{p.headline}</h1>
             <p className="docs-lede">{p.intro}</p>
             <p className="docs-jump">
-              <a href="#guides">Everything {p.name} does</a>
+              <a href="#guides">How to use {p.name}</a>
               <a href="#troubleshooting">Troubleshooting</a>
             </p>
             <OpenApp id={p.id} className="elum-btn elum-btn--primary docs-open">
@@ -237,7 +237,7 @@ export function ProductDoc() {
 
         <section aria-labelledby="docs-steps">
           <h2 id="docs-steps" className="docs-h2">
-            Three steps
+            First steps
           </h2>
           <ol className="docs-steps">
             {p.steps.map((s, i) => (
@@ -278,7 +278,7 @@ export function ProductDoc() {
 
         <section aria-labelledby="docs-guides" id="guides">
           <h2 id="docs-guides" className="docs-h2">
-            Everything {p.name} does
+            How to use {p.name}
           </h2>
           <div className="docs-guides">
             {GUIDES[p.id].map((g) => (
@@ -299,7 +299,7 @@ export function ProductDoc() {
             Troubleshooting {p.name}
           </h2>
           <p className="docs-trouble-intro muted">
-            Find the problem, or the message on your screen. For problems in every app, such as signing in, see{' '}
+            Look for your problem below, or for the message on your screen. For problems that can happen in any app, like signing in, see{' '}
             <Link to="/docs/troubleshooting">Troubleshooting</Link>.
           </p>
           <TroubleList troubles={TROUBLES[p.id]} />
@@ -344,15 +344,15 @@ function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductI
               <div className="docs-trouble__body">
                 {t.says && (
                   <p className="docs-trouble__says">
-                    <span className="docs-trouble__label">You see</span>“{t.says}”
+                    <span className="docs-trouble__label">What you’ll see</span>“{t.says}”
                   </p>
                 )}
                 <p>
-                  <span className="docs-trouble__label">Why</span>
+                  <span className="docs-trouble__label">Why this happens</span>
                   {t.why}
                 </p>
                 <div>
-                  <span className="docs-trouble__label">What to do</span>
+                  <span className="docs-trouble__label">How to fix it</span>
                   <ol>
                     {t.fix.map((f) => (
                       <li key={f}>{f}</li>
@@ -388,7 +388,7 @@ export function TroubleshootingPage() {
         <div className="docs-hero__text">
           <p className="docs-eyebrow">ELUM Docs</p>
           <h1>Troubleshooting</h1>
-          <p className="docs-lede">Find your problem, or type the message on your screen. Each answer says why it happens and what to do.</p>
+          <p className="docs-lede">Describe your problem, or type the message you’re seeing. Each answer explains why it happens and how to fix it.</p>
         </div>
       </section>
       <div className="docs-help-tools">
@@ -397,7 +397,7 @@ export function TroubleshootingPage() {
           type="search"
           value={q}
           onChange={(e) => set({ q: e.target.value })}
-          placeholder="Describe the problem, or paste the message"
+          placeholder="What’s going wrong?"
           aria-label="Search troubleshooting"
         />
         <div className="segmented docs-help-apps" role="group" aria-label="Which app">
@@ -415,8 +415,8 @@ export function TroubleshootingPage() {
         <TroubleList troubles={found.map((x) => x.trouble)} apps={found.map((x) => x.product)} />
       ) : (
         <div className="docs-help-none">
-          <h2>No answer matches that yet</h2>
-          <p>Try fewer words, or check ELUM Status to see whether a service is down.</p>
+          <h2>We couldn’t find an answer for that</h2>
+          <p>Try fewer words, or check the Status page to see whether something is down.</p>
           <Link to="/status" className="elum-btn elum-btn--primary">
             ELUM Status
           </Link>
