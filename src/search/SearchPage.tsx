@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
-import { useGo } from '../browser/BrowserShell';
+import { useGo, useOpenPage } from '../browser/BrowserShell';
 import { api, errorMessage, type SearchKind, type SearchPage as Page, type SearchResult } from '../api';
 import { Loader } from '../components/Loader';
 import { BrowseHeader } from './BrowseHeader';
 import { googleWebUrl, siteHue } from './google';
 import { rememberSearch, safeSearch } from './local';
-import { GOOGLE_CSE_ID, GoogleElementResults, type Outcome } from './googleElement';
+import { GOOGLE_CSE_ID, GoogleElementResults, resultTarget, type Outcome } from './googleElement';
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
@@ -24,6 +24,7 @@ export function SearchPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const go = useGo();
+  const openPage = useOpenPage();
   const q = (params.get('q') ?? '').trim();
   const kind: SearchKind = params.get('kind') === 'images' ? 'images' : 'web';
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -78,7 +79,21 @@ export function SearchPage() {
         {tab('images', 'Images')}
       </nav>
 
-      <main className="browse-results" aria-busy={state.status === 'loading'}>
+      <main
+        className="browse-results"
+        aria-busy={state.status === 'loading'}
+        onClickCapture={(e) => {
+          // Results open inside Browse; Google's own pages, which refuse that, in a new window.
+          if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          const a = (e.target as Element).closest('a[href]') as HTMLAnchorElement | null;
+          const target = a && resultTarget(a);
+          if (!target) return;
+          e.preventDefault();
+          e.stopPropagation();
+          if (target.external) window.open(target.url, '_blank', 'noopener,noreferrer');
+          else openPage(target.url);
+        }}
+      >
         {state.status === 'loading' && (
           <div className="browse-results__loading">
             <Loader size={40} label="Searching" />
@@ -105,6 +120,7 @@ export function SearchPage() {
                 onHidden={(hidden) => setState((s) => (s.status === 'element' && s.hidden !== hidden ? { ...s, hidden } : s))}
                 onError={(message) => setState({ status: 'error', message })}
                 onOutcome={(outcome) => setState((s) => (s.status === 'element' ? { ...s, outcome } : s))}
+                onOpen={openPage}
               />
             </div>
             {(state.outcome === 'empty' || state.outcome === 'failed') && <NoGoogleResults q={q} kind={kind} failed={state.outcome === 'failed'} />}

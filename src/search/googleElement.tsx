@@ -83,6 +83,29 @@ export function readOutcome(root: HTMLElement): Outcome | null {
   return null;
 }
 
+const GOOGLE = /(^|\.)(google\.[a-z.]+|googleadservices\.com|doubleclick\.net)$/;
+
+/**
+ * Where a result link leads, for opening it inside Browse. Google's click-tracking address
+ * (google.com/url?q=…) is unwrapped to the page itself. Links into Google (its own search page,
+ * ads) are `external`: Google does not let other sites show it, so they open in a new window.
+ */
+export function resultTarget(a: HTMLAnchorElement): { url: string; external: boolean } | null {
+  const raw = a.getAttribute('data-ctorig') || a.getAttribute('href') || '';
+  let url: URL;
+  try {
+    url = new URL(raw, location.href);
+  } catch {
+    return null;
+  }
+  if (GOOGLE.test(url.hostname) && url.pathname === '/url') {
+    const target = url.searchParams.get('q') || url.searchParams.get('url');
+    if (target && /^https?:\/\//i.test(target)) return resultTarget(Object.assign(document.createElement('a'), { href: target }));
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+  return { url: url.toString(), external: GOOGLE.test(url.hostname) };
+}
+
 interface Props {
   q: string;
   kind: SearchKind;
@@ -92,10 +115,12 @@ interface Props {
   onError: (message: string) => void;
   /** Called once Google has answered, or failed to. */
   onOutcome: (outcome: Outcome) => void;
+  /** Opens a result's page inside Browse. */
+  onOpen: (url: string) => void;
 }
 
 /** One search, shown with Google's Programmable Search Element. */
-export function GoogleElementResults({ q, kind, safe, onHidden, onError, onOutcome }: Props) {
+export function GoogleElementResults({ q, kind, safe, onHidden, onError, onOutcome, onOpen }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const report = useRef(onHidden);
   report.current = onHidden;
@@ -103,6 +128,27 @@ export function GoogleElementResults({ q, kind, safe, onHidden, onError, onOutco
   fail.current = onError;
   const answered = useRef(onOutcome);
   answered.current = onOutcome;
+  const open = useRef(onOpen);
+  open.current = onOpen;
+
+  // Clicking a result opens it in Browse, not in place of Browse. Caught on the way down, before
+  // Google's own link handling; a click with a modifier key (new tab) is left to the browser.
+  useEffect(() => {
+    const root = box.current!;
+    const onClick = (e: MouseEvent) => {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element).closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!a || !root.contains(a)) return;
+      const target = resultTarget(a);
+      if (!target) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (target.external) window.open(target.url, '_blank', 'noopener,noreferrer');
+      else open.current(target.url);
+    };
+    root.addEventListener('click', onClick, true);
+    return () => root.removeEventListener('click', onClick, true);
+  }, []);
 
   useEffect(() => {
     let live = true;

@@ -153,6 +153,7 @@ export const PRODUCTS: Words[] = [
       { symbol: 'visible', title: 'Just the web', text: 'Results from Google, without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches, your device', text: 'Recent searches stay on this device only. Forget one, or all of them, at any time.' },
       { symbol: 'open', title: 'ELUM apps, right here', text: 'Type write, type, make or account, or an address such as make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
+      { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and typed addresses open in a Browse tab. Sites that refuse to be shown inside other sites open as a clean reading view, with the original a click away.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
     ],
     tips: [

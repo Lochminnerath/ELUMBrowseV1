@@ -1,6 +1,6 @@
 import type { BrowseApi } from '../client';
 import { ApiError } from '../errors';
-import type { ElumStatus, SearchPage, Session, SignInInput, SignUpInput, User } from '../types';
+import type { ElumStatus, PageInfo, SearchPage, Session, SignInInput, SignUpInput, User } from '../types';
 import { checkSignUp, cleanName } from '../validation';
 import { hashPassword, verifyPassword, type PasswordHash } from './passwords';
 
@@ -117,6 +117,10 @@ export class LocalApi implements BrowseApi {
   /** Unconnected (development): no server to ask Google, so Browse offers Google's own results. */
   async search(): Promise<SearchPage> {
     return { configured: false, results: [], total: 0, next: null, suggestion: null, hidden: 0 };
+  }
+
+  async page(): Promise<PageInfo | null> {
+    return null;
   }
 
   async status(): Promise<ElumStatus | null> {

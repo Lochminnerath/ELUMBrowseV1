@@ -75,7 +75,29 @@ export function resolveElum(query: string): string | null {
   return NAMES[name] ?? null;
 }
 
-export type PlaceKind = 'home' | 'search' | 'app' | 'docs' | 'status' | 'page';
+/** A web page opened inside Browse: /web?url=… */
+export function webPath(url: string): string {
+  return `/web?url=${encodeURIComponent(url)}`;
+}
+
+/**
+ * The address a search means, when it is one: "wikipedia.org", "en.wikipedia.org/wiki/Fox" or
+ * "https://example.com". Words with spaces, or without a dot and a plausible ending, are searches.
+ */
+export function asWebAddress(query: string): string | null {
+  const q = query.trim();
+  if (!q || /\s/.test(q) || q.length > 2000) return null;
+  const withScheme = /^https?:\/\//i.test(q) ? q : /^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}(:\d+)?([/?#].*)?$/i.test(q) ? `https://${q}` : null;
+  if (!withScheme) return null;
+  try {
+    const url = new URL(withScheme);
+    return url.hostname.includes('.') ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'page';
 
 export interface Place {
   kind: PlaceKind;
@@ -83,6 +105,8 @@ export interface Place {
   app?: AppInfo;
   /** For app tabs: the path inside the app. */
   appPath?: string;
+  /** For web tabs: the page. */
+  webUrl?: string;
 }
 
 /** What a Browse path shows, for its tab. */
@@ -93,6 +117,16 @@ export function describe(path: string): Place {
     const app = ELUM_APPS[parts[1]];
     const rest = '/' + parts.slice(2).join('/');
     return { kind: 'app', title: app.name, app, appPath: (rest === '/' ? '' : rest) + url.search };
+  }
+  if (url.pathname === '/web') {
+    const target = url.searchParams.get('url') ?? '';
+    let host = 'Web page';
+    try {
+      host = new URL(target).hostname.replace(/^www\./, '');
+    } catch {
+      // Not an address: the tab says so.
+    }
+    return { kind: 'web', title: host, webUrl: target };
   }
   if (url.pathname === '/search') {
     const q = url.searchParams.get('q')?.trim();
@@ -111,6 +145,7 @@ export function describe(path: string): Place {
 export function coverAddress(path: string): string {
   const place = describe(path);
   if (place.kind === 'app' && place.app) return `${place.app.host}${place.appPath ?? ''}`;
+  if (place.kind === 'web') return (place.webUrl ?? '').replace(/^https?:\/\//, '');
   const url = new URL(path, 'https://browse.invalid');
   return `browse.elum.services${url.pathname === '/' ? '' : url.pathname}${url.search}`;
 }

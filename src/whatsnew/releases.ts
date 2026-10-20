@@ -29,6 +29,16 @@ export const APP_NAME = 'Browse';
 
 export const RELEASES: Release[] = [
   {
+    id: '2026-10-20-pages',
+    date: '20 October 2026',
+    title: 'Pages stay in Browse',
+    intro: 'Results and the addresses you type now open in Browse tabs.',
+    features: [
+      { title: 'Pages stay in Browse', text: 'A result opens in a Browse tab, never in place of Browse. Sites that refuse to be shown inside other sites open as a clean reading view, and Open in new window is always there.', art: 'devices' },
+      { title: 'Type an address', text: 'Type wikipedia.org, or any web address, into the search box and it opens in the tab.', art: 'spark' },
+    ],
+  },
+  {
     id: '2026-10-20',
     date: '20 October 2026',
     title: 'Browse, with tabs',
