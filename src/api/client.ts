@@ -1,0 +1,34 @@
+import type { AppNotification, SearchInput, SearchPage, Session, SignInInput, SignUpInput, User } from './types';
+
+/** The contract every Browse backend fulfils: Supabase in production, the browser when unconnected. */
+export interface BrowseApi {
+  /** `remote` for the ELUM platform on Supabase, `local` for the browser only (development). */
+  readonly mode: 'remote' | 'local';
+
+  // Accounts: the same ELUM account as every other app. Browse works signed out too.
+  restoreSession(): Promise<Session | null>;
+  signUp(input: SignUpInput): Promise<Session>;
+  signIn(input: SignInInput): Promise<Session>;
+  signOut(): Promise<void>;
+  updateProfile(input: { name: string }): Promise<User>;
+  /** Called when the session ends somewhere else. */
+  onUnauthorized(handler: () => void): () => void;
+
+  resendConfirmation?(email: string): Promise<void>;
+  takeLinkProblem?(): string | null;
+  typeDomain?(): Promise<string>;
+  handleAvailable?(handle: string): Promise<boolean>;
+  handoff?(to: string, next: string): Promise<string>;
+  completeHandoff?(tokenHash: string): Promise<Session>;
+
+  readonly notifications?: NotificationsApi;
+
+  /** Web or image results from Google, with AI products left out. */
+  search(input: SearchInput): Promise<SearchPage>;
+}
+
+export interface NotificationsApi {
+  list(options?: { before?: string; unreadOnly?: boolean; limit?: number }): Promise<AppNotification[]>;
+  markRead(ids?: string[]): Promise<void>;
+  subscribe(onNew: (n: AppNotification) => void): () => void;
+}
