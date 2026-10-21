@@ -6,8 +6,11 @@ import { Popover } from '../components/Popover';
 import * as Icons from '../components/icons/ElumIcons';
 import type { IconProps } from '../components/icons/ElumIcons';
 import { useFavicon } from '../lib/favicon';
+import { api } from '../api';
+import { useAuth } from '../auth/AuthProvider';
+import { Loader } from '../components/Loader';
 import { openElsewhere } from '../lib/elum';
-import { coverAddress, describe, frameUrl, resolveElum } from './places';
+import { asWebAddress, coverAddress, describe, frameUrl, resolveElum, webPath } from './places';
 import {
   activate,
   closeGroup,
@@ -31,6 +34,7 @@ import {
   type GroupSymbol,
   type Tab,
 } from './tabs';
+import { WebView } from './WebView';
 import './browser.css';
 
 export const SYMBOL_ICONS: Record<GroupSymbol, ComponentType<IconProps>> = {
@@ -51,16 +55,27 @@ export const SYMBOL_ICONS: Record<GroupSymbol, ComponentType<IconProps>> = {
 /** Sign-in pages pass through a tab without becoming its page. */
 const passing = (path: string) => path.startsWith('/auth/');
 
-/** Searches the web, or opens the ELUM place a search names, in the open tab. */
+/**
+ * Goes where a search box means, in the open tab: the ELUM place it names, the web address typed
+ * into it, or a web search. `web` searches the web whatever the words are.
+ */
 export function useGo() {
   const navigate = useNavigate();
   return (query: string, opts: { kind?: 'images'; web?: boolean } = {}) => {
     const { kind, web } = opts;
     const q = query.trim();
     if (!q) return;
-    const place = kind || web ? null : resolveElum(q);
-    navigate(place ?? `/search?q=${encodeURIComponent(q)}${kind ? `&kind=${kind}` : ''}`);
+    const plain = !kind && !web;
+    const place = plain ? resolveElum(q) : null;
+    const address = plain && !place ? asWebAddress(q) : null;
+    navigate(place ?? (address ? webPath(address) : `/search?q=${encodeURIComponent(q)}${kind ? `&kind=${kind}` : ''}`));
   };
+}
+
+/** Opens a web page in the open tab, keeping it inside Browse. */
+export function useOpenPage() {
+  const navigate = useNavigate();
+  return (url: string) => navigate(webPath(url));
 }
 
 /**
@@ -98,22 +113,24 @@ export function BrowserShell({ children }: { children: ReactNode }) {
   }, [active.id, active.path, here, navigate]);
 
   const place = describe(active.path);
-  const onApp = place.kind === 'app';
+  // ELUM apps and web pages show in the shell's surfaces; Browse's own pages through the router.
+  const onSurface = place.kind === 'app' || place.kind === 'web';
   // The browser's own tab shows the app open in Browse.
-  useFavicon(onApp && place.app ? `/brand/apps/${place.app.id}.svg` : null);
+  useFavicon(place.kind === 'app' && place.app ? `/brand/apps/${place.app.id}.svg` : null);
   useEffect(() => {
-    if (onApp) document.title = `ELUM ${place.title} · Browse`;
-  }, [onApp, place.title]);
+    if (place.kind === 'app') document.title = `ELUM ${place.title} · Browse`;
+    else if (place.kind === 'web') document.title = `${place.title} · Browse`;
+  }, [place.kind, place.title]);
 
   return (
     <div className="browser">
       <TabStrip />
       <div className="browser__body">
-        {onApp && <AppToolbar tab={active} onReload={() => setReloads((r) => ({ ...r, [active.id]: (r[active.id] ?? 0) + 1 }))} />}
-        <div className="browser__page" hidden={onApp}>
+        {onSurface && <AddressBar tab={active} onReload={() => setReloads((r) => ({ ...r, [active.id]: (r[active.id] ?? 0) + 1 }))} />}
+        <div className="browser__page" hidden={onSurface}>
           {children}
         </div>
-        <AppFrames activeId={active.id} onApp={onApp} reloads={reloads} />
+        <Surfaces activeId={active.id} onSurface={onSurface} reloads={reloads} />
       </div>
     </div>
   );
@@ -121,38 +138,77 @@ export function BrowserShell({ children }: { children: ReactNode }) {
 
 // ---------------------------------------------------------------- the frames
 
-/** Every app tab opened so far keeps its frame; only the open one shows. */
-function AppFrames({ activeId, onApp, reloads }: { activeId: string; onApp: boolean; reloads: Record<string, number> }) {
+/** Every app or web tab opened so far stays loaded; only the open one shows. */
+function Surfaces({ activeId, onSurface, reloads }: { activeId: string; onSurface: boolean; reloads: Record<string, number> }) {
   const { tabs } = useTabs();
+  const openPage = useOpenPage();
   const [opened, setOpened] = useState<Set<string>>(() => new Set());
   useEffect(() => {
-    if (onApp && !opened.has(activeId)) setOpened((o) => new Set(o).add(activeId));
-  }, [onApp, activeId, opened]);
+    if (onSurface && !opened.has(activeId)) setOpened((o) => new Set(o).add(activeId));
+  }, [onSurface, activeId, opened]);
 
   return (
-    <div className="browser__frames" hidden={!onApp}>
+    <div className="browser__frames" hidden={!onSurface}>
       {tabs.map((t) => {
-        const src = frameUrl(t.path);
-        if (!src || !(opened.has(t.id) || (onApp && t.id === activeId))) return null;
+        if (!(opened.has(t.id) || (onSurface && t.id === activeId))) return null;
         const place = describe(t.path);
-        return (
-          <iframe
-            key={`${t.id}:${reloads[t.id] ?? 0}`}
-            className="browser__frame"
-            src={src}
-            title={`ELUM ${place.title}`}
-            hidden={t.id !== activeId}
-            allow="clipboard-read; clipboard-write; fullscreen"
-            allowFullScreen
-          />
-        );
+        if (place.kind === 'web' && place.webUrl) {
+          return (
+            <div key={t.id} className="browser__frame" hidden={t.id !== activeId}>
+              <WebView url={place.webUrl} nonce={reloads[t.id] ?? 0} onNavigate={openPage} />
+            </div>
+          );
+        }
+        const src = frameUrl(t.path);
+        if (!src) return null;
+        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={`ELUM ${place.title}`} hidden={t.id !== activeId} />;
       })}
     </div>
   );
 }
 
-/** Over an app: its elum.services address, reload, and its own window. */
-function AppToolbar({ tab, onReload }: { tab: Tab; onReload(): void }) {
+/** App sites Browse has already signed in to during this visit. */
+const signedFrames = new Set<string>();
+
+/**
+ * An ELUM app in a tab. Signed in to Browse, the app arrives signed in too: the first time each app
+ * opens in this visit, Browse asks ELUM Account for a one-time sign-in and loads the app through
+ * it. The app keeps that sign-in for the rest of the visit, so later tabs load it directly.
+ */
+function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: boolean }) {
+  const { status } = useAuth();
+  const [url, setUrl] = useState<string | null>(null);
+  useEffect(() => {
+    if (status === 'loading') return;
+    const target = new URL(src);
+    if (status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
+      setUrl(src);
+      return;
+    }
+    let live = true;
+    api.handoff(`${target.origin}/auth/handoff`, target.pathname + target.search).then(
+      (signed) => {
+        signedFrames.add(target.origin);
+        if (live) setUrl(signed);
+      },
+      () => live && setUrl(src),
+    );
+    return () => {
+      live = false;
+    };
+  }, [src, status]);
+  if (!url) {
+    return (
+      <div className="browser__frame browser__frame--waiting" hidden={hidden}>
+        <Loader size={40} label="Signing you in" />
+      </div>
+    );
+  }
+  return <iframe className="browser__frame" src={url} title={title} hidden={hidden} allow="clipboard-read; clipboard-write; fullscreen" allowFullScreen />;
+}
+
+/** Over an app or a web page: its address, reload, and a window of its own. */
+function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
   const go = useGo();
   const place = describe(tab.path);
   const address = coverAddress(tab.path);
@@ -162,9 +218,15 @@ function AppToolbar({ tab, onReload }: { tab: Tab; onReload(): void }) {
     if (editing?.trim()) go(editing);
     setEditing(null);
   };
-  const real = frameUrl(tab.path);
+  const real = place.kind === 'web' ? place.webUrl : frameUrl(tab.path);
+  const openWindow = () => {
+    if (!real) return;
+    // ELUM apps open signed in; other sites open as they are.
+    if (place.kind === 'app') void openElsewhere(real, true);
+    else window.open(real, '_blank', 'noopener,noreferrer');
+  };
   return (
-    <div className="app-bar" style={{ '--app': place.app?.color } as CSSProperties}>
+    <div className="app-bar" style={place.app ? ({ '--app': place.app.color } as CSSProperties) : undefined}>
       <button type="button" className="icon-btn app-bar__btn" aria-label="Reload" data-tip="Reload" onClick={onReload}>
         <RotateCw size={17} strokeWidth={1.75} />
       </button>
@@ -187,13 +249,13 @@ function AppToolbar({ tab, onReload }: { tab: Tab; onReload(): void }) {
             if (e.key === 'Escape') (e.target as HTMLInputElement).blur();
           }}
         />
-        <span className="app-bar__badge">ELUM {place.title}</span>
+        {place.kind === 'app' && <span className="app-bar__badge">ELUM {place.title}</span>}
       </form>
       <button
         type="button"
         className="elum-btn elum-btn--secondary elum-btn--sm app-bar__window"
-        onClick={() => real && void openElsewhere(real, true)}
-        data-tip="Open in a window of its own, signed in"
+        onClick={openWindow}
+        data-tip={place.kind === 'app' ? 'Open in a window of its own, signed in' : 'Open the site itself in a new window'}
       >
         <Icons.OpenIcon size={16} />
         <span>Open in new window</span>

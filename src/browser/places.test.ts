@@ -1,10 +1,12 @@
 import { describe as group, expect, it } from 'vitest';
-import { coverAddress, describe, frameUrl, resolveElum } from './places';
+import { asWebAddress, coverAddress, describe, frameUrl, resolveElum, webPath } from './places';
 
 group('resolveElum', () => {
   it('opens ELUM apps named in a search', () => {
     expect(resolveElum('write')).toBe('/app/write');
     expect(resolveElum('  Make ')).toBe('/app/make');
+    expect(resolveElum('elum store')).toBe('/app/store');
+    expect(resolveElum('store.elum.services/apps/make')).toBe('/app/store/apps/make');
     expect(resolveElum('elum type')).toBe('/app/type');
     expect(resolveElum('ELUMAccount')).toBe('/app/account');
     expect(resolveElum('elum accounts')).toBe('/app/account');
@@ -48,5 +50,23 @@ group('describe, cover and frame', () => {
     expect(coverAddress('/search?q=fox')).toBe('browse.elum.services/search?q=fox');
     expect(frameUrl('/app/write/d/123')).toBe('https://elumwrite.netlify.app/d/123');
     expect(frameUrl('/search?q=fox')).toBeNull();
+  });
+});
+
+group('web pages', () => {
+  it('reads typed addresses, and leaves searches alone', () => {
+    expect(asWebAddress('wikipedia.org')).toBe('https://wikipedia.org/');
+    expect(asWebAddress('en.wikipedia.org/wiki/Red_fox')).toBe('https://en.wikipedia.org/wiki/Red_fox');
+    expect(asWebAddress('http://example.com/a?b=1')).toBe('http://example.com/a?b=1');
+    expect(asWebAddress('red fox')).toBeNull();
+    expect(asWebAddress('node.js')).toBe('https://node.js/');
+    expect(asWebAddress('hello')).toBeNull();
+    expect(asWebAddress('javascript:alert(1)')).toBeNull();
+  });
+
+  it('shows a web tab under its site and its address', () => {
+    const path = webPath('https://en.wikipedia.org/wiki/Red_fox');
+    expect(describe(path)).toMatchObject({ kind: 'web', title: 'en.wikipedia.org', webUrl: 'https://en.wikipedia.org/wiki/Red_fox' });
+    expect(coverAddress(path)).toBe('en.wikipedia.org/wiki/Red_fox');
   });
 });

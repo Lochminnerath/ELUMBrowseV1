@@ -82,6 +82,18 @@ export interface SearchPage {
   hidden: number;
 }
 
+/** How Browse shows a web page (the browse-page function, supabase/functions/browse-page). */
+export interface PageInfo {
+  /** Where the address led, after redirects. */
+  url: string;
+  status: number;
+  /** The site lets Browse show it as itself, in a frame. */
+  framable: boolean;
+  title: string | null;
+  /** For sites that refuse frames: the article, as HTML to clean before showing. */
+  reader: { title: string; byline: string | null; siteName: string | null; excerpt: string | null; lang: string | null; html: string } | null;
+}
+
 /** What /status shows: the elum-status function's answer (supabase/functions/_shared/status.ts). */
 export type Health = 'up' | 'slow' | 'down';
 export interface StatusCheck {

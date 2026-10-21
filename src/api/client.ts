@@ -1,4 +1,4 @@
-import type { AppNotification, ElumStatus, SearchInput, SearchPage, Session, SignInInput, SignUpInput, User } from './types';
+import type { AppNotification, ElumStatus, PageInfo, SearchInput, SearchPage, Session, SignInInput, SignUpInput, User } from './types';
 
 /** The contract every Browse backend fulfils: Supabase in production, the browser when unconnected. */
 export interface BrowseApi {
@@ -25,6 +25,8 @@ export interface BrowseApi {
 
   /** Web or image results from Google, with AI products left out. */
   search(input: SearchInput): Promise<SearchPage>;
+  /** How to show a web page inside Browse, or null without the ELUM platform (then: try a frame). */
+  page(url: string): Promise<PageInfo | null>;
   /** How every ELUM service is doing, or null without the ELUM platform. */
   status(): Promise<ElumStatus | null>;
 }
