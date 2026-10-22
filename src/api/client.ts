@@ -11,6 +11,9 @@ export interface BrowseApi {
   signIn(input: SignInInput): Promise<Session>;
   signOut(): Promise<void>;
   updateProfile(input: { name: string }): Promise<User>;
+  /** The last What's new release this account saw, kept on the account, or null if never recorded. */
+  whatsNewSeen(): Promise<string | null>;
+  setWhatsNewSeen(id: string): Promise<void>;
   /** Called when the session ends somewhere else. */
   onUnauthorized(handler: () => void): () => void;
 

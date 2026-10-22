@@ -264,6 +264,17 @@ export class SupabaseApi implements BrowseApi {
     return { ...toUser(data), pictureUrl: await this.pictureUrl(data.id) };
   }
 
+  async whatsNewSeen(): Promise<string | null> {
+    const { data } = await this.sb.auth.getUser();
+    const seen = data.user?.user_metadata?.whatsnew_browse;
+    return typeof seen === 'string' ? seen : null;
+  }
+
+  async setWhatsNewSeen(id: string): Promise<void> {
+    const { error } = await this.sb.auth.updateUser({ data: { whatsnew_browse: id } });
+    if (error) throw toApiError(error);
+  }
+
   private async me(): Promise<string> {
     const { data } = await this.sb.auth.getSession();
     const id = data.session?.user.id;

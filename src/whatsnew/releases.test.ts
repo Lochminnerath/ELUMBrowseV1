@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { RELEASES, tourSteps, unseenReleases, type Release } from './releases';
+import { planWhatsNew, RELEASES, tourSteps, unseenReleases, type Release } from './releases';
 
 const r = (id: string): Release => ({ id, date: id, title: id, intro: 'i', features: [{ title: 't', text: 'x', art: 'spark' }] });
 const list = [r('c'), r('b'), r('a')];
 
 describe("what's new", () => {
-  it('shows only the latest release to someone new', () => {
-    expect(unseenReleases(list, null).map((x) => x.id)).toEqual(['c']);
+  it('shows nothing to someone new', () => {
+    expect(unseenReleases(list, null)).toEqual([]);
   });
 
   it('shows every release since the last one seen', () => {
@@ -17,8 +17,36 @@ describe("what's new", () => {
     expect(unseenReleases(list, 'c')).toEqual([]);
   });
 
-  it('shows the latest when the last one seen no longer exists', () => {
-    expect(unseenReleases(list, 'gone').map((x) => x.id)).toEqual(['c']);
+  it('shows nothing when the last one seen no longer exists', () => {
+    expect(unseenReleases(list, 'gone')).toEqual([]);
+  });
+
+  describe('planWhatsNew', () => {
+    it('records the latest quietly when nothing was ever recorded', () => {
+      expect(planWhatsNew(list, null, null)).toEqual({ show: [], record: 'c' });
+    });
+
+    it('trusts the account over this device', () => {
+      expect(planWhatsNew(list, 'c', 'a')).toEqual({ show: [], record: null });
+      expect(planWhatsNew(list, 'b', 'c').show.map((x) => x.id)).toEqual(['c']);
+    });
+
+    it('shows only newer releases and records when the tour closes', () => {
+      expect(planWhatsNew(list, 'a', null)).toEqual({ show: [list[0], list[1]], record: null });
+    });
+
+    it('copies what this device saw onto the account', () => {
+      expect(planWhatsNew(list, null, 'c')).toEqual({ show: [], record: 'c' });
+      expect(planWhatsNew(list, null, 'b').show.map((x) => x.id)).toEqual(['c']);
+    });
+
+    it('records the latest when the account remembers a release that is gone', () => {
+      expect(planWhatsNew(list, 'gone', null)).toEqual({ show: [], record: 'c' });
+    });
+
+    it('does nothing without releases', () => {
+      expect(planWhatsNew([], null, null)).toEqual({ show: [], record: null });
+    });
   });
 
   it('opens each release with its title, then one step per feature', () => {

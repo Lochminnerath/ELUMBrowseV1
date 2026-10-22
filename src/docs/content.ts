@@ -5,6 +5,9 @@
 
 export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account';
 
+/** Every app with a page in the docs, including the ones still on the way. */
+export type DocsId = ProductId | 'tune';
+
 /** Which ELUM symbol a feature card shows (see components/icons/ElumIcons.tsx). */
 export type Symbol =
   | 'new'
@@ -42,7 +45,7 @@ export interface Feature {
 }
 
 export interface Product {
-  id: ProductId;
+  id: DocsId;
   name: string;
   /** The app's brand colour, and its pale wash. */
   color: string;
@@ -56,6 +59,8 @@ export interface Product {
   steps: Step[];
   features: Feature[];
   tips: string[];
+  /** Not open yet: the page says Coming soon, with no steps or features. */
+  soon?: boolean;
 }
 
 type Words = Omit<Product, 'url'>;
@@ -209,7 +214,25 @@ export const PRODUCTS: Words[] = [
       'The ring around your picture shows which ELUM apps are in your account.',
     ],
   },
+  {
+    id: 'tune',
+    name: 'Tune',
+    color: '#48bfe3',
+    mist: '#e3f5fb',
+    kind: 'Music',
+    headline: 'Tune is on the way',
+    intro: 'Tune is ELUM’s music service. It isn’t open yet, and this page will show you how to get started as soon as it is.',
+    steps: [],
+    features: [],
+    tips: ['Keep an eye on ELUM Store. Tune will show up there, with a Get button, the day it opens.'],
+    soon: true,
+  },
 ];
+
+/** An app that is open today, with guides and troubleshooting. */
+export type LiveProduct = Words & { id: ProductId };
+
+export const LIVE_PRODUCTS = PRODUCTS.filter((p): p is LiveProduct => !p.soon);
 
 /** The basics that hold across every app, for the docs home. */
 export const BASICS: Feature[] = [
