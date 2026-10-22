@@ -9,6 +9,8 @@ const LAUNCHER_APPS: LauncherApp[] = [
   { id: 'account', name: 'Account', note: 'You, everywhere', url: ACCOUNT_HOME, color: '#94c858' },
   { id: 'browse', name: 'Browse', note: 'Search', url: BROWSE_URL, color: '#9b84ee' },
   { id: 'store', name: 'Store', note: 'Apps and more', url: STORE_URL, color: '#e9b949' },
+  // Not open yet: shown as Soon, with no link.
+  { id: 'tune', name: 'Tune', note: 'Music', url: null, color: '#48bfe3' },
 ];
 
 export function ElumLauncher() {

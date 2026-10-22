@@ -324,6 +324,15 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
   const [menuOpen, setMenuOpen] = useState(false);
   const place = describe(tab.path);
   const color = group ? GROUP_COLORS[group.color] : undefined;
+  const [leaving, setLeaving] = useState(false);
+  // The tab folds away first, then closes. Without motion it closes straight away.
+  const close = () => {
+    if (leaving) return;
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (still) return updateTabs((st) => closeTabs(st, [tab.id]));
+    setLeaving(true);
+    window.setTimeout(() => updateTabs((st) => closeTabs(st, [tab.id])), 170);
+  };
 
   const items = (): MenuEntry[] => {
     const others = s.groups.filter((g) => g.id !== tab.groupId);
@@ -354,7 +363,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         : []),
       ...(tab.groupId ? [{ label: 'Remove from group', onSelect: () => updateTabs((st) => ungroupTab(st, tab.id)) }] : []),
       'separator',
-      { label: 'Close tab', icon: <Icons.DeleteIcon size={16} />, onSelect: () => updateTabs((st) => closeTabs(st, [tab.id])) },
+      { label: 'Close tab', icon: <Icons.DeleteIcon size={16} />, onSelect: close },
       ...(s.tabs.length > 1
         ? [{ label: 'Close other tabs', onSelect: () => updateTabs((st) => closeTabs(st, st.tabs.filter((t) => t.id !== tab.id).map((t) => t.id))) }]
         : []),
@@ -365,6 +374,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
     <div
       className="tab"
       data-active={active || undefined}
+      data-leaving={leaving || undefined}
       data-grouped={group ? true : undefined}
       style={color ? ({ '--group': color } as CSSProperties) : undefined}
       onContextMenu={(e) => {
@@ -372,7 +382,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         setMenuOpen(true);
       }}
       onAuxClick={(e) => {
-        if (e.button === 1) updateTabs((st) => closeTabs(st, [tab.id]));
+        if (e.button === 1) close();
       }}
     >
       <button type="button" role="tab" aria-selected={active} className="tab__main" title={place.kind === 'app' ? coverAddress(tab.path) : place.title} onClick={() => updateTabs((st) => activate(st, tab.id))}>
@@ -390,7 +400,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
           </button>
         )}
       />
-      <button type="button" className="tab__close" aria-label={`Close ${place.title}`} onClick={() => updateTabs((st) => closeTabs(st, [tab.id]))}>
+      <button type="button" className="tab__close" aria-label={`Close ${place.title}`} onClick={close}>
         <X size={14} strokeWidth={2} />
       </button>
     </div>
