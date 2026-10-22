@@ -1,5 +1,6 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router';
 import { AuthProvider } from './auth/AuthProvider';
+import { QuietSignIn } from './auth/QuietSignIn';
 import { BrowserShell } from './browser/BrowserShell';
 import { RedirectIfSignedIn } from './auth/guards';
 import { BrowseMark } from './components/Brand';
@@ -21,6 +22,7 @@ export function App() {
     <ThemeProvider>
       <ToastProvider>
         <AuthProvider>
+          <QuietSignIn />
           <BrowserRouter>
             <ErrorBoundary>
               <BrowserShell>
