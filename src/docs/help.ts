@@ -1323,12 +1323,12 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
     {
       problem: 'Contact support opens a blank page',
       why: 'The support form couldn’t load, often because of a content blocker or a slow connection.',
-      fix: ['Reload the tab, or choose Reload in the address bar.', 'Turn off any content blocker for ELUM and try again.', 'Still blank? Open inquire.elum.services/f/support in a new window.'],
+      fix: ['Reload the tab, or choose Reload in the address bar.', 'Turn off any content blocker for ELUM and try again.', 'Still blank? Open elumbrowse.netlify.app/app/inquire/f/support in a new window.'],
     },
     {
       problem: 'I want to contact support but I can’t sign in',
       why: 'You don’t need to sign in to send the support form.',
-      fix: ['Choose Contact support on the sign-in screen, or open inquire.elum.services/f/support.', 'Tell us the address you use and what you see on the screen.'],
+      fix: ['Choose Contact support on the sign-in screen, or open elumbrowse.netlify.app/app/inquire/f/support.', 'Tell us the address you use and what you see on the screen.'],
     },
     {
       problem: 'I sent the support form and heard nothing back',
@@ -1348,7 +1348,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
     {
       problem: 'elum.services shows the old Docs page',
       why: 'Your browser may be holding on to an older copy.',
-      fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at browse.elum.services/docs. The ELUM home has the products and the mission.'],
+      fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at elumbrowse.netlify.app/docs. The ELUM home has the products and the mission.'],
     },
     {
       problem: 'Where did “Start here” go?',

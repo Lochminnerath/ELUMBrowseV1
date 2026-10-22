@@ -59,7 +59,7 @@ group('describe, cover and frame', () => {
     const path = '/app/inquire/f/support?app=write&code=403&message=Sign%20in%20again';
     expect(describe(path)).toMatchObject({ kind: 'app', title: 'Support', label: 'ELUM Support' });
     expect(coverAddress(path)).toBe('inquire.elum.services/f/support');
-    expect(frameUrl(path)).toBe('https://inquire.elum.services/f/support?app=write&code=403&message=Sign%20in%20again');
+    expect(frameUrl(path)).toBe('https://eluminquire.netlify.app/f/support?app=write&code=403&message=Sign%20in%20again');
     expect(describe('/app/inquire/f/abc').title).toBe('Inquire');
     expect(describe('/app/inquire').label).toBe('ELUM Inquire');
   });

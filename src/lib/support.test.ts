@@ -3,7 +3,7 @@ import { supportPath, supportUrl } from './support';
 
 describe('the support link', () => {
   it('points at the support form in Browse, with the app', () => {
-    expect(supportUrl('write')).toBe('https://browse.elum.services/app/inquire/f/support?app=write');
+    expect(supportUrl('write')).toBe('https://elumbrowse.netlify.app/app/inquire/f/support?app=write');
     expect(supportPath('browse')).toBe('/app/inquire/f/support?app=browse');
   });
 

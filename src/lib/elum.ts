@@ -22,7 +22,7 @@ export const MAKE_URL = clean(env.VITE_ELUM_MAKE_URL) ?? 'https://elummake.netli
 export const BROWSE_URL = clean(env.VITE_ELUM_BROWSE_URL) ?? 'https://elumbrowse.netlify.app';
 export const STORE_URL = clean(env.VITE_ELUM_STORE_URL) ?? 'https://elumstore.netlify.app';
 /** Inquire, the form designer, which also serves ELUM Support (/f/support). */
-export const INQUIRE_URL = clean(env.VITE_ELUM_INQUIRE_URL) ?? 'https://inquire.elum.services';
+export const INQUIRE_URL = clean(env.VITE_ELUM_INQUIRE_URL) ?? 'https://eluminquire.netlify.app';
 /** The ELUM home, the public front door at elum.services. It has no sign-in of its own. */
 export const HOME_URL = clean(env.VITE_ELUM_HOME_URL) ?? 'https://elum.services';
 
