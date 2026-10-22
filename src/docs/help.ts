@@ -267,12 +267,103 @@ export const GUIDES: Record<ProductId, Guide[]> = {
       ],
     },
     {
+      title: 'Passkeys',
+      items: [
+        'A passkey lets you sign in with Face ID, Touch ID or your device PIN instead of a password. Nobody can trick you into giving it away.',
+        'Make one in Security: choose Create a passkey, then follow your device’s prompt. You’ll see “Passkey saved. Next time, sign in with a glance or a touch.”',
+        'After you sign in without a passkey, ELUM offers one with “Sign in faster with a passkey”. Choose Create a passkey, or Not now. It asks again the next time you sign in, until you have one.',
+        'To sign in, choose Sign in with a passkey. On many browsers your passkey also appears in the address field’s suggestions.',
+        'A passkey is saved in your iCloud Keychain, Google Password Manager or another password manager, so your other devices can use it too.',
+        'Rename a passkey so you can tell them apart, for example “Work laptop”. Remove one you don’t use any more.',
+        'Passkeys work on the ELUM Account site only: account.elum.services, and elumaccounts.netlify.app. A passkey belongs to the address it was made on.',
+        'Keep your password too. If you lose every device, your password is how you get back in to make a new passkey.',
+      ],
+    },
+    {
       title: 'Preferences, notifications and your apps',
       items: [
         'In Preferences, choose 12 or 24 hour time, the first day of your week, the app you start in, and how much motion you like.',
         'In Notifications, choose what reaches you inside the apps and outside them, for each kind of event.',
         'On your home screen, the ring around your picture lights up in the colour of each ELUM app in your account: Write, Type, Make, Browse and Store.',
         'You can delete your account at any time from the Delete page, and every ELUM app tidies up after it.',
+      ],
+    },
+  ],
+  inquire: [
+    {
+      title: 'Designing a form',
+      items: [
+        'Choose New form, give it a name, and add your first question. The name is what people see at the top of the form.',
+        'Add as many questions as you need and drag them into the order you want. Each one can be a short answer, a longer answer or a choice.',
+        'Mark a question as required if people shouldn’t be able to send the form without answering it.',
+        'Add a short note under a question when it needs explaining.',
+        'Your form saves as you work, to your ELUM account, so you can carry on from any device you sign in to.',
+      ],
+    },
+    {
+      title: 'Sharing the link',
+      items: [
+        'Every form has its own link. Choose Share, then Copy link, and send it by message, email or anywhere else.',
+        'Anyone with the link can fill the form in. They don’t need an ELUM account, and signing in is optional.',
+        'Try the link in a private window first, to see exactly what other people will see.',
+        'If you change a question after sharing, people who open the link afterwards see the new version.',
+      ],
+    },
+    {
+      title: 'Reading responses',
+      items: [
+        'Open a form and choose Responses to see the answers that have come in, newest first.',
+        'Open one response to read it in full, with each answer under its question.',
+        'Only you, and anyone you gave edit access to, can read the responses. People who fill the form in can’t see each other’s answers.',
+        'Responses stay with the form after you close it.',
+      ],
+    },
+    {
+      title: 'Conditional questions',
+      items: [
+        'A conditional question appears only when someone gives a certain answer to an earlier question.',
+        'Choose the question you want to hide, then pick the question and the answer that should make it appear.',
+        'A conditional question can only follow the question it depends on, so put the earlier question first.',
+        'A hidden question is never required. If it doesn’t appear, people can send the form without it.',
+      ],
+    },
+    {
+      title: 'Closing a form',
+      items: [
+        'Choose Close form when you have all the answers you need. Anyone who opens the link afterwards is told the form is closed.',
+        'Closing keeps every response you already have.',
+        'Open the form again from your list whenever you want to take answers again.',
+        'Delete a form only when you’re sure. Deleting it removes its responses too.',
+      ],
+    },
+  ],
+  home: [
+    {
+      title: 'The ELUM home',
+      items: [
+        'The ELUM home is at elum.services. It’s the public front door to ELUM, so you can read it without signing in.',
+        'Products shows every ELUM app with a short description and a link to open it.',
+        'Your ELUM Account is the home base. You sign in there, and the apps open already signed in.',
+        'Searching for elum.services in Browse opens the ELUM home in a Browse tab.',
+      ],
+    },
+    {
+      title: 'Contacting support',
+      items: [
+        'Choose Contact support on the ELUM home, in the header of Docs, or on any screen where something went wrong.',
+        'It opens the support form in a Browse tab called Support, at inquire.elum.services/f/support.',
+        'The form is already filled in with the app you were using, any error code, the page you were on and what the screen said. Add what you were trying to do, then send it.',
+        'You don’t need to be signed in to send it, so you can still reach us if signing in is the problem.',
+        'Your message is saved as a request for the ELUM team. There’s no ticket number yet, so keep a note of when you sent it.',
+      ],
+    },
+    {
+      title: 'Before you write to us',
+      items: [
+        'Troubleshooting has answers for every app. Search for the words you saw on screen.',
+        'Every answer says what you’ll see, why it happens and how to fix it.',
+        'At the bottom of each Troubleshooting page, “Still stuck? Tell us what happened” opens the support form for that app.',
+        'The Status page shows whether any ELUM app is having a problem right now.',
       ],
     },
   ],
@@ -987,6 +1078,282 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'I can’t start in the app I picked',
       why: 'Your start app is used when you sign in from ELUM Account.',
       fix: ['Check Preferences, Start in, and choose the app. Sign in from ELUM Account next time.'],
+    },
+    {
+      problem: 'Passkeys aren’t offered on a preview or test version of ELUM Account',
+      says: 'Passkeys work on the ELUM Account site only.',
+      why: 'A passkey belongs to the exact web address it was made on, and ELUM only lets ELUM Account’s own addresses make and use them. Preview and test versions of the site have other addresses, so the passkey buttons stay hidden there. If something tries anyway, this is what it says.',
+      fix: ['Open ELUM Account at account.elum.services or elumaccounts.netlify.app.', 'Make and use your passkey there.', 'If you’re at one of those addresses and still don’t see the button, see “I don’t see Create a passkey”.'],
+    },
+    {
+      problem: 'I don’t see Create a passkey',
+      says: 'This browser cannot make passkeys. Try Safari, Chrome, Edge or Firefox on a recent device.',
+      why: 'Your browser or device doesn’t support passkeys, or you’re not on ELUM Account’s own site. On an older device, or in a browser that’s out of date, the button is replaced by this note.',
+      fix: ['Update your browser and your phone or computer to the latest version.', 'Try Safari, Chrome, Edge or Firefox on a recent device.', 'Check the address bar says account.elum.services or elumaccounts.netlify.app.', 'Meanwhile, sign in with your password. Nothing else changes.'],
+    },
+    {
+      problem: 'My device asks for a passkey and I closed the prompt',
+      why: 'If you close the prompt, press Cancel, or the phone or computer takes too long to answer, the browser tells ELUM that no passkey was used. ELUM treats that as your choice and shows no message at all, so you may only notice that nothing happened.',
+      fix: ['Choose Create a passkey, or Sign in with a passkey, again and follow the prompt to the end.', 'Use Face ID, Touch ID, Windows Hello or your device PIN when it asks.', 'If the prompt never shows, see “The passkey prompt doesn’t appear”.'],
+    },
+    {
+      problem: 'The passkey prompt doesn’t appear',
+      why: 'Something is blocking it: a pop-up blocker, a browser extension that manages passwords, or a screen lock that isn’t set up on the device.',
+      fix: ['Make sure your device has a screen lock, like a PIN, a fingerprint or Face ID.', 'Turn off extensions that take over passkeys or passwords, then try again.', 'Try again in another browser.'],
+    },
+    {
+      problem: 'It says there is no passkey when I sign in',
+      why: 'Your browser couldn’t find a passkey for ELUM on this device. Passkeys are kept where you made them, in the device or password manager.',
+      fix: ['Choose Sign in with a passkey and, if asked, pick “Use a phone or tablet” and scan the code with the device that has your passkey.', 'Sign in with your password instead, then make a passkey on this device in Security.', 'Check you’re on the same ELUM Account address you made it on.'],
+    },
+    {
+      problem: 'We do not know that passkey',
+      says: 'We do not know that passkey. It may have been removed from your account.',
+      why: 'The passkey you picked isn’t in any ELUM account any more. It may have been removed in Security, or it belongs to an account that was deleted, but your device still shows it.',
+      fix: ['Sign in with your password.', 'Make a new passkey in Security.', 'Delete the old one from your device’s password manager so it stops being offered.'],
+    },
+    {
+      problem: 'That passkey did not work',
+      says: 'That passkey did not work. Try again, or use your password.',
+      why: 'The passkey was found, but it couldn’t be checked. This can happen if the time on your device is wrong, if the passkey was made for a different address, or if it was copied badly between devices.',
+      fix: ['Try once more, picking the passkey again.', 'Check your device’s date and time are set automatically.', 'Make sure you’re on the address you made the passkey on: account.elum.services or elumaccounts.netlify.app.', 'Use your password, then make a new passkey.'],
+    },
+    {
+      problem: 'A passkey didn’t sign me in',
+      says: 'That passkey did not sign you in. Try again, or use your password.',
+      why: 'ELUM accepted the passkey but the sign-in itself didn’t finish, often because of a poor connection.',
+      fix: ['Check your connection and try again.', 'Use your password if it keeps happening.'],
+    },
+    {
+      problem: 'This browser could not use a passkey',
+      says: 'This browser could not use a passkey. Try again, or use your password.',
+      why: 'Your browser or device ran into a problem while using the passkey. It can come from private browsing, a managed browser, or a security key that isn’t plugged in.',
+      fix: ['Try again, and approve the prompt when it appears.', 'Close private or incognito windows, and try in a normal one.', 'Try a different browser, such as Safari, Chrome, Edge or Firefox.', 'Use your password if you’re in a hurry.'],
+    },
+    {
+      problem: 'This device already has a passkey',
+      says: 'This device already has a passkey for your account.',
+      why: 'ELUM won’t make a second passkey on a device or password manager that already holds one for your account.',
+      fix: ['You don’t need another. Choose Sign in with a passkey next time.', 'To start fresh, remove the old passkey in Security, then create a new one.', 'To use a different device, open ELUM Account on it and create a passkey there.'],
+    },
+    {
+      problem: 'It says “That took too long. Try again.” when I use a passkey',
+      says: 'That took too long. Try again.',
+      why: 'Each passkey attempt starts with a short-lived check from ELUM. If you waited too long at the prompt, or the page sat open for a while, the check ran out.',
+      fix: ['Close the prompt and start again from Create a passkey or Sign in with a passkey.', 'Approve the prompt straight away this time.', 'If it keeps happening, reload the page first.'],
+    },
+    {
+      problem: 'The passkey did not answer',
+      says: 'The passkey did not answer. Try again.',
+      why: 'Your device didn’t send back what ELUM needed, often because the prompt was dismissed part-way or the browser extension interrupted it.',
+      fix: ['Try again and finish the whole prompt.', 'Turn off password-manager extensions for a moment, or try another browser.'],
+    },
+    {
+      problem: 'A passkey couldn’t be saved',
+      says: 'We could not save that passkey. Try again.',
+      why: 'ELUM couldn’t finish checking the new passkey. The time on your device may be wrong, or the page was open for too long.',
+      fix: ['Reload ELUM Account, sign in, and try Create a passkey again.', 'Check your date and time are set automatically.', 'Try another browser if it happens again.'],
+    },
+    {
+      problem: 'I need to sign in before I can make a passkey',
+      says: 'Sign in first, then make a passkey.',
+      why: 'Passkeys belong to a signed-in account, so ELUM needs to know whose it is. Your sign-in may have ended.',
+      fix: ['Sign in with your password and then choose Create a passkey in Security.', 'If you’re asked to sign in again straight away, sign out and back in.'],
+    },
+    {
+      problem: 'Too many passkey tries',
+      says: 'Too many tries. Wait a few minutes and try again.',
+      why: 'To keep accounts safe, ELUM slows down repeated passkey sign-in attempts from one place.',
+      fix: ['Wait about ten minutes, then try again.', 'In the meantime, sign in with your password.', 'On a shared network, someone else’s tries can count too. Try a different network, like mobile data.'],
+    },
+    {
+      problem: 'A passkey sign-in failed with “We could not sign you in. Try again.”',
+      says: 'We could not sign you in. Try again.',
+      why: 'ELUM checked your passkey, but couldn’t finish signing you in.',
+      fix: ['Try again.', 'Use your password if it keeps happening, and tell us with Contact support.'],
+    },
+    {
+      problem: 'Passkeys don’t work in private browsing',
+      why: 'Private or incognito windows don’t keep sign-in details, and some browsers limit passkeys in them.',
+      fix: ['Use a normal window to make your passkey.', 'Once it’s made, you can use it in private windows on browsers that allow it.'],
+    },
+    {
+      problem: 'My work or school browser won’t make a passkey',
+      why: 'Browsers managed by an organisation can switch passkeys off, or save them only in the organisation’s own password manager.',
+      fix: ['Ask whoever manages the device whether passkeys are allowed.', 'Make your passkey on your own phone or computer instead.', 'Sign in with your password on the managed device.'],
+    },
+    {
+      problem: 'I use a security key',
+      why: 'A security key works as a passkey if it supports it, but you need it with you each time.',
+      fix: ['Choose Create a passkey, and when your browser asks, pick Security key. Plug it in or tap it, and touch it when it blinks.', 'Use Sign in with a passkey and the same steps next time.', 'Make a second passkey on your phone or computer, so a lost key doesn’t lock you out.'],
+    },
+    {
+      problem: 'My passkey is on my iPhone but not my laptop',
+      why: 'Passkeys sync through iCloud Keychain, Google Password Manager or another password manager. If syncing is off, or the other device uses a different account, the passkey stays where it was made.',
+      fix: ['On Apple devices, turn on iCloud Keychain on both and use the same Apple account.', 'On Android and Chrome, sign in to the same Google account and turn on sync for passwords.', 'Otherwise, choose Sign in with a passkey and pick “Use a phone or tablet”, then scan the code.', 'Or make a separate passkey on the laptop in Security.'],
+    },
+    {
+      problem: 'I made a passkey on account.elum.services but elumaccounts.netlify.app doesn’t show it',
+      why: 'A passkey belongs to one web address. ELUM Account has two, account.elum.services and elumaccounts.netlify.app, and a passkey made on one is not offered on the other.',
+      fix: ['Sign in on the address you made it on.', 'Or sign in with your password and make a passkey on the other address too.', 'Pick the address you’ll use every day, and make your passkey there.'],
+    },
+    {
+      problem: 'I removed a passkey but my device still shows it',
+      why: 'Removing a passkey in Security takes it off your ELUM account. A copy can still sit in your device’s password manager, which doesn’t know.',
+      fix: ['It does no harm. ELUM won’t accept it, and says “We do not know that passkey. It may have been removed from your account.”', 'Delete it from your password manager so it stops being offered.'],
+    },
+    {
+      problem: 'Renaming a passkey',
+      why: 'Passkeys get a name from the device you made them on, like iPhone or Mac. You can change it to something you\'ll recognise.',
+      fix: ['Open Security, find the passkey in the list, and choose Rename.', 'Type a new name, up to 80 characters, and choose Save.', 'Choose Cancel to keep the old name.'],
+    },
+    {
+      problem: 'Removing a passkey',
+      says: 'Remove “iPhone”? You will not be able to sign in with it any more.',
+      why: 'Removing a passkey means you can’t sign in with it again. You may want to do it for a lost phone, or an old laptop.',
+      fix: ['Open Security, find the passkey and choose Remove, then confirm.', 'You’ll see “iPhone is removed”, with the passkey’s own name, and Passkey removed shows under Recent activity.', 'You can make a new passkey whenever you want.'],
+    },
+    {
+      problem: 'ELUM keeps offering me a passkey',
+      says: 'Sign in faster with a passkey',
+      why: 'After you sign in without a passkey, ELUM suggests making one, and asks again each time you sign in, until your account has one. Choosing Not now only skips it for that sign-in.',
+      fix: ['Choose Create a passkey and follow the prompt. Once your account has one, the offer stops.', 'If your browser can’t make passkeys, you won’t be offered one at all.', 'You can always make one later in Security.'],
+    },
+    {
+      problem: 'I lost every device that had my passkey',
+      why: 'A passkey lives on your devices and in your password manager. If they’re gone, so is the passkey, but your ELUM account is still there.',
+      fix: ['Sign in another way. Use your password on any browser.', 'Open Security and remove the old passkeys that are lost.', 'Create a new passkey on your new device.', 'If approvals are on and you have no signed-in device left, use Contact support and tell us what happened.'],
+    },
+    {
+      problem: 'I can’t make a passkey because passkeys aren’t connected',
+      says: 'Passkeys work once ELUM is connected.',
+      why: 'This copy of ELUM Account is running on its own, without the ELUM platform, so it has nowhere to keep passkeys.',
+      fix: ['Open ELUM Account at account.elum.services and use passkeys there.'],
+    },
+    {
+      problem: 'A passkey I tried to change isn’t in my account',
+      says: 'That passkey is not in your account.',
+      why: 'You tried to rename or remove a passkey that isn’t on your account any more, often because it was removed on another device a moment ago.',
+      fix: ['Reload the Security page to see the passkeys you have now.'],
+    },
+  ],
+  inquire: [
+    {
+      problem: 'My form link doesn’t open',
+      why: 'The link was cut short when it was copied, or the form has been deleted.',
+      fix: ['Copy the link again from Share in Inquire, and send the whole thing.', 'Open the link in a private window to check it works for someone who isn’t signed in.', 'If the form was deleted, you’ll need to make it again. Deleted forms can’t be brought back.'],
+    },
+    {
+      problem: 'Nobody can send my form',
+      why: 'The form may be closed, or a required question can’t be answered the way you set it up.',
+      fix: ['Open the form in Inquire and check whether it says it’s closed. Open it again to take answers.', 'Try it yourself in a private window. If a required question blocks you, change it or make it optional.', 'Check that the person has the full link and a connection that works.'],
+    },
+    {
+      problem: 'People say they can’t answer a question',
+      why: 'The question might be required but hidden behind a condition that never appears, or its choices don’t fit what people want to say.',
+      fix: ['Open the form and look at the question’s condition. Make sure the question it depends on comes first.', 'Add a choice like “Something else”, or a short answer, for people whose answer isn’t in the list.', 'Try the form in a private window and answer it the way they would.'],
+    },
+    {
+      problem: 'A question I added isn’t showing up',
+      why: 'The question is conditional, so it only appears after someone gives a certain answer to an earlier question.',
+      fix: ['Open the question and check the condition. Pick the answer that should make it appear.', 'Try the form in a private window and choose that answer to see it appear.', 'If you want it to always show, remove the condition.'],
+    },
+    {
+      problem: 'A conditional question shows when it shouldn’t',
+      why: 'The condition is looking at a different answer than you meant, or an earlier question was changed after you set it up.',
+      fix: ['Open the condition and check the question and the answer it uses.', 'If you renamed or replaced the earlier question, set the condition again.', 'Test it in a private window with each answer.'],
+    },
+    {
+      problem: 'I can’t see any responses',
+      why: 'No one has sent the form yet, or you’re looking at a different form than the one you shared.',
+      fix: ['Check you opened the right form in your list.', 'Open the link yourself in a private window and send a test answer. It should appear under Responses.', 'Reload the page. Responses show as soon as they’re sent, but an old page doesn’t update on its own.'],
+    },
+    {
+      problem: 'Someone says they sent it but I can’t find their answer',
+      why: 'The form might have been closed before they sent it, or their device lost its connection part-way.',
+      fix: ['Check when you closed the form. Nothing can be sent after that.', 'Ask them to open the link again and check they see a message that their answer was sent.', 'Ask them to send it once more if they didn’t. Duplicate answers are fine to delete.'],
+    },
+    {
+      problem: 'I closed a form by mistake',
+      why: 'Closing stops any more answers. Your form and the answers so far are kept.',
+      fix: ['Open the form from your list and open it again.', 'Tell people the link works again.'],
+    },
+    {
+      problem: 'I deleted a form and want it back',
+      why: 'Deleting a form removes it and every response it had.',
+      fix: ['Deleted forms can’t be brought back, so make the form again.', 'Next time, close a form instead of deleting it. Closing keeps all the answers.', 'If the answers matter and you’re not sure what’s gone, use Contact support and tell us which form it was.'],
+    },
+    {
+      problem: 'I can’t edit someone else’s form',
+      why: 'Only the person who made a form, and people they gave edit access to, can change it.',
+      fix: ['Ask the owner to share the form with you so you can edit it.', 'Or make a copy of your own and design it your way.'],
+    },
+    {
+      problem: 'I can’t share my form with another person',
+      why: 'You can share with people who have an ELUM account. Everyone else can fill the form in with the link, but can’t manage it.',
+      fix: ['Ask them to sign up for an ELUM account, then share it with their address.', 'To simply collect answers from someone, send them the link.'],
+    },
+    {
+      problem: 'The form looks different on my phone',
+      why: 'Forms fit the screen they’re opened on, so long answers and wide choices wrap on a small screen.',
+      fix: ['Keep question names short and put longer explanations in the note under the question.', 'Try the link on your phone before you share it.'],
+    },
+    {
+      problem: 'My answers disappeared when I reloaded the form',
+      why: 'A form you haven’t sent yet is only on your screen. Reloading, or closing the tab, can clear it.',
+      fix: ['Keep the tab open until you’ve sent your answers.', 'For a long form, write your answers somewhere else first and paste them in.'],
+    },
+    {
+      problem: 'Inquire says my session has ended',
+      why: 'You were signed out, perhaps because you signed out in another ELUM app or were away for a long time.',
+      fix: ['Sign in again. Your forms are all still there.', 'If you were part-way through changing a form, check the last change saved.'],
+    },
+    {
+      problem: 'The support form didn’t fill in my details',
+      why: 'You opened it without Contact support, or the details were cleared.',
+      fix: ['Choose Contact support again from the app or page where something went wrong.', 'Or tell us in your own words: which app, what you were doing, and what the screen said.'],
+    },
+  ],
+  home: [
+    {
+      problem: 'I can’t find where to sign in on the ELUM home',
+      why: 'The ELUM home is a front door and doesn’t sign you in. Your ELUM Account is the home base.',
+      fix: ['Open any ELUM app, or ELUM Account, and sign in there.', 'Once you’re signed in, the other apps open already signed in.'],
+    },
+    {
+      problem: 'Contact support opens a blank page',
+      why: 'The support form couldn’t load, often because of a content blocker or a slow connection.',
+      fix: ['Reload the tab, or choose Reload in the address bar.', 'Turn off any content blocker for ELUM and try again.', 'Still blank? Open inquire.elum.services/f/support in a new window.'],
+    },
+    {
+      problem: 'I want to contact support but I can’t sign in',
+      why: 'You don’t need to sign in to send the support form.',
+      fix: ['Choose Contact support on the sign-in screen, or open inquire.elum.services/f/support.', 'Tell us the address you use and what you see on the screen.'],
+    },
+    {
+      problem: 'I sent the support form and heard nothing back',
+      why: 'Support requests are saved for the ELUM team to read. There’s no automatic reply or ticket number yet.',
+      fix: ['Keep a note of when you sent it.', 'Check Troubleshooting for an answer in the meantime.', 'If it’s urgent and you’re locked out, send the form again with “Locked out” at the start.'],
+    },
+    {
+      problem: 'The support form says it’s closed',
+      why: 'The form was closed or can’t be reached right now.',
+      fix: ['Check the Status page to see if Inquire is working.', 'Try again in a few minutes.'],
+    },
+    {
+      problem: 'I want to send a screenshot to support',
+      why: 'The support form takes words, not pictures.',
+      fix: ['Type the message you saw on the screen exactly as it appears, and what you were doing.', 'Contact support from the screen itself, so we get the message automatically.'],
+    },
+    {
+      problem: 'elum.services shows the old Docs page',
+      why: 'Your browser may be holding on to an older copy.',
+      fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at browse.elum.services/docs. The ELUM home has the products and the mission.'],
+    },
+    {
+      problem: 'Where did “Start here” go?',
+      why: 'The start-here part of Docs moved to Products on the ELUM home.',
+      fix: ['Open elum.services/products to meet each ELUM app.', 'Docs now opens on the guides and Troubleshooting for every app.'],
     },
   ],
 };

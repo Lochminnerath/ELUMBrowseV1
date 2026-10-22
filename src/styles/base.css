@@ -79,6 +79,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Headings are Sora everywhere; a component can still choose its own. */
+:where(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
 button,
 input,
 select,

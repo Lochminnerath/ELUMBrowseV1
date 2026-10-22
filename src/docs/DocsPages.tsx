@@ -1,18 +1,26 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType, type CSSProperties, type ReactNode } from 'react';
-import { Link, Navigate, NavLink, useLocation, useParams, useSearchParams } from 'react-router';
+import { useEffect, useMemo, useRef, type ComponentType, type CSSProperties, type ReactNode } from 'react';
+import { Link, Navigate, NavLink, useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
 import { ElumLockup } from '../components/Brand';
 import { ElumLauncher } from '../components/ElumLauncher';
 import * as Icons from '../components/icons/ElumIcons';
 import type { IconProps } from '../components/icons/ElumIcons';
-import { ACCOUNT_HOME, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { SupportLink } from '../components/SupportLink';
+import { ACCOUNT_HOME, INQUIRE_URL, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { BASICS, LIVE_PRODUCTS, PRODUCTS, type DocsId, type Feature, type LiveProduct, type ProductId, type Symbol } from './content';
-import { allTroubles, COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES, type Trouble } from './help';
-import { CloseUp, CountUp, DevicePair, Phone, SHOTS, useActiveStep, useMotionOk, useScrollEffects, type Crop, type Shot } from './motion';
+import { LIVE_PRODUCTS, PRODUCTS, type DocsId, type Feature, type LiveProduct, type ProductId, type Symbol } from './content';
+import { COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES, type Trouble } from './help';
+import { CloseUp, DevicePair, Phone, SHOTS, useActiveStep, useMotionOk, useScrollEffects, type Crop, type Shot } from './motion';
 import './docs.css';
 import './showcase.css';
 
-const URLS: Record<ProductId, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', store: STORE_URL, account: ACCOUNT_HOME };
+const URLS: Record<Exclude<ProductId, 'home'>, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', store: STORE_URL, account: ACCOUNT_HOME, inquire: INQUIRE_URL };
+
+/** The apps with screenshots in the docs. Inquire and the ELUM home show their steps without a device. */
+type ShotId = Exclude<ProductId, 'inquire' | 'home'>;
+const hasShots = (id: ProductId): id is ShotId => id !== 'inquire' && id !== 'home';
+
+/** The URL where New to ELUM? people should start: Products on the ELUM home. */
+const START_URL = 'https://elum.services/products';
 
 const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   new: Icons.NewIcon,
@@ -57,9 +65,9 @@ function AppMark({ id, size }: { id: DocsId; size: number }) {
 
 /** Opens an app: Browse in place, the others signed in through ELUM Account where they can be. */
 function OpenApp({ id, children, className }: { id: ProductId; children: ReactNode; className: string }) {
-  if (id === 'browse') {
+  if (id === 'browse' || id === 'home') {
     return (
-      <Link to="/" className={className}>
+      <Link to={id === 'home' ? '/app/home' : '/'} className={className}>
         {children}
       </Link>
     );
@@ -94,6 +102,9 @@ function DocsShell({ children }: { children: ReactNode }) {
           <Link to="/" className="docs-bar__search">
             Search the web
           </Link>
+          <SupportLink app="browse" from="/docs" className="docs-bar__support">
+            Support
+          </SupportLink>
           <ThemeToggle />
           <ElumLauncher />
         </div>
@@ -102,7 +113,7 @@ function DocsShell({ children }: { children: ReactNode }) {
         <nav className="docs-nav" aria-label="ELUM apps">
           <NavLink to="/docs" end className="docs-nav__link">
             <span className="docs-nav__disc docs-nav__disc--home" aria-hidden="true" />
-            Start here
+            Guides
           </NavLink>
           <NavLink to="/docs/troubleshooting" className="docs-nav__link">
             <span className="docs-nav__disc docs-nav__disc--help" aria-hidden="true" />
@@ -120,7 +131,9 @@ function DocsShell({ children }: { children: ReactNode }) {
       </div>
       <footer className="docs-foot">
         <span>Made by you. Runs without AI.</span>
-        <span className="muted">ELUM Write, Type, Make, Browse, Store and Account. Tune is coming soon.</span>
+        <span className="muted">
+          ELUM Write, Type, Make, Browse, Store, Account and Inquire. Tune is coming soon. <SupportLink app="browse" from="/docs">Contact support</SupportLink>
+        </span>
       </footer>
     </div>
   );
@@ -140,7 +153,7 @@ function FeatureCard({ feature, color, i = 0 }: { feature: Feature; color?: stri
 }
 
 /** A close-up of one feature in each app, from its own screenshots. */
-const CROPS: Record<ProductId, Crop> = {
+const CROPS: Record<ShotId, Crop> = {
   write: { shot: SHOTS.write.desktop[1], x: 0.6, y: 0, w: 0.4, h: 0.3, title: 'Share it, talk it over', text: 'Share sits at the top of every document, and comments open right beside the text.' },
   type: { shot: SHOTS.type.desktop[1], x: 0.66, y: 0, w: 0.34, h: 0.3, title: 'Know who it’s from', text: 'Messages from other ELUM accounts carry the verified symbol, right next to the name.' },
   make: { shot: SHOTS.make.desktop[1], x: 0.3, y: 0.1, w: 0.5, h: 0.55, title: 'A real canvas', text: 'Your slide sits on a canvas with guides, layers and pages around it.' },
@@ -150,7 +163,7 @@ const CROPS: Record<ProductId, Crop> = {
 };
 
 /** Which screen each first step shows: its index in that app's shots. */
-const STEP_SCREENS: Record<ProductId, number[]> = {
+const STEP_SCREENS: Record<ShotId, number[]> = {
   write: [0, 1, 1],
   type: [0, 1, 0],
   make: [0, 1, 1],
@@ -160,7 +173,7 @@ const STEP_SCREENS: Record<ProductId, number[]> = {
 };
 
 /** Where a tap lands on each step's phone screen, to point out the button the step is about. */
-const STEP_TAPS: Partial<Record<ProductId, ({ x: number; y: number } | undefined)[]>> = {
+const STEP_TAPS: Partial<Record<ShotId, ({ x: number; y: number } | undefined)[]>> = {
   write: [{ x: 0.5, y: 0.05 }, { x: 0.3, y: 0.3 }, { x: 0.86, y: -0.02 }],
   type: [{ x: 0.5, y: 0.1 }, { x: 0.5, y: 0.9 }, { x: 0.5, y: 0.35 }],
   make: [{ x: 0.3, y: 0.18 }, { x: 0.5, y: 0.45 }, { x: 0.82, y: -0.02 }],
@@ -224,44 +237,6 @@ function Story({
   );
 }
 
-/** How signing in once works: ELUM Account in the middle, handing your sign-in to every app. */
-function SignInDiagram() {
-  const apps = LIVE_PRODUCTS.filter((p) => p.id !== 'account');
-  return (
-    <section className="sc-split" aria-labelledby="sc-once">
-      <div className="sc-split__text" data-reveal="rise">
-        <p className="docs-eyebrow">Sign in once</p>
-        <h2 id="sc-once" className="sc-big">
-          One account.
-          <br />
-          Every app.
-        </h2>
-        <p className="docs-lede">Sign in to one ELUM app and ELUM Account passes your sign-in along to the rest. Open any app from the apps window and you’re already in.</p>
-      </div>
-      <div className="sc-diagram" data-reveal="zoom" aria-hidden="true">
-        <span className="sc-diagram__hub" style={{ '--app': '#94c858' } as CSSProperties}>
-          <AppMark id="account" size={84} />
-        </span>
-        {apps.map((p, i) => {
-          const angle = (i / apps.length) * Math.PI * 2 - Math.PI / 2;
-          const dx = Math.cos(angle) * 39;
-          const dy = Math.sin(angle) * 39;
-          return (
-            <span key={p.id} className="sc-diagram__spoke" style={{ '--x': `${dx}%`, '--y': `${dy}%`, '--a': `${(angle * 180) / Math.PI}deg`, '--app': p.color, '--i': i } as CSSProperties}>
-              <span className="sc-diagram__line">
-                <span className="sc-diagram__dot" />
-              </span>
-              <span className="sc-diagram__node">
-                <AppMark id={p.id} size={46} />
-              </span>
-            </span>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
 /** A sign-in approval, close up: the new device shows a number, and you pick it on one you trust. */
 function ApprovalCloseUp() {
   return (
@@ -304,48 +279,57 @@ function ApprovalCloseUp() {
   );
 }
 
-/** Big numbers, counting up. */
-function Numbers({ items, motion }: { items: { n: number; label: string; color: string }[]; motion: boolean }) {
+/** "Still stuck? Tell us what happened": opens the support form for this app. */
+function SupportBlock({ app, code, id }: { app: string; code?: string; id?: string }) {
+  const { pathname, search } = useLocation();
   return (
-    <ul className="sc-numbers">
-      {items.map((x, i) => (
-        <li key={x.label} data-reveal="rise" style={{ '--d': i, '--app': x.color } as CSSProperties}>
-          <CountUp to={x.n} motion={motion} />
-          <span>{x.label}</span>
-        </li>
-      ))}
-    </ul>
+    <aside className="docs-support" id={id} data-reveal="rise" aria-labelledby={`${id ?? 'docs-support'}-title`}>
+      <span className="docs-support__icon" aria-hidden="true">
+        <Icons.SendIcon size={26} />
+      </span>
+      <div className="docs-support__text">
+        <h2 id={`${id ?? 'docs-support'}-title`}>Still stuck? Tell us what happened</h2>
+        <p>The support form opens already filled in with the app. Add what you were doing and what the screen said, and send it. You don’t need to be signed in.</p>
+      </div>
+      <SupportLink app={app} code={code} from={pathname + search} className="elum-btn elum-btn--primary docs-support__button">
+        Contact support
+      </SupportLink>
+    </aside>
   );
 }
 
-/** The hero devices, cycling through every app. */
-function HeroDevices({ motion }: { motion: boolean }) {
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (!motion) return;
-    const t = window.setInterval(() => document.visibilityState === 'visible' && setI((x) => (x + 1) % LIVE_PRODUCTS.length), 3200);
-    return () => window.clearInterval(t);
-  }, [motion]);
-  const now = LIVE_PRODUCTS[i];
+/** New to ELUM? Start on the ELUM home, which now holds the start-here part of the docs. */
+function StartLink() {
+  const navigate = useNavigate();
   return (
-    <div className="sc-hero__devices" style={{ '--app': now.color } as CSSProperties}>
-      <DevicePair laptop={LIVE_PRODUCTS.map((p) => SHOTS[p.id].desktop[0])} phone={LIVE_PRODUCTS.map((p) => SHOTS[p.id].phone[0])} index={i} eager>
-        <span className="sc-hero__chip" key={now.id}>
-          <AppMark id={now.id} size={20} />
-          ELUM {now.name}
-        </span>
-      </DevicePair>
-    </div>
+    <a
+      href={START_URL}
+      className="docs-start"
+      data-reveal="rise"
+      onClick={(e) => {
+        // Inside Browse it opens in the tab, as the ELUM home; elsewhere the link works as it is.
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+        e.preventDefault();
+        navigate('/app/home/products');
+      }}
+    >
+      <span className="docs-start__text">
+        <strong>New to ELUM? Start on the ELUM home</strong>
+        <span>Meet every product, and see what ELUM is for.</span>
+      </span>
+      <span className="docs-start__go" aria-hidden="true">
+        <Icons.OpenIcon size={22} />
+      </span>
+    </a>
   );
 }
 
-/** /docs: ELUM as a whole, and a way into each app's starting page. */
+/** /docs: the guides for every app, and Troubleshooting. (Start here is on the ELUM home.) */
 export function DocsHome() {
   useTitle('ELUM Docs');
-  const motion = useMotionOk();
   return (
     <DocsShell>
-      <section className="sc-hero" data-progress>
+      <section className="sc-hero sc-hero--docs" data-progress>
         <div className="sc-hero__glow" aria-hidden="true">
           {LIVE_PRODUCTS.map((p, i) => (
             <span key={p.id} style={{ '--app': p.color, '--i': i } as CSSProperties} />
@@ -353,47 +337,26 @@ export function DocsHome() {
         </div>
         <p className="docs-eyebrow sc-hero__eyebrow">ELUM Docs</p>
         <h1 className="sc-hero__title">
-          <span>One account.</span> <span>Six apps.</span> <span className="sc-hero__accent">No AI.</span>
+          <span>Guides.</span> <span>Answers.</span> <span className="sc-hero__accent">Help.</span>
         </h1>
-        <p className="docs-lede sc-hero__lede">Everything you need to get going with ELUM, on your phone and your computer, and answers for when something goes wrong.</p>
+        <p className="docs-lede sc-hero__lede">How to use every ELUM app, and answers for when something goes wrong.</p>
+        <StartLink />
         <p className="sc-hero__links">
           <a href="#sc-apps" className="elum-btn elum-btn--primary">
-            Start here
+            Product guides
           </a>
           <Link to="/docs/troubleshooting" className="docs-more">
             Troubleshooting
           </Link>
+          <SupportLink app="browse" from="/docs" className="docs-more">
+            Support
+          </SupportLink>
         </p>
-        <HeroDevices motion={motion} />
       </section>
 
-      <Story
-        eyebrow="The apps"
-        title="Made to work together."
-        color="#9b84ee"
-        phone={LIVE_PRODUCTS.map((p) => SHOTS[p.id].phone[0])}
-        laptop={LIVE_PRODUCTS.map((p) => SHOTS[p.id].desktop[0])}
-        screens={LIVE_PRODUCTS.map((_, i) => i)}
-        steps={LIVE_PRODUCTS.map((p) => ({ title: `${p.name}. ${p.kind}.`, text: p.intro, mark: p.id, color: p.color }))}
-      />
-
-      <SignInDiagram />
-
-      <Numbers
-        motion={motion}
-        items={[
-          { n: LIVE_PRODUCTS.length, label: 'apps, free with your account', color: '#9b84ee' },
-          { n: 1, label: 'account for all of them', color: '#94c858' },
-          { n: 0, label: 'AI, anywhere', color: '#ec7fa9' },
-          { n: allTroubles().length, label: 'answers when something goes wrong', color: '#3fc4a0' },
-        ]}
-      />
-
-      <ApprovalCloseUp />
-
-      <section aria-labelledby="sc-apps" id="sc-apps" className="sc-section">
+      <section aria-labelledby="sc-apps-title" id="sc-apps" className="sc-section">
         <h2 id="sc-apps-title" className="sc-big" data-reveal="rise">
-          Pick an app to get started.
+          Product guides.
         </h2>
         <ul className="docs-apps">
           {PRODUCTS.map((p, i) => (
@@ -402,20 +365,9 @@ export function DocsHome() {
                 <AppMark id={p.id} size={52} />
                 <span className="docs-app__name">{p.name}</span>
                 <span className="docs-app__kind">{p.kind}</span>
-                {p.soon ? <span className="docs-soon">Coming soon</span> : <span className="docs-app__go">Get started</span>}
+                {p.soon ? <span className="docs-soon">Coming soon</span> : <span className="docs-app__go">Read the guide</span>}
               </Link>
             </li>
-          ))}
-        </ul>
-      </section>
-
-      <section aria-labelledby="docs-basics" className="sc-section">
-        <h2 id="docs-basics" className="sc-big" data-reveal="rise">
-          The basics.
-        </h2>
-        <ul className="docs-cards">
-          {BASICS.map((f, i) => (
-            <FeatureCard key={f.title} feature={f} i={i} />
           ))}
         </ul>
       </section>
@@ -423,7 +375,7 @@ export function DocsHome() {
       <section aria-labelledby="docs-common" className="sc-section">
         <div className="docs-h2-row" data-reveal="rise">
           <h2 id="docs-common" className="sc-big">
-            If something goes wrong.
+            Troubleshooting.
           </h2>
           <Link to="/docs/troubleshooting" className="docs-more">
             See all answers
@@ -431,6 +383,8 @@ export function DocsHome() {
         </div>
         <TroubleList troubles={COMMON_TROUBLES.slice(0, 5)} />
       </section>
+
+      <SupportBlock app="browse" />
     </DocsShell>
   );
 }
@@ -523,10 +477,33 @@ export function ProductDoc() {
   );
 }
 
+/** The three steps for an app that has no screenshots: numbered cards. */
+function StepsOnly({ name, steps }: { name: string; steps: { title: string; text: string }[] }) {
+  return (
+    <section className="sc-section" aria-labelledby="sc-steps">
+      <p className="docs-eyebrow" data-reveal="rise">First steps</p>
+      <h2 id="sc-steps" className="sc-big" data-reveal="rise">
+        {name}, in three steps.
+      </h2>
+      <ol className="docs-steps">
+        {steps.map((st, i) => (
+          <li key={st.title} data-reveal="rise" style={{ '--d': i } as CSSProperties}>
+            <span className="docs-steps__num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3>{st.title}</h3>
+            <p>{st.text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 function LiveDoc({ p }: { p: LiveProduct }) {
-  const motion = useMotionOk();
-  const shots = SHOTS[p.id];
-  const crop = CROPS[p.id];
+  const shotId = hasShots(p.id) ? p.id : null;
+  const shots = shotId ? SHOTS[shotId] : null;
+  const crop = shotId ? CROPS[shotId] : null;
   return (
     <div className="docs-product" style={{ '--app': p.color, '--mist': p.mist } as CSSProperties}>
       <section className="sc-hero sc-hero--app" data-progress>
@@ -546,7 +523,7 @@ function LiveDoc({ p }: { p: LiveProduct }) {
         <p className="docs-lede sc-hero__lede">{p.intro}</p>
         <p className="sc-hero__links">
           <OpenApp id={p.id} className="elum-btn elum-btn--primary docs-open">
-            Open {p.name}
+            {p.id === 'home' ? 'Open the ELUM home' : `Open ${p.name}`}
           </OpenApp>
           <a href="#guides" className="docs-more">
             How to use {p.name}
@@ -555,31 +532,41 @@ function LiveDoc({ p }: { p: LiveProduct }) {
             Troubleshooting
           </a>
         </p>
-        <div className="sc-hero__devices">
-          <DevicePair laptop={shots.desktop} phone={shots.phone} eager />
-        </div>
+        {shots && (
+          <div className="sc-hero__devices">
+            <DevicePair laptop={shots.desktop} phone={shots.phone} eager />
+          </div>
+        )}
       </section>
 
-      <Story
-        eyebrow="First steps"
-        title={`${p.name}, in three steps.`}
-        color={p.color}
-        phone={shots.phone}
-        screens={STEP_SCREENS[p.id]}
-        taps={STEP_TAPS[p.id]}
-        steps={p.steps}
-      />
+      {shots && shotId ? (
+        <Story
+          eyebrow="First steps"
+          title={`${p.name}, in three steps.`}
+          color={p.color}
+          phone={shots.phone}
+          screens={STEP_SCREENS[shotId]}
+          taps={STEP_TAPS[shotId]}
+          steps={p.steps}
+        />
+      ) : (
+        <StepsOnly name={p.name} steps={p.steps} />
+      )}
 
-      <section className="sc-split" aria-labelledby="sc-close">
-        <div className="sc-split__text" data-reveal="rise">
-          <p className="docs-eyebrow">A closer look</p>
-          <h2 id="sc-close" className="sc-big">
-            {crop.title}.
-          </h2>
-          <p className="docs-lede">{crop.text}</p>
-        </div>
-        <CloseUp crop={crop} color={p.color} />
-      </section>
+      {crop && (
+        <section className="sc-split" aria-labelledby="sc-close">
+          <div className="sc-split__text" data-reveal="rise">
+            <p className="docs-eyebrow">A closer look</p>
+            <h2 id="sc-close" className="sc-big">
+              {crop.title}.
+            </h2>
+            <p className="docs-lede">{crop.text}</p>
+          </div>
+          <CloseUp crop={crop} color={p.color} />
+        </section>
+      )}
+
+      {p.id === 'account' && <ApprovalCloseUp />}
 
       <section aria-labelledby="docs-features" className="sc-section">
         <h2 id="docs-features" className="sc-big" data-reveal="rise">
@@ -591,15 +578,6 @@ function LiveDoc({ p }: { p: LiveProduct }) {
           ))}
         </ul>
       </section>
-
-      <Numbers
-        motion={motion}
-        items={[
-          { n: GUIDES[p.id].length, label: `guides to ${p.name}`, color: p.color },
-          { n: TROUBLES[p.id].length, label: `answers for ${p.name}`, color: p.color },
-          { n: COMMON_TROUBLES.length, label: 'answers for every app', color: p.color },
-        ]}
-      />
 
       <section aria-labelledby="docs-tips" className="docs-tips sc-section">
         <h2 id="docs-tips" className="sc-big" data-reveal="rise">
@@ -639,8 +617,15 @@ function LiveDoc({ p }: { p: LiveProduct }) {
         <p className="docs-trouble-intro muted">
           Look for your problem below, or for the message on your screen. For problems that can happen in any app, like signing in, see{' '}
           <Link to="/docs/troubleshooting">Troubleshooting</Link>.
+          {p.id === 'account' && (
+            <>
+              {' '}
+              Trouble with a passkey? <Link to="/docs/troubleshooting?q=passkey">See every passkey answer</Link>.
+            </>
+          )}
         </p>
         <TroubleList troubles={TROUBLES[p.id]} />
+        <SupportBlock app={p.id} id="support" />
       </section>
 
       <MoreOfElum id={p.id} />
@@ -655,7 +640,7 @@ function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductI
       {troubles.map((t, i) => {
         const app = apps?.[i] ? PRODUCTS.find((p) => p.id === apps[i]) : null;
         return (
-          <li key={`${apps?.[i] ?? ''}${t.problem}`} style={app ? ({ '--app': app.color } as CSSProperties) : undefined}>
+          <li key={`${apps?.[i] ?? ''}${t.problem}`} style={{ '--d': Math.min(i, 5), ...(app ? { '--app': app.color } : {}) } as CSSProperties}>
             <details className="docs-trouble">
               <summary>
                 {app && <AppMark id={app.id} size={20} />}
@@ -695,6 +680,7 @@ export function TroubleshootingPage() {
   const q = params.get('q') ?? '';
   const app = (params.get('app') ?? 'all') as ProductId | 'all' | 'every';
   const found = useMemo(() => searchTroubles(q).filter((x) => app === 'all' || (app === 'every' ? x.product === null : x.product === app)), [q, app]);
+  const supportApp = LIVE_PRODUCTS.some((p) => p.id === app) ? app : 'browse';
   const set = (next: { q?: string; app?: string }) => {
     const merged = { q, app, ...next };
     const out: Record<string, string> = {};
@@ -709,6 +695,11 @@ export function TroubleshootingPage() {
           <p className="docs-eyebrow">ELUM Docs</p>
           <h1>Troubleshooting</h1>
           <p className="docs-lede">Describe your problem, or type the message you’re seeing. Each answer explains why it happens and how to fix it.</p>
+          <p className="docs-hero__actions">
+            <SupportLink app={supportApp} from="/docs/troubleshooting" button>
+              Contact support
+            </SupportLink>
+          </p>
         </div>
       </section>
       <div className="docs-help-tools">
@@ -742,6 +733,7 @@ export function TroubleshootingPage() {
           </Link>
         </div>
       )}
+      <SupportBlock app={supportApp} id="support" />
     </DocsShell>
   );
 }

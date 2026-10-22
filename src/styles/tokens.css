@@ -77,3 +77,44 @@
 .label { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.14em; }
 .mono { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; letter-spacing: 0; }
 .label { text-transform: uppercase; }
+
+/* ---- Motion: defined once, used everywhere. Springs overshoot a little and settle. ---- */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  /* A springy curve that overshoots, for things that arrive. */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* A softer overshoot, for larger things. */
+  --ease-spring-soft: cubic-bezier(0.22, 1.28, 0.42, 1);
+  --dur-quick: 180ms;
+  --dur-base: 380ms;
+  --dur-slow: 700ms;
+  --dur-reveal: 1100ms;
+  /* The pause between neighbours that arrive one after another. */
+  --stagger: 90ms;
+  /* How far, and how big, things come from when they appear on scroll. */
+  --reveal-rise: 84px;
+  --reveal-scale: 0.9;
+  --reveal-blur: 8px;
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    /* A real spring: it passes the end, comes back, and settles. */
+    --ease-spring: linear(0, 0.009, 0.035 2.1%, 0.141, 0.281 6.7%, 0.723 12.9%, 0.938 16.7%, 1.017, 1.077, 1.121, 1.149 24.3%, 1.159, 1.163 27%, 1.154, 1.129 32.8%, 1.051 39.6%, 1.017 43.1%, 0.991, 0.977 51%, 0.974 53.8%, 0.975 57.1%, 0.997 69.8%, 1.003 76.9%, 1);
+    --ease-spring-soft: linear(0, 0.006, 0.024 2.2%, 0.1 5%, 0.5 12.4%, 0.8 16.4%, 0.99 20.7%, 1.07 24.8%, 1.1 28%, 1.095 31.6%, 1.04 38.9%, 1.006 46.4%, 0.99 54.2%, 0.998 70%, 1);
+  }
+}
+/* Without motion, everything arrives at once. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-quick: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-reveal: 1ms;
+    --stagger: 0ms;
+    --reveal-rise: 0px;
+    --reveal-scale: 1;
+    --reveal-blur: 0px;
+  }
+}

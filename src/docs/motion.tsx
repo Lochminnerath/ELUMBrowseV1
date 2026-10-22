@@ -127,7 +127,7 @@ export interface Shot {
 
 const shot = (name: string, alt: string): Shot => ({ src: `/docs/shots/${name}.webp`, alt });
 
-export const SHOTS: Record<Exclude<DocsId, 'tune'>, { desktop: Shot[]; phone: Shot[] }> = {
+export const SHOTS: Record<Exclude<DocsId, 'tune' | 'inquire' | 'home'>, { desktop: Shot[]; phone: Shot[] }> = {
   write: {
     desktop: [shot('write-desktop', 'ELUM Write showing all your documents'), shot('write-desktop-open', 'A document open in ELUM Write')],
     phone: [shot('write-phone', 'ELUM Write on a phone, with your documents'), shot('write-phone-open', 'A document open in ELUM Write on a phone')],

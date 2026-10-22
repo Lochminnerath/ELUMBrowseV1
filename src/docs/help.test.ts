@@ -13,11 +13,44 @@ describe('ELUM Docs help', () => {
       }
     }
     expect(COMMON_TROUBLES.length).toBeGreaterThanOrEqual(40);
-    expect(allTroubles().length).toBeGreaterThanOrEqual(186);
+    expect(allTroubles().length).toBeGreaterThanOrEqual(240);
   });
 
   it('covers every app well', () => {
-    for (const p of LIVE_PRODUCTS) expect(TROUBLES[p.id].length, p.id).toBeGreaterThanOrEqual(14);
+    for (const p of LIVE_PRODUCTS) expect(TROUBLES[p.id].length, p.id).toBeGreaterThanOrEqual(p.id === 'home' ? 6 : 14);
+  });
+
+  it('covers Inquire, with a guide for each thing people do', () => {
+    expect(GUIDES.inquire.map((g) => g.title)).toEqual(['Designing a form', 'Sharing the link', 'Reading responses', 'Conditional questions', 'Closing a form']);
+    expect(GUIDES.home.map((g) => g.title)).toContain('Contacting support');
+  });
+
+  it('answers every passkey message the Account app shows', () => {
+    const passkeys = TROUBLES.account.filter((t) => /passkey/i.test(`${t.problem} ${t.says ?? ''}`));
+    expect(passkeys.length).toBeGreaterThanOrEqual(14);
+    for (const t of passkeys) {
+      expect(t.why.length, t.problem).toBeGreaterThan(20);
+      expect(t.fix.length, t.problem).toBeGreaterThan(0);
+    }
+    const messages = [
+      'Passkeys work on the ELUM Account site only.',
+      'This browser cannot make passkeys. Try Safari, Chrome, Edge or Firefox on a recent device.',
+      'We do not know that passkey. It may have been removed from your account.',
+      'That passkey did not work. Try again, or use your password.',
+      'That passkey did not sign you in. Try again, or use your password.',
+      'This browser could not use a passkey. Try again, or use your password.',
+      'This device already has a passkey for your account.',
+      'That took too long. Try again.',
+      'The passkey did not answer. Try again.',
+      'We could not save that passkey. Try again.',
+      'Sign in first, then make a passkey.',
+      'Too many tries. Wait a few minutes and try again.',
+      'Passkeys work once ELUM is connected.',
+      'That passkey is not in your account.',
+    ];
+    const says = new Set(TROUBLES.account.map((t) => t.says));
+    for (const m of messages) expect(says.has(m), m).toBe(true);
+    expect(GUIDES.account.map((g) => g.title)).toContain('Passkeys');
   });
 
   it('never repeats a problem across every app', () => {
@@ -35,7 +68,7 @@ describe('ELUM Docs help', () => {
   });
 
   it('answers the questions people ask most', () => {
-    for (const q of ['passkey', 'nearby', 'approval email', 'version history', 'brand kit', 'private browsing', 'delete my account', 'notifications', 'What’s new', 'offline'])
+    for (const q of ['passkey', 'account.elum.services', 'security key', 'iCloud Keychain', 'conditional', 'nearby', 'approval email', 'version history', 'brand kit', 'private browsing', 'delete my account', 'notifications', 'What’s new', 'offline'])
       expect(searchTroubles(q).length, q).toBeGreaterThan(0);
   });
 

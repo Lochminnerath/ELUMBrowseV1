@@ -690,38 +690,74 @@
 }
 
 /* ---- Motion: only when welcome ---- */
+/* Things arrive from further away, bigger and softer, and neighbours follow one after another. */
 .docs[data-motion] [data-reveal] {
   transition:
-    opacity 900ms var(--docs-ease),
-    transform 1100ms var(--docs-ease);
-  transition-delay: calc(var(--d, 0) * 80ms);
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-reveal) var(--ease-spring-soft),
+    filter var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--d, 0) * var(--stagger));
 }
 .docs[data-motion] [data-reveal]:not([data-shown]) {
   opacity: 0;
-  transform: translateY(40px);
+  transform: translateY(var(--reveal-rise)) scale(0.96);
+  filter: blur(var(--reveal-blur));
 }
 .docs[data-motion] [data-reveal='zoom']:not([data-shown]) {
-  transform: scale(0.92);
+  transform: scale(var(--reveal-scale)) translateY(32px);
+}
+.docs[data-motion] [data-reveal='left']:not([data-shown]) {
+  transform: translateX(calc(var(--reveal-rise) * -1.5));
+}
+.docs[data-motion] [data-reveal='right']:not([data-shown]) {
+  transform: translateX(calc(var(--reveal-rise) * 1.5));
+}
+/* Headings slide up out of a mask, a line at a time. */
+.docs[data-motion] .sc-big[data-reveal]:not([data-shown]) {
+  letter-spacing: -0.06em;
+}
+.docs[data-motion] .sc-big[data-reveal] {
+  transition-property: opacity, transform, filter, letter-spacing;
 }
 .docs[data-motion] .sc-closeup__frame img {
-  transition: transform 1600ms var(--docs-ease);
+  transition: transform 1800ms var(--ease-out);
 }
 .docs[data-motion] .sc-closeup:not([data-shown]) .sc-closeup__frame img {
-  transform: scale(1.4);
+  transform: scale(1.6);
+}
+/* Devices rise out of a tilt, the laptop's lid opens, and the phone springs in from the side. */
+.docs[data-motion] .sc-pair {
+  transform-style: preserve-3d;
 }
 .docs[data-motion] .sc-pair:not([data-shown]) {
-  transform: translateY(70px) perspective(1400px) rotateX(14deg);
+  transform: translateY(120px) perspective(1400px) rotateX(24deg) rotateZ(-1.5deg) scale(0.92);
 }
 .docs[data-motion] .sc-pair__laptop,
 .docs[data-motion] .sc-pair__phone {
   transition: transform 160ms linear;
 }
+.docs[data-motion] .sc-laptop__lid {
+  transform-origin: 50% 100%;
+  transition: transform 1500ms var(--ease-spring-soft) 180ms, box-shadow var(--dur-slow) var(--ease-out);
+}
+.docs[data-motion] .sc-pair:not([data-shown]) .sc-laptop__lid {
+  transform: perspective(1200px) rotateX(-58deg);
+}
 .docs[data-motion] .sc-pair__phone > .sc-phone {
-  animation: docs-float 7s ease-in-out infinite;
+  transition: translate 1300ms var(--ease-spring) 420ms, rotate 1300ms var(--ease-spring) 420ms, opacity var(--dur-slow) ease 420ms;
+  animation: docs-float 7s ease-in-out infinite 1.8s;
+}
+.docs[data-motion] .sc-pair:not([data-shown]) .sc-pair__phone > .sc-phone {
+  translate: 60% 18%;
+  rotate: 12deg;
+  opacity: 0;
+}
+.docs[data-motion] .sc-screen {
+  transition: opacity 700ms var(--ease-out), transform 900ms var(--ease-spring-soft), filter 700ms var(--ease-out);
 }
 .docs[data-motion] .sc-hero__title > span {
-  animation: sc-word 1100ms var(--docs-ease) both;
-  animation-delay: calc(var(--n, 0) * 140ms);
+  animation: sc-word 1300ms var(--ease-spring-soft) both;
+  animation-delay: calc(var(--n, 0) * 170ms + 80ms);
 }
 .docs[data-motion] .sc-hero__title > span:nth-child(2) {
   --n: 1;
@@ -735,10 +771,10 @@
 .docs[data-motion] .sc-hero__mark,
 .docs[data-motion] .sc-soon__mark,
 .docs[data-motion] .docs-soon--big {
-  animation: docs-rise 900ms var(--docs-ease) both 200ms;
+  animation: docs-rise 1100ms var(--ease-spring-soft) both 480ms;
 }
 .docs[data-motion] .sc-hero__glow span {
-  animation: sc-drift 16s ease-in-out infinite alternate;
+  animation: sc-drift 14s ease-in-out infinite alternate;
   animation-delay: calc(var(--i) * -3s);
 }
 .docs[data-motion] .sc-hero__glow {
@@ -772,13 +808,13 @@
 @keyframes sc-word {
   from {
     opacity: 0;
-    transform: translateY(0.4em);
-    filter: blur(8px);
+    transform: translateY(0.7em) rotate(1.5deg) scale(0.96);
+    filter: blur(12px);
   }
 }
 @keyframes sc-drift {
   to {
-    transform: translate(6vw, 4vh) scale(1.15);
+    transform: translate(9vw, 6vh) scale(1.3);
   }
 }
 @keyframes sc-chip {
@@ -978,9 +1014,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .docs [data-reveal] {
+  .docs [data-reveal],
+  .docs .sc-laptop__lid,
+  .docs .sc-pair__phone > .sc-phone {
     opacity: 1 !important;
     transform: none !important;
+    translate: none !important;
+    rotate: none !important;
+    filter: none !important;
+    letter-spacing: inherit !important;
+    transition: none !important;
+    animation: none !important;
   }
   .sc-screen {
     transition: none;
@@ -991,9 +1035,9 @@
   }
 }
 
-/* Seven apps fit on one row on wide screens. */
+/* As many apps as fit on a row. */
 @media (min-width: 901px) {
   .docs-apps {
-    grid-template-columns: repeat(7, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }

@@ -16,6 +16,7 @@ import { StatusPage } from './status/StatusPage';
 import { SecurityLayer } from './security/SecurityLayer';
 import { ThemeProvider } from './theme/ThemeProvider';
 import { WhatsNew } from './whatsnew/WhatsNew';
+import { SupportLink } from './components/SupportLink';
 
 export function App() {
   return (
@@ -75,6 +76,7 @@ function NotFound() {
       <Link to="/" className="elum-btn elum-btn--primary">
         Go to Browse
       </Link>
+      <SupportLink button code="404" message="We could not find that page" troubleshooting />
     </div>
   );
 }

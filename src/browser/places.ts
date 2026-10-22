@@ -1,11 +1,14 @@
-import { ACCOUNT_HOME, MAKE_URL, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
+import { ACCOUNT_HOME, HOME_URL, INQUIRE_URL, MAKE_URL, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 
 /**
  * The places Browse knows: ELUM apps it opens inside its own tabs, and its own pages. Each ELUM
  * app is shown under its elum.services address (write.elum.services), whatever site serves it.
  */
 
-export type ElumApp = 'write' | 'type' | 'make' | 'account' | 'store';
+/** The support form, served by Inquire, as a Browse path. */
+export const SUPPORT_PATH = '/app/inquire/f/support';
+
+export type ElumApp = 'write' | 'type' | 'make' | 'account' | 'store' | 'inquire' | 'home';
 
 export interface AppInfo {
   id: ElumApp;
@@ -15,14 +18,18 @@ export interface AppInfo {
   url: string;
   /** Its name on elum.services. */
   host: string;
+  /** Whether it can take a sign-in handed over by ELUM Account. The ELUM home has none. */
+  signIn: boolean;
 }
 
 export const ELUM_APPS: Record<ElumApp, AppInfo> = {
-  write: { id: 'write', name: 'Write', color: '#f59a52', url: WRITE_URL, host: 'write.elum.services' },
-  type: { id: 'type', name: 'Type', color: '#3fc4a0', url: TYPE_URL, host: 'type.elum.services' },
-  make: { id: 'make', name: 'Make', color: '#ec7fa9', url: MAKE_URL, host: 'make.elum.services' },
-  account: { id: 'account', name: 'Account', color: '#94c858', url: ACCOUNT_HOME, host: 'account.elum.services' },
-  store: { id: 'store', name: 'Store', color: '#e9b949', url: STORE_URL, host: 'store.elum.services' },
+  write: { id: 'write', name: 'Write', color: '#f59a52', url: WRITE_URL, host: 'write.elum.services', signIn: true },
+  type: { id: 'type', name: 'Type', color: '#3fc4a0', url: TYPE_URL, host: 'type.elum.services', signIn: true },
+  make: { id: 'make', name: 'Make', color: '#ec7fa9', url: MAKE_URL, host: 'make.elum.services', signIn: true },
+  account: { id: 'account', name: 'Account', color: '#94c858', url: ACCOUNT_HOME, host: 'account.elum.services', signIn: true },
+  store: { id: 'store', name: 'Store', color: '#e9b949', url: STORE_URL, host: 'store.elum.services', signIn: true },
+  inquire: { id: 'inquire', name: 'Inquire', color: '#f06a5f', url: INQUIRE_URL, host: 'inquire.elum.services', signIn: true },
+  home: { id: 'home', name: 'Home', color: '#7093f8', url: HOME_URL, host: 'elum.services', signIn: false },
 };
 
 const isApp = (v: string): v is ElumApp => v in ELUM_APPS;
@@ -35,6 +42,8 @@ const NAMES: Record<string, string> = {
   account: '/app/account',
   accounts: '/app/account',
   store: '/app/store',
+  inquire: '/app/inquire',
+  forms: '/app/inquire',
   browse: '/',
   search: '/',
   docs: '/docs',
@@ -42,8 +51,11 @@ const NAMES: Record<string, string> = {
   status: '/status',
 };
 
+/** Words that name an ELUM place only after "elum": a bare "home" or "support" is just a search. */
+const ELUM_ONLY: Record<string, string> = { home: '/app/home', support: SUPPORT_PATH };
+
 /** Hosts on elum.services that are Browse's own pages rather than apps. */
-const OWN_HOSTS: Record<string, string> = { browse: '', search: '', docs: '/docs', status: '/status', www: '/docs' };
+const OWN_HOSTS: Record<string, string> = { browse: '', search: '', docs: '/docs', status: '/status' };
 
 /** A path inside an app: "/d/123", never "//evil.example". */
 function safeRest(rest: string | undefined): string {
@@ -64,7 +76,7 @@ export function resolveElum(query: string): string | null {
   const url = q.match(/^(?:https?:\/\/)?(?:([a-z]+)\.)?elum\.services(\/\S*)?$/);
   if (url) {
     const [, sub, rest] = url;
-    if (!sub) return '/docs';
+    if (!sub || sub === 'www') return safeRest(rest) ? `/app/home${safeRest(rest)}` : '/app/home';
     const host = sub === 'accounts' ? 'account' : sub;
     if (isApp(host)) return `/app/${host}${safeRest(rest)}`;
     if (host in OWN_HOSTS) return OWN_HOSTS[host] || '/';
@@ -72,8 +84,9 @@ export function resolveElum(query: string): string | null {
   }
 
   const name = q.replace(/^elum[\s.-]*/, '').trim();
-  if (name === '' && q.startsWith('elum')) return '/docs';
+  if (name === '' && q.startsWith('elum')) return '/app/home';
   if (/\s/.test(name)) return null;
+  if (q.startsWith('elum') && ELUM_ONLY[name]) return ELUM_ONLY[name];
   return NAMES[name] ?? null;
 }
 
@@ -104,6 +117,8 @@ export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 
 export interface Place {
   kind: PlaceKind;
   title: string;
+  /** For app tabs: how the app is named in words, "ELUM Inquire", "ELUM Support", "ELUM home". */
+  label?: string;
   app?: AppInfo;
   /** For app tabs: the path inside the app. */
   appPath?: string;
@@ -118,7 +133,10 @@ export function describe(path: string): Place {
   if (parts[0] === 'app' && parts[1] && isApp(parts[1])) {
     const app = ELUM_APPS[parts[1]];
     const rest = '/' + parts.slice(2).join('/');
-    return { kind: 'app', title: app.name, app, appPath: (rest === '/' ? '' : rest) + url.search };
+    // The support form is a tab of its own, named for what it is.
+    const title = app.id === 'inquire' && rest === '/f/support' ? 'Support' : app.id === 'home' ? 'ELUM home' : app.name;
+    const label = app.id === 'home' ? 'ELUM home' : `ELUM ${title}`;
+    return { kind: 'app', title, label, app, appPath: (rest === '/' ? '' : rest) + url.search };
   }
   if (url.pathname === '/web') {
     const target = url.searchParams.get('url') ?? '';
@@ -146,7 +164,11 @@ export function describe(path: string): Place {
 /** The address Browse shows for a place: write.elum.services/d/123, or browse.elum.services/… */
 export function coverAddress(path: string): string {
   const place = describe(path);
-  if (place.kind === 'app' && place.app) return `${place.app.host}${place.appPath ?? ''}`;
+  if (place.kind === 'app' && place.app) {
+    // Support shows its plain address; what it was filled in with stays in the tab.
+    if (place.title === 'Support') return `${place.app.host}/f/support`;
+    return `${place.app.host}${place.appPath ?? ''}`;
+  }
   if (place.kind === 'web') return (place.webUrl ?? '').replace(/^https?:\/\//, '');
   const url = new URL(path, 'https://browse.invalid');
   return `browse.elum.services${url.pathname === '/' ? '' : url.pathname}${url.search}`;

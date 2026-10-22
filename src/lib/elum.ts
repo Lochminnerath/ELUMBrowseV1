@@ -21,6 +21,10 @@ export const ACCOUNT_HOME = ACCOUNT_URL ?? 'https://elumaccounts.netlify.app';
 export const MAKE_URL = clean(env.VITE_ELUM_MAKE_URL) ?? 'https://elummake.netlify.app';
 export const BROWSE_URL = clean(env.VITE_ELUM_BROWSE_URL) ?? 'https://elumbrowse.netlify.app';
 export const STORE_URL = clean(env.VITE_ELUM_STORE_URL) ?? 'https://elumstore.netlify.app';
+/** Inquire, the form designer, which also serves ELUM Support (/f/support). */
+export const INQUIRE_URL = clean(env.VITE_ELUM_INQUIRE_URL) ?? 'https://inquire.elum.services';
+/** The ELUM home, the public front door at elum.services. It has no sign-in of its own. */
+export const HOME_URL = clean(env.VITE_ELUM_HOME_URL) ?? 'https://elum.services';
 
 /** Where an ELUM app lives, for links that belong to it. */
 export function appUrl(service: string): string | null {
@@ -29,11 +33,13 @@ export function appUrl(service: string): string | null {
   if (service === 'make') return MAKE_URL;
   if (service === 'browse') return BROWSE_URL;
   if (service === 'store') return STORE_URL;
+  if (service === 'inquire') return INQUIRE_URL;
+  if (service === 'home') return HOME_URL;
   if (service === 'elum') return ACCOUNT_URL;
   return null;
 }
 
-const ELUM_ORIGINS = [ACCOUNT_URL, WRITE_URL, TYPE_URL, MAKE_URL, BROWSE_URL, STORE_URL].filter(Boolean).map((u) => new URL(u!).origin);
+const ELUM_ORIGINS = [ACCOUNT_URL, WRITE_URL, TYPE_URL, MAKE_URL, BROWSE_URL, STORE_URL, INQUIRE_URL].filter(Boolean).map((u) => new URL(u!).origin);
 
 /**
  * Where ELUM Account will hand a sign-in over: each app's own site, elum.services, and this

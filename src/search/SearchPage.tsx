@@ -10,6 +10,7 @@ import { GOOGLE_CSE_ID, GoogleElementResults, resultTarget, type Outcome } from 
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
+import { SupportLink } from '../components/SupportLink';
 
 type State =
   | { status: 'loading' }
@@ -104,6 +105,7 @@ export function SearchPage() {
             <a className="elum-btn elum-btn--secondary" href={googleWebUrl(q, kind)} rel="noreferrer">
               Search on Google instead
             </a>
+            <SupportLink button code="search" message={state.message} troubleshooting />
           </div>
         )}
 

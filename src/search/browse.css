@@ -242,7 +242,7 @@
   border-radius: 999px;
   background: var(--surface-glass);
   border: 1px solid var(--hairline);
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 .browse-recent__go {
   display: inline-flex;
@@ -358,7 +358,7 @@
   gap: 26px;
 }
 .browse-result {
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 .browse-result__link {
   display: flex;
@@ -552,7 +552,7 @@
 @keyframes browse-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(26px) scale(0.97);
   }
 }
 
@@ -673,7 +673,7 @@
   padding: 14px 0 16px !important;
   border: 0 !important;
   background: transparent !important;
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 /* Each result's site gets the ELUM disc in front of its address. */
 .browse-google-element .gsc-webResult.gsc-result .gsc-url-top {
@@ -809,7 +809,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  animation: browse-rise 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 800ms var(--ease-spring-soft) both;
 }
 .browse-skeleton__site {
   display: flex;
@@ -868,6 +868,34 @@
   .browse-skeleton__disc,
   .browse-skeleton__bar,
   .browse-skeleton__tile {
+    animation: none;
+  }
+}
+
+/* The front page arrives one piece after another. */
+.browse-home > * {
+  animation: browse-rise 900ms var(--ease-spring-soft) both;
+  animation-delay: calc(var(--n, 0) * var(--stagger));
+}
+.browse-home > :nth-child(2) { --n: 1; }
+.browse-home > :nth-child(3) { --n: 2; }
+.browse-home > :nth-child(4) { --n: 3; }
+.browse-home > :nth-child(5) { --n: 4; }
+.browse-home > :nth-child(6) { --n: 5; }
+.browse-home > :nth-child(7) { --n: 6; }
+.browse-home__mark {
+  animation-name: browse-pop;
+  animation-timing-function: var(--ease-spring);
+}
+@keyframes browse-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-12deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .browse-home > *,
+  .browse-recent__chip {
     animation: none;
   }
 }

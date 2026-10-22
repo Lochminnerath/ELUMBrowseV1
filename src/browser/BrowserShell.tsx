@@ -118,9 +118,9 @@ export function BrowserShell({ children }: { children: ReactNode }) {
   // The browser's own tab shows the app open in Browse.
   useFavicon(place.kind === 'app' && place.app ? `/brand/apps/${place.app.id}.svg` : null);
   useEffect(() => {
-    if (place.kind === 'app') document.title = `ELUM ${place.title} · Browse`;
+    if (place.kind === 'app') document.title = `${place.label} · Browse`;
     else if (place.kind === 'web') document.title = `${place.title} · Browse`;
-  }, [place.kind, place.title]);
+  }, [place.kind, place.title, place.label]);
 
   return (
     <div className="browser">
@@ -161,7 +161,7 @@ function Surfaces({ activeId, onSurface, reloads }: { activeId: string; onSurfac
         }
         const src = frameUrl(t.path);
         if (!src) return null;
-        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={`ELUM ${place.title}`} hidden={t.id !== activeId} />;
+        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={place.label ?? place.title} signIn={place.app?.signIn !== false} hidden={t.id !== activeId} />;
       })}
     </div>
   );
@@ -175,13 +175,13 @@ const signedFrames = new Set<string>();
  * opens in this visit, Browse asks ELUM Account for a one-time sign-in and loads the app through
  * it. The app keeps that sign-in for the rest of the visit, so later tabs load it directly.
  */
-function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: boolean }) {
+function AppFrame({ src, title, hidden, signIn }: { src: string; title: string; hidden: boolean; signIn: boolean }) {
   const { status } = useAuth();
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (status === 'loading') return;
     const target = new URL(src);
-    if (status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
+    if (!signIn || status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
       setUrl(src);
       return;
     }
@@ -196,7 +196,7 @@ function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: 
     return () => {
       live = false;
     };
-  }, [src, status]);
+  }, [src, status, signIn]);
   if (!url) {
     return (
       <div className="browser__frame browser__frame--waiting" hidden={hidden}>
@@ -249,7 +249,7 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
             if (e.key === 'Escape') (e.target as HTMLInputElement).blur();
           }}
         />
-        {place.kind === 'app' && <span className="app-bar__badge">ELUM {place.title}</span>}
+        {place.kind === 'app' && <span className="app-bar__badge">{place.label}</span>}
       </form>
       <button
         type="button"
