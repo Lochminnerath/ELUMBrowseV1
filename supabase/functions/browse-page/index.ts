@@ -19,12 +19,12 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 import { CORS, fail, ok } from '../_shared/http.ts';
 import { absoluteLink, frameAllowed, safePageUrl } from '../_shared/page.ts';
 
-const EMBEDDER = Deno.env.get('BROWSE_ORIGIN') ?? 'https://elumbrowse.netlify.app';
+const EMBEDDER = Deno.env.get('BROWSE_ORIGIN') ?? 'https://browsebyelum.netlify.app';
 const MAX_BYTES = 3_000_000;
 const TIMEOUT_MS = 9000;
 const MAX_REDIRECTS = 5;
 const HOURLY_LIMIT = 600;
-const USER_AGENT = 'Mozilla/5.0 (compatible; ELUM Browse; +https://elumbrowse.netlify.app/docs/browse)';
+const USER_AGENT = 'Mozilla/5.0 (compatible; ELUM Browse; +https://browsebyelum.netlify.app/docs/browse)';
 
 interface Reader {
   title: string;

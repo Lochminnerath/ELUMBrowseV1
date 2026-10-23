@@ -59,7 +59,7 @@ group('describe, cover and frame', () => {
     const path = '/app/inquire/f/support?app=write&code=403&message=Sign%20in%20again';
     expect(describe(path)).toMatchObject({ kind: 'app', title: 'Support', label: 'ELUM Support' });
     expect(coverAddress(path)).toBe('inquire.elum.services/f/support');
-    expect(frameUrl(path)).toBe('https://eluminquire.netlify.app/f/support?app=write&code=403&message=Sign%20in%20again');
+    expect(frameUrl(path)).toBe('https://inquirebyelum.netlify.app/f/support?app=write&code=403&message=Sign%20in%20again');
     expect(describe('/app/inquire/f/abc').title).toBe('Inquire');
     expect(describe('/app/inquire').label).toBe('ELUM Inquire');
   });
@@ -67,7 +67,7 @@ group('describe, cover and frame', () => {
   it('opens the ELUM home at elum.services', () => {
     expect(describe('/app/home')).toMatchObject({ kind: 'app', title: 'ELUM home', label: 'ELUM home' });
     expect(coverAddress('/app/home/products')).toBe('elum.services/products');
-    expect(frameUrl('/app/home/products')).toBe('https://elum.services/products');
+    expect(frameUrl('/app/home/products')).toBe('https://elum.netlify.app/products');
     expect(ELUM_APPS.home.signIn).toBe(false);
     expect(ELUM_APPS.inquire.signIn).toBe(true);
   });
@@ -75,7 +75,7 @@ group('describe, cover and frame', () => {
   it('shows apps under elum.services and loads them from where they live', () => {
     expect(coverAddress('/app/write/d/123')).toBe('write.elum.services/d/123');
     expect(coverAddress('/search?q=fox')).toBe('browse.elum.services/search?q=fox');
-    expect(frameUrl('/app/write/d/123')).toBe('https://elumwrite.netlify.app/d/123');
+    expect(frameUrl('/app/write/d/123')).toBe('https://writebyelum.netlify.app/d/123');
     expect(frameUrl('/search?q=fox')).toBeNull();
   });
 });

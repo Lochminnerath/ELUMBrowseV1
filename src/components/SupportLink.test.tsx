@@ -24,6 +24,6 @@ describe('SupportLink', () => {
   });
 
   it('uses the full address where Browse’s tabs are gone', () => {
-    expect(hrefOf(<SupportLink hard app="browse" from="/" />)).toBe('https://elumbrowse.netlify.app/app/inquire/f/support?app=browse&from=%2F');
+    expect(hrefOf(<SupportLink hard app="browse" from="/" />)).toBe('https://browsebyelum.netlify.app/app/inquire/f/support?app=browse&from=%2F');
   });
 });

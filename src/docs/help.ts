@@ -275,7 +275,7 @@ export const GUIDES: Record<ProductId, Guide[]> = {
         'To sign in, choose Sign in with a passkey. On many browsers your passkey also appears in the address field’s suggestions.',
         'A passkey is saved in your iCloud Keychain, Google Password Manager or another password manager, so your other devices can use it too.',
         'Rename a passkey so you can tell them apart, for example “Work laptop”. Remove one you don’t use any more.',
-        'Passkeys work on the ELUM Account site only: account.elum.services, and elumaccounts.netlify.app. A passkey belongs to the address it was made on.',
+        'Passkeys work on the ELUM Account site only: account.elum.services, and accountsbyelum.netlify.app. A passkey belongs to the address it was made on.',
         'Keep your password too. If you lose every device, your password is how you get back in to make a new passkey.',
       ],
     },
@@ -1083,13 +1083,13 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'Passkeys aren’t offered on a preview or test version of ELUM Account',
       says: 'Passkeys work on the ELUM Account site only.',
       why: 'A passkey belongs to the exact web address it was made on, and ELUM only lets ELUM Account’s own addresses make and use them. Preview and test versions of the site have other addresses, so the passkey buttons stay hidden there. If something tries anyway, this is what it says.',
-      fix: ['Open ELUM Account at account.elum.services or elumaccounts.netlify.app.', 'Make and use your passkey there.', 'If you’re at one of those addresses and still don’t see the button, see “I don’t see Create a passkey”.'],
+      fix: ['Open ELUM Account at account.elum.services or accountsbyelum.netlify.app.', 'Make and use your passkey there.', 'If you’re at one of those addresses and still don’t see the button, see “I don’t see Create a passkey”.'],
     },
     {
       problem: 'I don’t see Create a passkey',
       says: 'This browser cannot make passkeys. Try Safari, Chrome, Edge or Firefox on a recent device.',
       why: 'Your browser or device doesn’t support passkeys, or you’re not on ELUM Account’s own site. On an older device, or in a browser that’s out of date, the button is replaced by this note.',
-      fix: ['Update your browser and your phone or computer to the latest version.', 'Try Safari, Chrome, Edge or Firefox on a recent device.', 'Check the address bar says account.elum.services or elumaccounts.netlify.app.', 'Meanwhile, sign in with your password. Nothing else changes.'],
+      fix: ['Update your browser and your phone or computer to the latest version.', 'Try Safari, Chrome, Edge or Firefox on a recent device.', 'Check the address bar says account.elum.services or accountsbyelum.netlify.app.', 'Meanwhile, sign in with your password. Nothing else changes.'],
     },
     {
       problem: 'My device asks for a passkey and I closed the prompt',
@@ -1116,7 +1116,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'That passkey did not work',
       says: 'That passkey did not work. Try again, or use your password.',
       why: 'The passkey was found, but it couldn’t be checked. This can happen if the time on your device is wrong, if the passkey was made for a different address, or if it was copied badly between devices.',
-      fix: ['Try once more, picking the passkey again.', 'Check your device’s date and time are set automatically.', 'Make sure you’re on the address you made the passkey on: account.elum.services or elumaccounts.netlify.app.', 'Use your password, then make a new passkey.'],
+      fix: ['Try once more, picking the passkey again.', 'Check your device’s date and time are set automatically.', 'Make sure you’re on the address you made the passkey on: account.elum.services or accountsbyelum.netlify.app.', 'Use your password, then make a new passkey.'],
     },
     {
       problem: 'A passkey didn’t sign me in',
@@ -1193,8 +1193,8 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       fix: ['On Apple devices, turn on iCloud Keychain on both and use the same Apple account.', 'On Android and Chrome, sign in to the same Google account and turn on sync for passwords.', 'Otherwise, choose Sign in with a passkey and pick “Use a phone or tablet”, then scan the code.', 'Or make a separate passkey on the laptop in Security.'],
     },
     {
-      problem: 'I made a passkey on account.elum.services but elumaccounts.netlify.app doesn’t show it',
-      why: 'A passkey belongs to one web address. ELUM Account has two, account.elum.services and elumaccounts.netlify.app, and a passkey made on one is not offered on the other.',
+      problem: 'I made a passkey on account.elum.services but accountsbyelum.netlify.app doesn’t show it',
+      why: 'A passkey belongs to one web address. ELUM Account has two, account.elum.services and accountsbyelum.netlify.app, and a passkey made on one is not offered on the other.',
       fix: ['Sign in on the address you made it on.', 'Or sign in with your password and make a passkey on the other address too.', 'Pick the address you’ll use every day, and make your passkey there.'],
     },
     {
@@ -1323,12 +1323,12 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
     {
       problem: 'Contact support opens a blank page',
       why: 'The support form couldn’t load, often because of a content blocker or a slow connection.',
-      fix: ['Reload the tab, or choose Reload in the address bar.', 'Turn off any content blocker for ELUM and try again.', 'Still blank? Open elumbrowse.netlify.app/app/inquire/f/support in a new window.'],
+      fix: ['Reload the tab, or choose Reload in the address bar.', 'Turn off any content blocker for ELUM and try again.', 'Still blank? Open browsebyelum.netlify.app/app/inquire/f/support in a new window.'],
     },
     {
       problem: 'I want to contact support but I can’t sign in',
       why: 'You don’t need to sign in to send the support form.',
-      fix: ['Choose Contact support on the sign-in screen, or open elumbrowse.netlify.app/app/inquire/f/support.', 'Tell us the address you use and what you see on the screen.'],
+      fix: ['Choose Contact support on the sign-in screen, or open browsebyelum.netlify.app/app/inquire/f/support.', 'Tell us the address you use and what you see on the screen.'],
     },
     {
       problem: 'I sent the support form and heard nothing back',
@@ -1348,7 +1348,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
     {
       problem: 'elum.services shows the old Docs page',
       why: 'Your browser may be holding on to an older copy.',
-      fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at elumbrowse.netlify.app/docs. The ELUM home has the products and the mission.'],
+      fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at browsebyelum.netlify.app/docs. The ELUM home has the products and the mission.'],
     },
     {
       problem: 'Where did “Start here” go?',

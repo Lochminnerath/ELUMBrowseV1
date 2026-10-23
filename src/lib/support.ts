@@ -5,7 +5,7 @@
  */
 
 /** Where Support opens, whatever the app is running on: Browse on elum.services, even in development. */
-const BROWSE_ORIGIN = 'https://elumbrowse.netlify.app';
+const BROWSE_ORIGIN = 'https://browsebyelum.netlify.app';
 const SUPPORT_ROUTE = '/app/inquire/f/support';
 
 export interface SupportDetails {
@@ -37,7 +37,7 @@ export function supportPath(app: string, details: SupportDetails = {}): string {
   return `${SUPPORT_ROUTE}?${query(app, details)}`;
 }
 
-/** The full address, which works from any ELUM app: https://elumbrowse.netlify.app/app/inquire/f/support?app=… */
+/** The full address, which works from any ELUM app: https://browsebyelum.netlify.app/app/inquire/f/support?app=… */
 export function supportUrl(app: string, details: SupportDetails = {}): string {
   return `${BROWSE_ORIGIN}${supportPath(app, details)}`;
 }

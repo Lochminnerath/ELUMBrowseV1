@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { absoluteLink, frameAllowed, safePageUrl } from './page';
 
-const BROWSE = 'https://elumbrowse.netlify.app';
+const BROWSE = 'https://browsebyelum.netlify.app';
 const headers = (h: Record<string, string>) => new Headers(h);
 
 describe('safePageUrl', () => {

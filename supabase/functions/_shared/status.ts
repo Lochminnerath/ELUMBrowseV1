@@ -45,12 +45,12 @@ export function overall(checks: Check[]): Health {
 }
 
 export const DEFAULT_SITES: { id: string; name: string; url: string }[] = [
-  { id: 'write', name: 'Write', url: 'https://elumwrite.netlify.app' },
-  { id: 'type', name: 'Type', url: 'https://elumtype.netlify.app' },
-  { id: 'make', name: 'Make', url: 'https://elummake.netlify.app' },
-  { id: 'account', name: 'Account', url: 'https://elumaccounts.netlify.app' },
-  { id: 'browse', name: 'Browse', url: 'https://elumbrowse.netlify.app' },
-  { id: 'store', name: 'Store', url: 'https://elumstore.netlify.app' },
+  { id: 'write', name: 'Write', url: 'https://writebyelum.netlify.app' },
+  { id: 'type', name: 'Type', url: 'https://typebyelum.netlify.app' },
+  { id: 'make', name: 'Make', url: 'https://makebyelum.netlify.app' },
+  { id: 'account', name: 'Account', url: 'https://accountsbyelum.netlify.app' },
+  { id: 'browse', name: 'Browse', url: 'https://browsebyelum.netlify.app' },
+  { id: 'store', name: 'Store', url: 'https://storebyelum.netlify.app' },
 ];
 
 /** ELUM_STATUS_SITES, as id=url pairs separated by commas, replaces the default sites. */

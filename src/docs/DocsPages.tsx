@@ -20,7 +20,7 @@ type ShotId = Exclude<ProductId, 'inquire' | 'home'>;
 const hasShots = (id: ProductId): id is ShotId => id !== 'inquire' && id !== 'home';
 
 /** The URL where New to ELUM? people should start: Products on the ELUM home. */
-const START_URL = 'https://elum.services/products';
+const START_URL = 'https://elum.netlify.app/products';
 
 const SYMBOLS: Record<Symbol, ComponentType<IconProps>> = {
   new: Icons.NewIcon,

@@ -5,10 +5,10 @@ import type { Plugin } from 'vite';
 
 /**
  * /opensearch.xml, so browsers can add ELUM Browse as a search engine. It needs the site's full
- * address: VITE_ELUM_BROWSE_URL, or https://elumbrowse.netlify.app.
+ * address: VITE_ELUM_BROWSE_URL, or https://browsebyelum.netlify.app.
  */
 function openSearch(): Plugin {
-  const base = (process.env.VITE_ELUM_BROWSE_URL?.trim() || 'https://elumbrowse.netlify.app').replace(/\/+$/, '');
+  const base = (process.env.VITE_ELUM_BROWSE_URL?.trim() || 'https://browsebyelum.netlify.app').replace(/\/+$/, '');
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>ELUM Browse</ShortName>

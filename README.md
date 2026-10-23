@@ -65,7 +65,7 @@ npm run build
 **Website (Netlify).** Create a site from this repository (suggested name `elumbrowse`), and set
 `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` for all deploy contexts. `netlify.toml` has the
 build, the single-page routing (so `/search?q=…` links and refreshes work) and the privacy headers.
-Set `VITE_ELUM_BROWSE_URL` if Browse lives somewhere other than https://elumbrowse.netlify.app.
+Set `VITE_ELUM_BROWSE_URL` if Browse lives somewhere other than https://browsebyelum.netlify.app.
 
 **Search function (Supabase).** `supabase/functions/browse-search`, deployed with JWT
 verification off (searching needs no account):
