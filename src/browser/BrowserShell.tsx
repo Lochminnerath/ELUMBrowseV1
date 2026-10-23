@@ -118,9 +118,9 @@ export function BrowserShell({ children }: { children: ReactNode }) {
   // The browser's own tab shows the app open in Browse.
   useFavicon(place.kind === 'app' && place.app ? `/brand/apps/${place.app.id}.svg` : null);
   useEffect(() => {
-    if (place.kind === 'app') document.title = `ELUM ${place.title} · Browse`;
+    if (place.kind === 'app') document.title = `${place.label} · Browse`;
     else if (place.kind === 'web') document.title = `${place.title} · Browse`;
-  }, [place.kind, place.title]);
+  }, [place.kind, place.title, place.label]);
 
   return (
     <div className="browser">
@@ -161,7 +161,7 @@ function Surfaces({ activeId, onSurface, reloads }: { activeId: string; onSurfac
         }
         const src = frameUrl(t.path);
         if (!src) return null;
-        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={`ELUM ${place.title}`} hidden={t.id !== activeId} />;
+        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={place.label ?? place.title} signIn={place.app?.signIn !== false} hidden={t.id !== activeId} />;
       })}
     </div>
   );
@@ -175,13 +175,13 @@ const signedFrames = new Set<string>();
  * opens in this visit, Browse asks ELUM Account for a one-time sign-in and loads the app through
  * it. The app keeps that sign-in for the rest of the visit, so later tabs load it directly.
  */
-function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: boolean }) {
+function AppFrame({ src, title, hidden, signIn }: { src: string; title: string; hidden: boolean; signIn: boolean }) {
   const { status } = useAuth();
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (status === 'loading') return;
     const target = new URL(src);
-    if (status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
+    if (!signIn || status !== 'signed-in' || api.mode !== 'remote' || !api.handoff || signedFrames.has(target.origin)) {
       setUrl(src);
       return;
     }
@@ -196,7 +196,7 @@ function AppFrame({ src, title, hidden }: { src: string; title: string; hidden: 
     return () => {
       live = false;
     };
-  }, [src, status]);
+  }, [src, status, signIn]);
   if (!url) {
     return (
       <div className="browser__frame browser__frame--waiting" hidden={hidden}>
@@ -249,7 +249,7 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
             if (e.key === 'Escape') (e.target as HTMLInputElement).blur();
           }}
         />
-        {place.kind === 'app' && <span className="app-bar__badge">ELUM {place.title}</span>}
+        {place.kind === 'app' && <span className="app-bar__badge">{place.label}</span>}
       </form>
       <button
         type="button"
@@ -324,6 +324,15 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
   const [menuOpen, setMenuOpen] = useState(false);
   const place = describe(tab.path);
   const color = group ? GROUP_COLORS[group.color] : undefined;
+  const [leaving, setLeaving] = useState(false);
+  // The tab folds away first, then closes. Without motion it closes straight away.
+  const close = () => {
+    if (leaving) return;
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (still) return updateTabs((st) => closeTabs(st, [tab.id]));
+    setLeaving(true);
+    window.setTimeout(() => updateTabs((st) => closeTabs(st, [tab.id])), 170);
+  };
 
   const items = (): MenuEntry[] => {
     const others = s.groups.filter((g) => g.id !== tab.groupId);
@@ -354,7 +363,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         : []),
       ...(tab.groupId ? [{ label: 'Remove from group', onSelect: () => updateTabs((st) => ungroupTab(st, tab.id)) }] : []),
       'separator',
-      { label: 'Close tab', icon: <Icons.DeleteIcon size={16} />, onSelect: () => updateTabs((st) => closeTabs(st, [tab.id])) },
+      { label: 'Close tab', icon: <Icons.DeleteIcon size={16} />, onSelect: close },
       ...(s.tabs.length > 1
         ? [{ label: 'Close other tabs', onSelect: () => updateTabs((st) => closeTabs(st, st.tabs.filter((t) => t.id !== tab.id).map((t) => t.id))) }]
         : []),
@@ -365,6 +374,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
     <div
       className="tab"
       data-active={active || undefined}
+      data-leaving={leaving || undefined}
       data-grouped={group ? true : undefined}
       style={color ? ({ '--group': color } as CSSProperties) : undefined}
       onContextMenu={(e) => {
@@ -372,7 +382,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         setMenuOpen(true);
       }}
       onAuxClick={(e) => {
-        if (e.button === 1) updateTabs((st) => closeTabs(st, [tab.id]));
+        if (e.button === 1) close();
       }}
     >
       <button type="button" role="tab" aria-selected={active} className="tab__main" title={place.kind === 'app' ? coverAddress(tab.path) : place.title} onClick={() => updateTabs((st) => activate(st, tab.id))}>
@@ -390,7 +400,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
           </button>
         )}
       />
-      <button type="button" className="tab__close" aria-label={`Close ${place.title}`} onClick={() => updateTabs((st) => closeTabs(st, [tab.id]))}>
+      <button type="button" className="tab__close" aria-label={`Close ${place.title}`} onClick={close}>
         <X size={14} strokeWidth={2} />
       </button>
     </div>

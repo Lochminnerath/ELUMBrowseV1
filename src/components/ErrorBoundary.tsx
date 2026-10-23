@@ -1,5 +1,6 @@
 import { Component, type ReactNode } from 'react';
 import { BrowseMark } from './Brand';
+import { SupportLink } from './SupportLink';
 
 interface State {
   error: Error | null;
@@ -25,6 +26,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
         <button type="button" className="elum-btn elum-btn--primary" onClick={() => window.location.reload()}>
           Reload
         </button>
+        <SupportLink hard button app="browse" code={stale ? 'stale-version' : 'error-boundary'} message={this.state.error.message} from={window.location.pathname} />
       </div>
     );
   }

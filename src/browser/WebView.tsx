@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { api, errorMessage, type PageInfo } from '../api';
 import { Loader } from '../components/Loader';
 import './webview.css';
+import { SupportLink } from '../components/SupportLink';
 
 /**
  * A web page inside a Browse tab. Sites that let other sites frame them are shown as themselves,
@@ -162,6 +163,7 @@ function Unavailable({ url, title, text }: { url: string; title: string; text: s
         <a className="elum-btn elum-btn--primary" href={url} target="_blank" rel="noreferrer">
           Open in new window
         </a>
+        <SupportLink button code="web-page" message={text} troubleshooting />
       </div>
     </div>
   );

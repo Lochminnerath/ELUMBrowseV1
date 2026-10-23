@@ -112,6 +112,15 @@ export class LocalApi implements BrowseApi {
     return publicUser(user);
   }
 
+  /** Kept per local account, standing in for the account's metadata. */
+  async whatsNewSeen(): Promise<string | null> {
+    return localStorage.getItem(`${KEY}.whatsnew.${this.me().id}`);
+  }
+
+  async setWhatsNewSeen(id: string): Promise<void> {
+    localStorage.setItem(`${KEY}.whatsnew.${this.me().id}`, id);
+  }
+
   // ------------------------------------------------------------------ search
 
   /** Unconnected (development): no server to ask Google, so Browse offers Google's own results. */

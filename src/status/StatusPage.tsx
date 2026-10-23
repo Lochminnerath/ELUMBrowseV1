@@ -5,6 +5,7 @@ import { AttachIcon, PrivateIcon, SavedIcon, SendIcon, VisibleIcon } from '../co
 import { Loader } from '../components/Loader';
 import { BrowseHeader } from '../search/BrowseHeader';
 import './status.css';
+import { SupportLink } from '../components/SupportLink';
 
 const REFRESH_MS = 60_000;
 
@@ -82,6 +83,9 @@ export function StatusPage() {
           <button type="button" className="elum-btn elum-btn--secondary status-again" onClick={() => void check()} disabled={checking}>
             {checking ? <Loader size={18} label="Checking" /> : 'Check again'}
           </button>
+          {(state.status === 'error' || (state.status === 'done' && state.data.overall !== 'up')) && (
+            <SupportLink button code="status" message={state.status === 'error' ? state.message : undefined} troubleshooting />
+          )}
         </section>
 
         {state.status === 'done' &&

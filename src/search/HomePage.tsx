@@ -7,6 +7,7 @@ import { BrowseHeader } from './BrowseHeader';
 import { clearSearches, forgetSearch, historyPaused, recentSearches, safeSearch, setHistoryPaused, setSafeSearch } from './local';
 import { SearchBox } from './SearchBox';
 import './browse.css';
+import { SupportLink } from '../components/SupportLink';
 
 /** Browse's front page: the mark, the box, and your recent searches from this browser. */
 export function HomePage() {
@@ -96,7 +97,7 @@ export function HomePage() {
       </main>
       <footer className="browse-foot">
         <span>
-          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link>
+          Made by you. Runs without AI. <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link> · <SupportLink>Support</SupportLink>
         </span>
         <span className="muted">Searches go to Google to find results. ELUM does not keep them.</span>
       </footer>

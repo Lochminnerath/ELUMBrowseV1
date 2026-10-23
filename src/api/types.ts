@@ -110,7 +110,7 @@ export interface ElumStatus {
   checks: StatusCheck[];
 }
 
-export type ServiceId = 'write' | 'type' | 'browse' | 'make' | 'store';
+export type ServiceId = 'write' | 'type' | 'browse' | 'make' | 'store' | 'inquire';
 
 export interface AppNotification {
   id: string;

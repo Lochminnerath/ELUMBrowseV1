@@ -29,6 +29,17 @@ export const APP_NAME = 'Browse';
 
 export const RELEASES: Release[] = [
   {
+    id: '2026-10-22-docs',
+    date: '22 October 2026',
+    title: 'New ELUM Docs',
+    intro: 'The docs have a fresh look, and a lot more answers for when something goes wrong.',
+    features: [
+      { title: 'A tour of every app', text: 'Each app’s page shows it on a phone and a computer, one step at a time as you scroll.', art: 'devices' },
+      { title: 'Many more answers', text: 'Troubleshooting now covers signing in, approvals, passkeys, sharing, notifications and every app. Search it by the message on your screen.', art: 'check' },
+      { title: 'Tune is on the way', text: 'ELUM’s music service has its own page in the docs, ready for when it opens.', art: 'spark' },
+    ],
+  },
+  {
     id: '2026-10-20-store',
     date: '20 October 2026',
     title: 'ELUM Store, in Browse',
@@ -90,11 +101,33 @@ export const RELEASES: Release[] = [
   },
 ];
 
-/** The releases someone has not seen yet, given the last one they saw. New visitors see the latest. */
+/**
+ * The releases someone has not seen yet: only those newer than the last one they saw. With nothing
+ * seen (someone new, or a release that no longer exists) there is nothing to show.
+ */
 export function unseenReleases(releases: Release[], lastSeen: string | null): Release[] {
-  if (!releases.length) return [];
   const at = lastSeen ? releases.findIndex((r) => r.id === lastSeen) : -1;
-  return at === -1 ? releases.slice(0, 1) : releases.slice(0, at);
+  return at === -1 ? [] : releases.slice(0, at);
+}
+
+export interface WhatsNewPlan {
+  /** Releases to show now. */
+  show: Release[];
+  /** The id to remember now, quietly, on the account and this device; null when nothing changes. */
+  record: string | null;
+}
+
+/**
+ * What to do when Browse opens, given what the account remembers and what this device has cached.
+ * The account wins. Nothing ever recorded: remember the latest quietly and show nothing.
+ */
+export function planWhatsNew(releases: Release[], account: string | null, cached: string | null): WhatsNewPlan {
+  const latest = releases[0]?.id ?? null;
+  const seen = account ?? cached;
+  const show = unseenReleases(releases, seen);
+  // With something to show, the latest is recorded when the tour closes.
+  const record = show.length || account === latest ? null : latest;
+  return { show, record };
 }
 
 export interface Step {

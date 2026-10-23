@@ -242,7 +242,7 @@
   border-radius: 999px;
   background: var(--surface-glass);
   border: 1px solid var(--hairline);
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 .browse-recent__go {
   display: inline-flex;
@@ -358,7 +358,7 @@
   gap: 26px;
 }
 .browse-result {
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 .browse-result__link {
   display: flex;
@@ -552,7 +552,7 @@
 @keyframes browse-rise {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(26px) scale(0.97);
   }
 }
 
@@ -673,7 +673,7 @@
   padding: 14px 0 16px !important;
   border: 0 !important;
   background: transparent !important;
-  animation: browse-rise 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: browse-rise 700ms var(--ease-spring-soft) both;
 }
 /* Each result's site gets the ELUM disc in front of its address. */
 .browse-google-element .gsc-webResult.gsc-result .gsc-url-top {
@@ -787,6 +787,115 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .browse-google-element .gsc-webResult.gsc-result {
+    animation: none;
+  }
+}
+
+/* ---- While searching: shapes where the results will land, with a soft shimmer ---- */
+.browse-skeleton {
+  --sk: color-mix(in srgb, var(--ink) 7%, transparent);
+  --sk-shine: color-mix(in srgb, var(--browse) 14%, transparent);
+  padding: 4px 0 24px;
+}
+.browse-skeleton__list {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.browse-skeleton__list li {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  animation: browse-rise 800ms var(--ease-spring-soft) both;
+}
+.browse-skeleton__site {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.browse-skeleton__disc,
+.browse-skeleton__bar,
+.browse-skeleton__tile {
+  display: block;
+  background: linear-gradient(100deg, var(--sk) 30%, var(--sk-shine) 50%, var(--sk) 70%) 0 0 / 300% 100%;
+  animation: browse-shimmer 1.6s ease-in-out infinite;
+}
+.browse-skeleton__disc {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.browse-skeleton__bar {
+  width: 100%;
+  max-width: 600px;
+  height: 12px;
+  border-radius: 6px;
+}
+.browse-skeleton__bar--title {
+  height: 20px;
+  border-radius: 8px;
+}
+.browse-skeleton__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+.browse-skeleton__tile {
+  aspect-ratio: 1;
+  border-radius: 16px;
+}
+.browse-result {
+  animation-duration: 560ms;
+}
+@keyframes browse-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@media (max-width: 600px) {
+  .browse-skeleton__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .browse-skeleton__list li,
+  .browse-skeleton__disc,
+  .browse-skeleton__bar,
+  .browse-skeleton__tile {
+    animation: none;
+  }
+}
+
+/* The front page arrives one piece after another. */
+.browse-home > * {
+  animation: browse-rise 900ms var(--ease-spring-soft) both;
+  animation-delay: calc(var(--n, 0) * var(--stagger));
+}
+.browse-home > :nth-child(2) { --n: 1; }
+.browse-home > :nth-child(3) { --n: 2; }
+.browse-home > :nth-child(4) { --n: 3; }
+.browse-home > :nth-child(5) { --n: 4; }
+.browse-home > :nth-child(6) { --n: 5; }
+.browse-home > :nth-child(7) { --n: 6; }
+.browse-home__mark {
+  animation-name: browse-pop;
+  animation-timing-function: var(--ease-spring);
+}
+@keyframes browse-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-12deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .browse-home > *,
+  .browse-recent__chip {
     animation: none;
   }
 }

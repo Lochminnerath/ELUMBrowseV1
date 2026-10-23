@@ -10,6 +10,7 @@ import { GOOGLE_CSE_ID, GoogleElementResults, resultTarget, type Outcome } from 
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
+import { SupportLink } from '../components/SupportLink';
 
 type State =
   | { status: 'loading' }
@@ -95,9 +96,7 @@ export function SearchPage() {
         }}
       >
         {state.status === 'loading' && (
-          <div className="browse-results__loading">
-            <Loader size={40} label="Searching" />
-          </div>
+          <ResultsSkeleton images={kind === 'images'} />
         )}
 
         {state.status === 'error' && (
@@ -106,6 +105,7 @@ export function SearchPage() {
             <a className="elum-btn elum-btn--secondary" href={googleWebUrl(q, kind)} rel="noreferrer">
               Search on Google instead
             </a>
+            <SupportLink button code="search" message={state.message} troubleshooting />
           </div>
         )}
 
@@ -181,6 +181,36 @@ export function SearchPage() {
   );
 }
 
+/** Shapes where results are about to land, shimmering while Browse asks Google. */
+function ResultsSkeleton({ images }: { images: boolean }) {
+  return (
+    <div className="browse-skeleton" role="status" data-images={images || undefined}>
+      <span className="visually-hidden">Searching</span>
+      {images ? (
+        <div className="browse-skeleton__grid" aria-hidden="true">
+          {Array.from({ length: 12 }, (_, i) => (
+            <span key={i} className="browse-skeleton__tile" style={{ animationDelay: `${i * 40}ms` }} />
+          ))}
+        </div>
+      ) : (
+        <ul className="browse-skeleton__list" aria-hidden="true">
+          {Array.from({ length: 5 }, (_, i) => (
+            <li key={i} style={{ animationDelay: `${i * 70}ms` }}>
+              <span className="browse-skeleton__site">
+                <span className="browse-skeleton__disc" />
+                <span className="browse-skeleton__bar" style={{ width: 120 }} />
+              </span>
+              <span className="browse-skeleton__bar browse-skeleton__bar--title" style={{ width: `${62 + ((i * 17) % 30)}%` }} />
+              <span className="browse-skeleton__bar" />
+              <span className="browse-skeleton__bar" style={{ width: `${70 + ((i * 11) % 25)}%` }} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 /** How many results were left out for leading to AI chat products. */
 function HiddenNote({ count }: { count: number }) {
   if (count <= 0) return null;
@@ -196,7 +226,7 @@ function HiddenNote({ count }: { count: number }) {
 function WebResult({ result: r, index }: { result: SearchResult; index: number }) {
   const hue = siteHue(r.site);
   return (
-    <li className="browse-result" style={{ animationDelay: `${Math.min(index, 10) * 30}ms` }}>
+    <li className="browse-result" style={{ animationDelay: `${Math.min(index, 10) * 45}ms` }}>
       <a className="browse-result__link" href={r.url} rel="noreferrer">
         <span className="browse-result__site">
           <span className="browse-result__disc" style={{ background: `hsl(${hue} 70% 92%)`, color: `hsl(${hue} 55% 32%)` }} aria-hidden="true">

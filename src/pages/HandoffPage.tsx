@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { api, errorMessage } from '../api';
 import { BrowseMark } from '../components/Brand';
 import { FullPageLoader } from '../components/Loader';
+import { SupportLink } from '../components/SupportLink';
 
 /**
  * /auth/handoff#token_hash=…&next=…: ELUM Account sent someone here signed in. The token works
@@ -37,6 +38,7 @@ export function HandoffPage() {
       <Link to="/signin" className="elum-btn elum-btn--primary">
         Sign in
       </Link>
+      <SupportLink button code="handoff" message={error} troubleshooting />
     </div>
   );
 }

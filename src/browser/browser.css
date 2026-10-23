@@ -99,11 +99,19 @@
   padding: 0 4px 0 2px;
   border-radius: 14px 14px 0 0;
   color: var(--ink-muted);
-  transition: background 160ms ease, color 160ms ease;
-  animation: tab-in 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: background var(--dur-quick) ease, color var(--dur-quick) ease, transform var(--dur-base) var(--ease-spring);
+  animation: tab-in 560ms var(--ease-spring);
+  transform-origin: 50% 100%;
+}
+.tab[data-leaving] {
+  pointer-events: none;
+  animation: tab-out 240ms var(--ease-in) forwards;
 }
 .tab:hover {
   background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+.tab:active {
+  transform: scale(0.97);
 }
 .tab[data-active] {
   background: var(--surface);
@@ -424,7 +432,23 @@
 @keyframes tab-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    width: 0;
+    transform: translateY(14px) scaleY(0.7) scaleX(0.8);
+  }
+  35% {
+    opacity: 1;
+  }
+}
+@keyframes tab-out {
+  40% {
+    opacity: 0.4;
+    transform: translateY(6px) scale(0.94);
+  }
+  to {
+    opacity: 0;
+    width: 0;
+    padding: 0;
+    transform: translateY(10px) scale(0.8);
   }
 }
 @keyframes status-pulse {

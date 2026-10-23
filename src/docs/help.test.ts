@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { PRODUCTS } from './content';
+import { LIVE_PRODUCTS, PRODUCTS } from './content';
 import { allTroubles, COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES } from './help';
 
 describe('ELUM Docs help', () => {
   it('has guides and troubleshooting for every app', () => {
-    for (const p of PRODUCTS) {
+    for (const p of LIVE_PRODUCTS) {
       expect(GUIDES[p.id].length, p.id).toBeGreaterThanOrEqual(3);
       expect(TROUBLES[p.id].length, p.id).toBeGreaterThanOrEqual(5);
       for (const t of TROUBLES[p.id]) {
@@ -12,11 +12,68 @@ describe('ELUM Docs help', () => {
         expect(t.fix.length, t.problem).toBeGreaterThan(0);
       }
     }
-    expect(COMMON_TROUBLES.length).toBeGreaterThanOrEqual(5);
+    expect(COMMON_TROUBLES.length).toBeGreaterThanOrEqual(40);
+    expect(allTroubles().length).toBeGreaterThanOrEqual(240);
+  });
+
+  it('covers every app well', () => {
+    for (const p of LIVE_PRODUCTS) expect(TROUBLES[p.id].length, p.id).toBeGreaterThanOrEqual(p.id === 'home' ? 6 : 14);
+  });
+
+  it('covers Inquire, with a guide for each thing people do', () => {
+    expect(GUIDES.inquire.map((g) => g.title)).toEqual(['Designing a form', 'Sharing the link', 'Reading responses', 'Conditional questions', 'Closing a form']);
+    expect(GUIDES.home.map((g) => g.title)).toContain('Contacting support');
+  });
+
+  it('answers every passkey message the Account app shows', () => {
+    const passkeys = TROUBLES.account.filter((t) => /passkey/i.test(`${t.problem} ${t.says ?? ''}`));
+    expect(passkeys.length).toBeGreaterThanOrEqual(14);
+    for (const t of passkeys) {
+      expect(t.why.length, t.problem).toBeGreaterThan(20);
+      expect(t.fix.length, t.problem).toBeGreaterThan(0);
+    }
+    const messages = [
+      'Passkeys work on the ELUM Account site only.',
+      'This browser cannot make passkeys. Try Safari, Chrome, Edge or Firefox on a recent device.',
+      'We do not know that passkey. It may have been removed from your account.',
+      'That passkey did not work. Try again, or use your password.',
+      'That passkey did not sign you in. Try again, or use your password.',
+      'This browser could not use a passkey. Try again, or use your password.',
+      'This device already has a passkey for your account.',
+      'That took too long. Try again.',
+      'The passkey did not answer. Try again.',
+      'We could not save that passkey. Try again.',
+      'Sign in first, then make a passkey.',
+      'Too many tries. Wait a few minutes and try again.',
+      'Passkeys work once ELUM is connected.',
+      'That passkey is not in your account.',
+    ];
+    const says = new Set(TROUBLES.account.map((t) => t.says));
+    for (const m of messages) expect(says.has(m), m).toBe(true);
+    expect(GUIDES.account.map((g) => g.title)).toContain('Passkeys');
+  });
+
+  it('never repeats a problem across every app', () => {
+    const common = COMMON_TROUBLES.map((t) => t.problem);
+    expect(new Set(common).size).toBe(common.length);
+  });
+
+  it('shows Tune as coming soon, with nothing it can’t do yet', () => {
+    const tune = PRODUCTS.find((p) => p.id === 'tune');
+    expect(tune?.soon).toBe(true);
+    expect(tune?.color).toBe('#48bfe3');
+    expect(tune?.steps).toEqual([]);
+    expect(tune?.features).toEqual([]);
+    expect(LIVE_PRODUCTS.some((p) => p.id === ('tune' as string))).toBe(false);
+  });
+
+  it('answers the questions people ask most', () => {
+    for (const q of ['passkey', 'account.elum.services', 'security key', 'iCloud Keychain', 'conditional', 'nearby', 'approval email', 'version history', 'brand kit', 'private browsing', 'delete my account', 'notifications', 'What’s new', 'offline'])
+      expect(searchTroubles(q).length, q).toBeGreaterThan(0);
   });
 
   it('never repeats a problem within an app', () => {
-    for (const p of PRODUCTS) {
+    for (const p of LIVE_PRODUCTS) {
       const names = TROUBLES[p.id].map((t) => t.problem);
       expect(new Set(names).size, p.id).toBe(names.length);
     }

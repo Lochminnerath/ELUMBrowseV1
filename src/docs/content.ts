@@ -1,9 +1,13 @@
 /**
- * ELUM Docs: a starting page for each ELUM app, and one for ELUM as a whole. Words only; the
+ * ELUM Docs: a guide for each ELUM app, and one for the ELUM home and Support. New to ELUM? The
+ * start-here part lives on the ELUM home (elum.services/products). Words only; the
  * pages that show them are in DocsPages.tsx. Keep each step to something people can do today.
  */
 
-export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account';
+export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account' | 'inquire' | 'home';
+
+/** Every app with a page in the docs, including the ones still on the way. */
+export type DocsId = ProductId | 'tune';
 
 /** Which ELUM symbol a feature card shows (see components/icons/ElumIcons.tsx). */
 export type Symbol =
@@ -42,7 +46,7 @@ export interface Feature {
 }
 
 export interface Product {
-  id: ProductId;
+  id: DocsId;
   name: string;
   /** The app's brand colour, and its pale wash. */
   color: string;
@@ -56,6 +60,8 @@ export interface Product {
   steps: Step[];
   features: Feature[];
   tips: string[];
+  /** Not open yet: the page says Coming soon, with no steps or features. */
+  soon?: boolean;
 }
 
 type Words = Omit<Product, 'url'>;
@@ -152,7 +158,7 @@ export const PRODUCTS: Words[] = [
     features: [
       { symbol: 'visible', title: 'Just the web', text: 'You get Google’s results without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches stay with you', text: 'Recent searches are kept on this device only, and you can clear one or all of them whenever you like.' },
-      { symbol: 'open', title: 'Your ELUM apps, right here', text: 'Type write, type, make, store or account, or an address like make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
+      { symbol: 'open', title: 'Your ELUM apps, right here', text: 'Type write, type, make, store, inquire or account, or an address like make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
       { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and addresses you type open in a Browse tab. If a site won’t let other sites show it, you get a clean reading view instead, with the original one click away.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
     ],
@@ -209,12 +215,72 @@ export const PRODUCTS: Words[] = [
       'The ring around your picture shows which ELUM apps are in your account.',
     ],
   },
+  {
+    id: 'inquire',
+    name: 'Inquire',
+    color: '#f06a5f',
+    mist: '#fdecea',
+    kind: 'Forms',
+    headline: 'Getting started with Inquire',
+    intro: 'Inquire is where you design a form, share a link, and read the answers that come back. People can fill it in without an account.',
+    steps: [
+      { title: 'Design your form', text: 'Choose New form, give it a name, and add your questions. Drag them into the order you like and say which ones must be answered.' },
+      { title: 'Share the link', text: 'Every form has its own link. Send it to anyone, and they can answer in their browser, on a phone or a computer.' },
+      { title: 'Read the answers', text: 'Responses arrive as people send them. Open the form to read them one by one, or all together, and close the form when you have enough.' },
+    ],
+    features: [
+      { symbol: 'compose', title: 'Questions that fit', text: 'Short answers, long answers, choices and more. Mark a question as required and people can’t send the form without it.' },
+      { symbol: 'link', title: 'One link to share', text: 'Anyone with the link can fill the form in. Signing in is optional for them.' },
+      { symbol: 'visible', title: 'Questions that appear when they matter', text: 'Show a follow-up question only when someone gives a certain answer, so everyone sees just what applies to them.' },
+      { symbol: 'private', title: 'You decide when it ends', text: 'Close a form and nobody can send any more answers. Open it again whenever you like.' },
+    ],
+    tips: [
+      'Try your own form before you share it. Open the link in a private window to see what other people see.',
+      'ELUM Support is an Inquire form too, and you can open it from any ELUM app with Contact support.',
+      'Closing a form keeps every answer you already have.',
+    ],
+  },
+  {
+    id: 'home',
+    name: 'Home',
+    color: '#7093f8',
+    mist: '#eef2ff',
+    kind: 'The front door, and Support',
+    headline: 'The ELUM home, and getting help',
+    intro: 'The ELUM home at elum.services is the public front door to ELUM: what we believe, every product, and how to reach support. You don’t need an account to look around.',
+    steps: [
+      { title: 'Look around', text: 'Open elum.services to read what ELUM is for. Products shows every app with a short description.' },
+      { title: 'Find the right app', text: 'Each product has a page of its own with a link to open it. Your ELUM Account is the home base where you sign in.' },
+      { title: 'Ask for help', text: 'Choose Contact support from the home, from Docs, or from any screen where something went wrong. It opens the support form with the details filled in.' },
+    ],
+    features: [
+      { symbol: 'open', title: 'The front door', text: 'Everything about ELUM in one place, with no sign-in needed to read it.' },
+      { symbol: 'verified', title: 'Accounts is home base', text: 'You sign in through ELUM Account. The ELUM home is where you start, not where you log in.' },
+      { symbol: 'send', title: 'Support, from anywhere', text: 'Contact support appears wherever something goes wrong. It tells us which app you were in and what the screen said.' },
+      { symbol: 'warning', title: 'Answers first', text: 'Troubleshooting in Docs has answers for the most common problems, so you may not need to wait for anyone.' },
+    ],
+    tips: [
+      'The support form works without signing in, so you can still reach us if signing in is the problem.',
+      'Include what you were doing when it went wrong. The form fills in the app and the message for you.',
+      'New to ELUM? Start on the ELUM home, at elum.services/products.',
+    ],
+  },
+  {
+    id: 'tune',
+    name: 'Tune',
+    color: '#48bfe3',
+    mist: '#e3f5fb',
+    kind: 'Music',
+    headline: 'Tune is on the way',
+    intro: 'Tune is ELUM’s music service. It isn’t open yet, and this page will show you how to get started as soon as it is.',
+    steps: [],
+    features: [],
+    tips: ['Keep an eye on ELUM Store. Tune will show up there, with a Get button, the day it opens.'],
+    soon: true,
+  },
 ];
 
-/** The basics that hold across every app, for the docs home. */
-export const BASICS: Feature[] = [
-  { symbol: 'verified', title: 'One account', text: 'Your ELUM Account works in every app, with the same name, picture and people.' },
-  { symbol: 'open', title: 'Sign in once', text: 'Sign in to one ELUM app, and the others open already signed in when you move to them from the apps window.' },
-  { symbol: 'link', title: 'The apps window', text: 'The dots at the top of every app open your ELUM apps, so you can jump between them in one click.' },
-  { symbol: 'new', title: 'What’s new', text: 'After an update, each app shows you a short tour. You can watch it again from your account menu.' },
-];
+/** An app that is open today, with guides and troubleshooting. */
+export type LiveProduct = Words & { id: ProductId };
+
+export const LIVE_PRODUCTS = PRODUCTS.filter((p): p is LiveProduct => !p.soon);
