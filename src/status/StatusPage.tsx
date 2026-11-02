@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ComponentType, type CSSProperties } from 'react';
-import { api, errorMessage, type ElumStatus, type Health, type StatusCheck } from '../api';
+import { api, errorMessage, type ElumStatus, type Health, type StatusCheck, type StatusIncident } from '../api';
 import type { IconProps } from '../components/icons/ElumIcons';
 import { AttachIcon, PrivateIcon, SavedIcon, SendIcon, VisibleIcon } from '../components/icons/ElumIcons';
 import { Loader } from '../components/Loader';
@@ -32,7 +32,7 @@ const SYMBOLS: Record<string, ComponentType<IconProps>> = {
   google: VisibleIcon,
 };
 
-const APP_MARKS = new Set(['write', 'type', 'make', 'account', 'browse']);
+const APP_MARKS = new Set(['write', 'type', 'make', 'account', 'browse', 'store', 'inquire', 'tune', 'code', 'capture', 'home']);
 
 type State = { status: 'loading' } | { status: 'error'; message: string } | { status: 'none' } | { status: 'done'; data: ElumStatus };
 
@@ -88,6 +88,8 @@ export function StatusPage() {
           )}
         </section>
 
+        {state.status === 'done' && !!state.data.incidents?.length && <Incidents incidents={state.data.incidents} names={state.data.checks} />}
+
         {state.status === 'done' &&
           GROUPS.map((g) => {
             const checks = state.data.checks.filter((c) => c.group === g.id);
@@ -136,5 +138,32 @@ function CheckRow({ check: c, index }: { check: StatusCheck; index: number }) {
         {WORDS[c.health].short}
       </span>
     </li>
+  );
+}
+
+const SEVERITY: Record<StatusIncident['severity'], string> = { outage: 'Outage', degraded: 'Partly down', maintenance: 'Maintenance' };
+
+/** What the ELUM team posted: open incidents, then the ones from the last two weeks. */
+function Incidents({ incidents, names }: { incidents: StatusIncident[]; names: StatusCheck[] }) {
+  const nameOf = (id: string) => (id === 'elum' ? 'All of ELUM' : (names.find((c) => c.id === id)?.name ?? id));
+  const open = incidents.filter((i) => !i.endedAt);
+  const past = incidents.filter((i) => i.endedAt);
+  return (
+    <section className="status-group status-incidents" aria-labelledby="status-incidents">
+      <h2 id="status-incidents">{open.length ? 'Happening now' : 'Recently'}</h2>
+      <ul>
+        {[...open, ...past].map((i) => (
+          <li key={i.id} className="status-incident" data-open={!i.endedAt || undefined} data-severity={i.severity}>
+            <span className="status-incident__head">
+              <strong>{i.title}</strong>
+              <span className="muted">
+                {nameOf(i.service)} · {SEVERITY[i.severity]} · {i.endedAt ? `resolved ${new Date(i.endedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}` : `since ${formatTime(i.startedAt)}`}
+              </span>
+            </span>
+            {i.message && <p>{i.message}</p>}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

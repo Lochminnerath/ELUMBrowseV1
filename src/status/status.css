@@ -228,3 +228,36 @@
     animation: none;
   }
 }
+
+/* What the ELUM team posted from the ELUM Console. */
+.status-incidents ul {
+  display: grid;
+  gap: 10px;
+}
+.status-incident {
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--hairline);
+  background: var(--surface);
+  list-style: none;
+}
+.status-incident[data-open] {
+  border-left: 4px solid #e8833a;
+}
+.status-incident[data-open][data-severity='outage'] {
+  border-left-color: #e5484d;
+}
+.status-incident[data-open][data-severity='maintenance'] {
+  border-left-color: var(--elum-blue);
+}
+.status-incident__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+}
+.status-incident p {
+  margin: 0;
+}
