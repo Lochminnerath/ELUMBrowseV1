@@ -3,7 +3,9 @@
 //   GET or POST  →  { data: Status }
 //
 // Checks, all at once, each with a time limit: every ELUM site, sign-in (Supabase Auth), the
-// database, file storage, ELUM's server functions, and Google search for Browse. The answer is
+// database, file storage, ELUM's server functions, and Google search for Browse. Adds what the
+// ELUM team posted in the ELUM Console (elum_status_board): incidents, and services put into
+// maintenance or read only. The answer is
 // kept for 30 seconds, so a busy status page does not hammer the services it watches.
 //
 // Secrets: ELUM_STATUS_SITES (optional, "write=https://...,type=https://..."), GOOGLE_CSE_ID
@@ -13,7 +15,7 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { CORS, ok } from '../_shared/http.ts';
-import { overall, parseSites, siteHealth, TIMEOUT_MS, type Check, type Status } from '../_shared/status.ts';
+import { overall, parseSites, siteHealth, TIMEOUT_MS, withMode, type Check, type Incident, type Status } from '../_shared/status.ts';
 
 const CACHE_MS = 30_000;
 let cached: { at: number; status: Status } | null = null;
@@ -42,8 +44,15 @@ async function http(url: string, init: RequestInit = {}) {
 
 async function checkAll(): Promise<Status> {
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-  const anon = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
-  const db = createClient(supabaseUrl, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
+  const keysIn = (name: string): Record<string, string> => {
+    try {
+      return JSON.parse(Deno.env.get(name) ?? '{}');
+    } catch {
+      return {};
+    }
+  };
+  const anon = keysIn('SUPABASE_PUBLISHABLE_KEYS').default ?? Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+  const db = createClient(supabaseUrl, keysIn('SUPABASE_SECRET_KEYS').default ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
   const cx = Deno.env.get('GOOGLE_CSE_ID') ?? '61de32450a25e4731';
 
   const site = async (s: { id: string; name: string; url: string }): Promise<Check> => {
@@ -60,7 +69,12 @@ async function checkAll(): Promise<Status> {
   // Supabase client calls report failure in their result, not by throwing: 500 stands for it.
   const viaClient = (call: () => PromiseLike<{ error: unknown }>) => async () => ((await call()).error ? 500 : 200);
 
-  const checks = await Promise.all([
+  const board = db.rpc('elum_status_board').then(
+    ({ data }) => (data ?? null) as { services: { id: string; mode: string; message: string }[]; incidents: Incident[] } | null,
+    () => null,
+  );
+
+  const measured = await Promise.all([
     ...parseSites(Deno.env.get('ELUM_STATUS_SITES')).map(site),
     probe('auth', 'Sign-in', 'platform', async (signal) => {
       const res = await fetch(`${supabaseUrl}/auth/v1/health`, { headers: { apikey: anon }, signal });
@@ -81,7 +95,14 @@ async function checkAll(): Promise<Status> {
     }, 'Web results for Browse'),
   ]);
 
-  return { checkedAt: new Date().toISOString(), overall: overall(checks), checks };
+  const posted = await board;
+  const checks = measured.map((c) => {
+    if (c.group !== 'apps') return c;
+    const svc = posted?.services.find((s) => s.id === c.id);
+    return withMode(c, svc?.mode, svc?.message);
+  });
+  const incidents = posted?.incidents ?? [];
+  return { checkedAt: new Date().toISOString(), overall: overall(checks, incidents), checks, incidents };
 }
 
 Deno.serve(async (req) => {

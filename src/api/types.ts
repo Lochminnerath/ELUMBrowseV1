@@ -104,10 +104,21 @@ export interface StatusCheck {
   ms: number;
   note: string;
 }
+export interface StatusIncident {
+  id: string;
+  service: string;
+  severity: 'maintenance' | 'degraded' | 'outage';
+  title: string;
+  message: string;
+  startedAt: string;
+  endedAt: string | null;
+}
 export interface ElumStatus {
   checkedAt: string;
   overall: Health;
   checks: StatusCheck[];
+  /** What the ELUM team posted: open incidents first, then those that ended in the last 14 days. */
+  incidents?: StatusIncident[];
 }
 
 export type ServiceId = 'write' | 'type' | 'browse' | 'make' | 'store' | 'inquire';
