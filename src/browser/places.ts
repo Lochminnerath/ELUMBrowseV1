@@ -2,7 +2,7 @@ import { ACCOUNT_HOME, HOME_URL, INQUIRE_URL, MAKE_URL, STORE_URL, TYPE_URL, WRI
 
 /**
  * The places Browse knows: ELUM apps it opens inside its own tabs, and its own pages. Each ELUM
- * app is shown under its elum.services address (write.elum.services), whatever site serves it.
+ * app is shown under its elum.space address (write.elum.space), whatever site serves it.
  */
 
 /** The support form, served by Inquire, as a Browse path. */
@@ -16,20 +16,20 @@ export interface AppInfo {
   color: string;
   /** Where it is served from. */
   url: string;
-  /** Its name on elum.services. */
+  /** Its name on elum.space. */
   host: string;
   /** Whether it can take a sign-in handed over by ELUM Account. The ELUM home has none. */
   signIn: boolean;
 }
 
 export const ELUM_APPS: Record<ElumApp, AppInfo> = {
-  write: { id: 'write', name: 'Write', color: '#f59a52', url: WRITE_URL, host: 'write.elum.services', signIn: true },
-  type: { id: 'type', name: 'Type', color: '#3fc4a0', url: TYPE_URL, host: 'type.elum.services', signIn: true },
-  make: { id: 'make', name: 'Make', color: '#ec7fa9', url: MAKE_URL, host: 'make.elum.services', signIn: true },
-  account: { id: 'account', name: 'Account', color: '#94c858', url: ACCOUNT_HOME, host: 'account.elum.services', signIn: true },
-  store: { id: 'store', name: 'Store', color: '#e9b949', url: STORE_URL, host: 'store.elum.services', signIn: true },
-  inquire: { id: 'inquire', name: 'Inquire', color: '#f06a5f', url: INQUIRE_URL, host: 'inquire.elum.services', signIn: true },
-  home: { id: 'home', name: 'Home', color: '#7093f8', url: HOME_URL, host: 'elum.services', signIn: false },
+  write: { id: 'write', name: 'Write', color: '#f59a52', url: WRITE_URL, host: 'write.elum.space', signIn: true },
+  type: { id: 'type', name: 'Type', color: '#3fc4a0', url: TYPE_URL, host: 'type.elum.space', signIn: true },
+  make: { id: 'make', name: 'Make', color: '#ec7fa9', url: MAKE_URL, host: 'make.elum.space', signIn: true },
+  account: { id: 'account', name: 'Account', color: '#94c858', url: ACCOUNT_HOME, host: 'account.elum.space', signIn: true },
+  store: { id: 'store', name: 'Store', color: '#e9b949', url: STORE_URL, host: 'store.elum.space', signIn: true },
+  inquire: { id: 'inquire', name: 'Inquire', color: '#f06a5f', url: INQUIRE_URL, host: 'inquire.elum.space', signIn: true },
+  home: { id: 'home', name: 'Home', color: '#7093f8', url: HOME_URL, host: 'elum.space', signIn: false },
 };
 
 const isApp = (v: string): v is ElumApp => v in ELUM_APPS;
@@ -54,7 +54,7 @@ const NAMES: Record<string, string> = {
 /** Words that name an ELUM place only after "elum": a bare "home" or "support" is just a search. */
 const ELUM_ONLY: Record<string, string> = { home: '/app/home', support: SUPPORT_PATH };
 
-/** Hosts on elum.services that are Browse's own pages rather than apps. */
+/** Hosts on elum.space that are Browse's own pages rather than apps. */
 const OWN_HOSTS: Record<string, string> = { browse: '', search: '', docs: '/docs', status: '/status' };
 
 /** A path inside an app: "/d/123", never "//evil.example". */
@@ -67,13 +67,13 @@ function safeRest(rest: string | undefined): string {
 /**
  * Where a search should go when it names ELUM instead of asking the web: a Browse path such as
  * "/app/write/d/123" or "/docs", or null to search. Takes "write", "elum write", "elumwrite",
- * "write.elum.services/d/123", "https://make.elum.services" and "elum.services".
+ * "write.elum.space/d/123", "https://make.elum.space" and "elum.space".
  */
 export function resolveElum(query: string): string | null {
   const q = query.trim().toLowerCase();
   if (!q || q.length > 300) return null;
 
-  const url = q.match(/^(?:https?:\/\/)?(?:([a-z]+)\.)?elum\.services(\/\S*)?$/);
+  const url = q.match(/^(?:https?:\/\/)?(?:([a-z]+)\.)?elum\.space(\/\S*)?$/);
   if (url) {
     const [, sub, rest] = url;
     if (!sub || sub === 'www') return safeRest(rest) ? `/app/home${safeRest(rest)}` : '/app/home';
@@ -161,7 +161,7 @@ export function describe(path: string): Place {
   return { kind: 'page', title: 'Browse' };
 }
 
-/** The address Browse shows for a place: write.elum.services/d/123, or browse.elum.services/… */
+/** The address Browse shows for a place: write.elum.space/d/123, or browse.elum.space/… */
 export function coverAddress(path: string): string {
   const place = describe(path);
   if (place.kind === 'app' && place.app) {
@@ -171,7 +171,7 @@ export function coverAddress(path: string): string {
   }
   if (place.kind === 'web') return (place.webUrl ?? '').replace(/^https?:\/\//, '');
   const url = new URL(path, 'https://browse.invalid');
-  return `browse.elum.services${url.pathname === '/' ? '' : url.pathname}${url.search}`;
+  return `browse.elum.space${url.pathname === '/' ? '' : url.pathname}${url.search}`;
 }
 
 /** The real address an app tab loads. */

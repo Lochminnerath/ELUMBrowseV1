@@ -68,7 +68,7 @@ describe('ELUM Docs help', () => {
   });
 
   it('answers the questions people ask most', () => {
-    for (const q of ['passkey', 'account.elum.services', 'security key', 'iCloud Keychain', 'conditional', 'nearby', 'approval email', 'version history', 'brand kit', 'private browsing', 'delete my account', 'notifications', 'What’s new', 'offline'])
+    for (const q of ['passkey', 'account.elum.space', 'security key', 'iCloud Keychain', 'conditional', 'nearby', 'approval email', 'version history', 'brand kit', 'private browsing', 'delete my account', 'notifications', 'What’s new', 'offline'])
       expect(searchTroubles(q).length, q).toBeGreaterThan(0);
   });
 

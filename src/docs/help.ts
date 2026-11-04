@@ -78,7 +78,7 @@ export const GUIDES: Record<ProductId, Guide[]> = {
     {
       title: 'Your ELUM Type address',
       items: [
-        'When you sign up, choose Get an ELUM Type address and pick a name. Your address becomes name@type.elum.services.',
+        'When you sign up, choose Get an ELUM Type address and pick a name. Your address becomes name@elum.space.',
         'A name has to start and end with a letter or number, and can’t have two symbols in a row.',
         'Add a recovery email when you sign up, so you can still be reached if you lose access.',
         'You can sign in with your whole address or with just the name.',
@@ -182,8 +182,8 @@ export const GUIDES: Record<ProductId, Guide[]> = {
     {
       title: 'Your ELUM apps in Browse',
       items: [
-        'Type write, type, make, store or account, or an address like make.elum.services, and that app opens in a Browse tab.',
-        'The address bar shows the app’s elum.services address.',
+        'Type write, type, make, store or account, or an address like make.elum.space, and that app opens in a Browse tab.',
+        'The address bar shows the app’s elum.space address.',
         'If you’re signed in to Browse, apps open in their tabs already signed in.',
         'Open in new window gives the app a window of its own, still signed in.',
         'If you meant to search the web for those words, choose Search the web under the box.',
@@ -275,7 +275,7 @@ export const GUIDES: Record<ProductId, Guide[]> = {
         'To sign in, choose Sign in with a passkey. On many browsers your passkey also appears in the address field’s suggestions.',
         'A passkey is saved in your iCloud Keychain, Google Password Manager or another password manager, so your other devices can use it too.',
         'Rename a passkey so you can tell them apart, for example “Work laptop”. Remove one you don’t use any more.',
-        'Passkeys work on the ELUM Account site only: account.elum.services, and accountsbyelum.netlify.app. A passkey belongs to the address it was made on.',
+        'Passkeys work on the ELUM Account site only: account.elum.space, and accountsbyelum.netlify.app. A passkey belongs to the address it was made on.',
         'Keep your password too. If you lose every device, your password is how you get back in to make a new passkey.',
       ],
     },
@@ -341,17 +341,17 @@ export const GUIDES: Record<ProductId, Guide[]> = {
     {
       title: 'The ELUM home',
       items: [
-        'The ELUM home is at elum.services. It’s the public front door to ELUM, so you can read it without signing in.',
+        'The ELUM home is at elum.space. It’s the public front door to ELUM, so you can read it without signing in.',
         'Products shows every ELUM app with a short description and a link to open it.',
         'Your ELUM Account is the home base. You sign in there, and the apps open already signed in.',
-        'Searching for elum.services in Browse opens the ELUM home in a Browse tab.',
+        'Searching for elum.space in Browse opens the ELUM home in a Browse tab.',
       ],
     },
     {
       title: 'Contacting support',
       items: [
         'Choose Contact support on the ELUM home, in the header of Docs, or on any screen where something went wrong.',
-        'It opens the support form in a Browse tab called Support, at inquire.elum.services/f/support.',
+        'It opens the support form in a Browse tab called Support, at inquire.elum.space/f/support.',
         'The form is already filled in with the app you were using, any error code, the page you were on and what the screen said. Add what you were trying to do, then send it.',
         'You don’t need to be signed in to send it, so you can still reach us if signing in is the problem.',
         'Your message is saved as a request for the ELUM team. There’s no ticket number yet, so keep a note of when you sent it.',
@@ -795,7 +795,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
     {
       problem: 'I typed an app’s name and got a web search',
       why: 'Anything with a space, like “make bread”, is treated as a search. A single word, like “make”, opens the app.',
-      fix: ['Type just the app’s name, or its elum.services address.'],
+      fix: ['Type just the app’s name, or its elum.space address.'],
     },
     {
       problem: 'An app in a tab is asking for a site password',
@@ -1083,13 +1083,13 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'Passkeys aren’t offered on a preview or test version of ELUM Account',
       says: 'Passkeys work on the ELUM Account site only.',
       why: 'A passkey belongs to the exact web address it was made on, and ELUM only lets ELUM Account’s own addresses make and use them. Preview and test versions of the site have other addresses, so the passkey buttons stay hidden there. If something tries anyway, this is what it says.',
-      fix: ['Open ELUM Account at account.elum.services or accountsbyelum.netlify.app.', 'Make and use your passkey there.', 'If you’re at one of those addresses and still don’t see the button, see “I don’t see Create a passkey”.'],
+      fix: ['Open ELUM Account at account.elum.space or accountsbyelum.netlify.app.', 'Make and use your passkey there.', 'If you’re at one of those addresses and still don’t see the button, see “I don’t see Create a passkey”.'],
     },
     {
       problem: 'I don’t see Create a passkey',
       says: 'This browser cannot make passkeys. Try Safari, Chrome, Edge or Firefox on a recent device.',
       why: 'Your browser or device doesn’t support passkeys, or you’re not on ELUM Account’s own site. On an older device, or in a browser that’s out of date, the button is replaced by this note.',
-      fix: ['Update your browser and your phone or computer to the latest version.', 'Try Safari, Chrome, Edge or Firefox on a recent device.', 'Check the address bar says account.elum.services or accountsbyelum.netlify.app.', 'Meanwhile, sign in with your password. Nothing else changes.'],
+      fix: ['Update your browser and your phone or computer to the latest version.', 'Try Safari, Chrome, Edge or Firefox on a recent device.', 'Check the address bar says account.elum.space or accountsbyelum.netlify.app.', 'Meanwhile, sign in with your password. Nothing else changes.'],
     },
     {
       problem: 'My device asks for a passkey and I closed the prompt',
@@ -1116,7 +1116,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'That passkey did not work',
       says: 'That passkey did not work. Try again, or use your password.',
       why: 'The passkey was found, but it couldn’t be checked. This can happen if the time on your device is wrong, if the passkey was made for a different address, or if it was copied badly between devices.',
-      fix: ['Try once more, picking the passkey again.', 'Check your device’s date and time are set automatically.', 'Make sure you’re on the address you made the passkey on: account.elum.services or accountsbyelum.netlify.app.', 'Use your password, then make a new passkey.'],
+      fix: ['Try once more, picking the passkey again.', 'Check your device’s date and time are set automatically.', 'Make sure you’re on the address you made the passkey on: account.elum.space or accountsbyelum.netlify.app.', 'Use your password, then make a new passkey.'],
     },
     {
       problem: 'A passkey didn’t sign me in',
@@ -1193,8 +1193,8 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       fix: ['On Apple devices, turn on iCloud Keychain on both and use the same Apple account.', 'On Android and Chrome, sign in to the same Google account and turn on sync for passwords.', 'Otherwise, choose Sign in with a passkey and pick “Use a phone or tablet”, then scan the code.', 'Or make a separate passkey on the laptop in Security.'],
     },
     {
-      problem: 'I made a passkey on account.elum.services but accountsbyelum.netlify.app doesn’t show it',
-      why: 'A passkey belongs to one web address. ELUM Account has two, account.elum.services and accountsbyelum.netlify.app, and a passkey made on one is not offered on the other.',
+      problem: 'I made a passkey on account.elum.space but accountsbyelum.netlify.app doesn’t show it',
+      why: 'A passkey belongs to one web address. ELUM Account has two, account.elum.space and accountsbyelum.netlify.app, and a passkey made on one is not offered on the other.',
       fix: ['Sign in on the address you made it on.', 'Or sign in with your password and make a passkey on the other address too.', 'Pick the address you’ll use every day, and make your passkey there.'],
     },
     {
@@ -1228,7 +1228,7 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       problem: 'I can’t make a passkey because passkeys aren’t connected',
       says: 'Passkeys work once ELUM is connected.',
       why: 'This copy of ELUM Account is running on its own, without the ELUM platform, so it has nowhere to keep passkeys.',
-      fix: ['Open ELUM Account at account.elum.services and use passkeys there.'],
+      fix: ['Open ELUM Account at account.elum.space and use passkeys there.'],
     },
     {
       problem: 'A passkey I tried to change isn’t in my account',
@@ -1346,14 +1346,14 @@ export const TROUBLES: Record<ProductId, Trouble[]> = {
       fix: ['Type the message you saw on the screen exactly as it appears, and what you were doing.', 'Contact support from the screen itself, so we get the message automatically.'],
     },
     {
-      problem: 'elum.services shows the old Docs page',
+      problem: 'elum.space shows the old Docs page',
       why: 'Your browser may be holding on to an older copy.',
       fix: ['Reload the page, or press Ctrl+Shift+R (Cmd+Shift+R on a Mac).', 'Docs now lives at browsebyelum.netlify.app/docs. The ELUM home has the products and the mission.'],
     },
     {
       problem: 'Where did “Start here” go?',
       why: 'The start-here part of Docs moved to Products on the ELUM home.',
-      fix: ['Open elum.services/products to meet each ELUM app.', 'Docs now opens on the guides and Troubleshooting for every app.'],
+      fix: ['Open elum.space/products to meet each ELUM app.', 'Docs now opens on the guides and Troubleshooting for every app.'],
     },
   ],
 };
@@ -1433,7 +1433,7 @@ export const COMMON_TROUBLES: Trouble[] = [
   {
     problem: 'I keep getting sent back to the sign-in page',
     why: 'Your browser may be blocking the storage ELUM uses to remember that you’re signed in.',
-    fix: ['Allow cookies and site data for elum.services in your browser’s settings.', 'Leave private browsing and try in a normal window.', 'Check the date and time on your device are set automatically.'],
+    fix: ['Allow cookies and site data for elum.space in your browser’s settings.', 'Leave private browsing and try in a normal window.', 'Check the date and time on your device are set automatically.'],
   },
   {
     problem: 'Signing out of one app signed me out of all of them',
@@ -1589,12 +1589,12 @@ export const COMMON_TROUBLES: Trouble[] = [
   {
     problem: 'An ELUM app looks broken in my browser',
     why: 'An old browser, or an extension, can stop parts of the page from working.',
-    fix: ['Update your browser.', 'Turn off ad blockers or other extensions for elum.services and reload.', 'Try another browser to see if it’s the browser or the app.'],
+    fix: ['Update your browser.', 'Turn off ad blockers or other extensions for elum.space and reload.', 'Try another browser to see if it’s the browser or the app.'],
   },
   {
     problem: 'The page is blank',
     why: 'The app didn’t finish loading, often because of a dropped connection or a browser extension.',
-    fix: ['Reload the page.', 'Turn off extensions for elum.services.', 'Check the Status page in Browse.'],
+    fix: ['Reload the page.', 'Turn off extensions for elum.space.', 'Check the Status page in Browse.'],
   },
   {
     problem: 'Text is too small or too big',
@@ -1639,7 +1639,7 @@ export const COMMON_TROUBLES: Trouble[] = [
   {
     problem: 'Two-device approval keeps asking on every sign-in',
     why: 'With approvals on, every new device or browser needs approving once. Clearing your browser’s data makes it new again.',
-    fix: ['Avoid clearing site data for elum.services if you can.', 'Private windows count as new each time, so use a normal window.'],
+    fix: ['Avoid clearing site data for elum.space if you can.', 'Private windows count as new each time, so use a normal window.'],
   },
   {
     problem: 'My account email is out of date',

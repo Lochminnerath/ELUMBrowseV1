@@ -1,10 +1,10 @@
 /**
- * Contacting ELUM Support. Support is a form served by Inquire (inquire.elum.services/f/support),
+ * Contacting ELUM Support. Support is a form served by Inquire (inquire.elum.space/f/support),
  * and Browse opens it in a tab of its own. Every link carries what was going on, so people do not
  * have to explain it twice: the app, an error code, the page, and what the screen said.
  */
 
-/** Where Support opens, whatever the app is running on: Browse on elum.services, even in development. */
+/** Where Support opens, whatever the app is running on: Browse on elum.space, even in development. */
 const BROWSE_ORIGIN = 'https://browsebyelum.netlify.app';
 const SUPPORT_ROUTE = '/app/inquire/f/support';
 
