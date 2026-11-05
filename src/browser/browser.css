@@ -2,7 +2,7 @@
 
 .browser {
   --strip: color-mix(in srgb, var(--browse-mist) 70%, var(--surface));
-  height: 100dvh;
+  height: calc(100dvh - var(--host-badge-h));
   display: flex;
   flex-direction: column;
   background: var(--surface);
@@ -211,8 +211,9 @@
   flex: none;
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  /* 24px: the smallest comfortable target (WCAG 2.5.8). */
+  width: 24px;
+  height: 24px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -486,4 +487,9 @@
   .tab__disc--status::after {
     animation: none;
   }
+}
+
+/* A group chip's list item takes no room of its own. */
+.tabstrip__item {
+  display: contents;
 }
