@@ -10,6 +10,8 @@ export interface BrowseApi {
   restoreSession(): Promise<Session | null>;
   signUp(input: SignUpInput): Promise<Session>;
   signIn(input: SignInInput): Promise<Session>;
+  /** Signs in with a passkey. Only on ELUM's own domain (elum.space), where passkeys work. */
+  signInWithPasskey?(): Promise<Session>;
   signOut(): Promise<void>;
   updateProfile(input: { name: string }): Promise<User>;
   /** The last What's new release this account saw, kept on the account, or null if never recorded. */
