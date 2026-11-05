@@ -45,7 +45,7 @@ export const RELEASES: Release[] = [
     title: 'ELUM Store, in Browse',
     intro: 'Every ELUM app in one place. Type store to open it in a Browse tab.',
     features: [
-      { title: 'Store in a tab', text: 'Type store, or store.elum.services, and ELUM Store opens in a Browse tab, signed in.', art: 'spark' },
+      { title: 'Store in a tab', text: 'Type store, or store.elum.space, and ELUM Store opens in a Browse tab, signed in.', art: 'spark' },
       { title: 'Open apps in Browse', text: 'In Store, the arrow beside Open opens any ELUM app in a Browse tab.', art: 'devices' },
     ],
   },
@@ -65,7 +65,7 @@ export const RELEASES: Release[] = [
     title: 'Browse, with tabs',
     intro: 'Keep searches and ELUM apps open side by side, and see how ELUM is doing.',
     features: [
-      { title: 'ELUM apps in Browse', text: 'Type write, type, make or account and the app opens in a Browse tab, under its elum.services address. Open in new window gives it a window of its own.', art: 'spark' },
+      { title: 'ELUM apps in Browse', text: 'Type write, type, make or account and the app opens in a Browse tab, under its elum.space address. Open in new window gives it a window of its own.', art: 'spark' },
       { title: 'Tab groups', text: 'Right-click a tab to group it, and give the group a name, a colour and an ELUM symbol. Click the group to fold it away.', art: 'layers' },
       { title: 'ELUM status', text: 'Status, linked under the search box, checks every ELUM app and what they run on, each minute.', art: 'check' },
       { title: 'ELUM Docs', text: 'A starting page for every ELUM app, on your phone or your computer.', art: 'mark' },

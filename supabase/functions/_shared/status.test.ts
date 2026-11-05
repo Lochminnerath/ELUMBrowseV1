@@ -41,9 +41,9 @@ describe('incidents and modes', () => {
 
 describe('parseSites', () => {
   it('moves default sites by id, adds others, and always checks every ELUM app', () => {
-    const sites = parseSites('write=https://write.elum.services/, extra=https://extra.elum.services');
-    expect(sites.find((s) => s.id === 'write')).toEqual({ id: 'write', name: 'Write', url: 'https://write.elum.services' });
-    expect(sites.at(-1)).toEqual({ id: 'extra', name: 'Extra', url: 'https://extra.elum.services' });
+    const sites = parseSites('write=https://write.elum.space/, extra=https://extra.elum.space');
+    expect(sites.find((s) => s.id === 'write')).toEqual({ id: 'write', name: 'Write', url: 'https://write.elum.space' });
+    expect(sites.at(-1)).toEqual({ id: 'extra', name: 'Extra', url: 'https://extra.elum.space' });
     expect(sites.map((s) => s.id)).toEqual(expect.arrayContaining(['type', 'tune', 'code', 'capture', 'inquire']));
     expect(parseSites('nonsense, x=http://insecure.example')).toEqual(DEFAULT_SITES);
     expect(parseSites(undefined)).toEqual(DEFAULT_SITES);

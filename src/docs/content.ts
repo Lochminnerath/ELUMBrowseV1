@@ -1,6 +1,6 @@
 /**
  * ELUM Docs: a guide for each ELUM app, and one for the ELUM home and Support. New to ELUM? The
- * start-here part lives on the ELUM home (elum.services/products). Words only; the
+ * start-here part lives on the ELUM home (elum.space/products). Words only; the
  * pages that show them are in DocsPages.tsx. Keep each step to something people can do today.
  */
 
@@ -158,7 +158,7 @@ export const PRODUCTS: Words[] = [
     features: [
       { symbol: 'visible', title: 'Just the web', text: 'You get Google’s results without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches stay with you', text: 'Recent searches are kept on this device only, and you can clear one or all of them whenever you like.' },
-      { symbol: 'open', title: 'Your ELUM apps, right here', text: 'Type write, type, make, store, inquire or account, or an address like make.elum.services, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
+      { symbol: 'open', title: 'Your ELUM apps, right here', text: 'Type write, type, make, store, inquire or account, or an address like make.elum.space, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
       { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and addresses you type open in a Browse tab. If a site won’t let other sites show it, you get a clean reading view instead, with the original one click away.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
     ],
@@ -247,9 +247,9 @@ export const PRODUCTS: Words[] = [
     mist: '#eef2ff',
     kind: 'The front door, and Support',
     headline: 'The ELUM home, and getting help',
-    intro: 'The ELUM home at elum.services is the public front door to ELUM: what we believe, every product, and how to reach support. You don’t need an account to look around.',
+    intro: 'The ELUM home at elum.space is the public front door to ELUM: what we believe, every product, and how to reach support. You don’t need an account to look around.',
     steps: [
-      { title: 'Look around', text: 'Open elum.services to read what ELUM is for. Products shows every app with a short description.' },
+      { title: 'Look around', text: 'Open elum.space to read what ELUM is for. Products shows every app with a short description.' },
       { title: 'Find the right app', text: 'Each product has a page of its own with a link to open it. Your ELUM Account is the home base where you sign in.' },
       { title: 'Ask for help', text: 'Choose Contact support from the home, from Docs, or from any screen where something went wrong. It opens the support form with the details filled in.' },
     ],
@@ -262,7 +262,7 @@ export const PRODUCTS: Words[] = [
     tips: [
       'The support form works without signing in, so you can still reach us if signing in is the problem.',
       'Include what you were doing when it went wrong. The form fills in the app and the message for you.',
-      'New to ELUM? Start on the ELUM home, at elum.services/products.',
+      'New to ELUM? Start on the ELUM home, at elum.space/products.',
     ],
   },
   {
