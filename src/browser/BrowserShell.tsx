@@ -296,7 +296,11 @@ function TabStrip() {
     const group = t.groupId ? s.groups.find((g) => g.id === t.groupId) : undefined;
     if (group && !seen.has(group.id)) {
       seen.add(group.id);
-      items.push(<GroupChip key={group.id} group={group} count={s.tabs.filter((x) => x.groupId === group.id).length} />);
+      items.push(
+        <div key={group.id} role="listitem" className="tabstrip__item">
+          <GroupChip group={group} count={s.tabs.filter((x) => x.groupId === group.id).length} />
+        </div>,
+      );
     }
     if (group?.collapsed) continue;
     items.push(<TabButton key={t.id} tab={t} group={group} active={t.id === s.activeId} />);
@@ -304,18 +308,19 @@ function TabStrip() {
 
   // Keep the open tab in view.
   useEffect(() => {
-    strip.current?.querySelector<HTMLElement>('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    strip.current?.querySelector<HTMLElement>('[aria-current="page"]')?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }, [s.activeId]);
 
   return (
-    <div className="tabstrip">
-      <div className="tabstrip__tabs" role="tablist" aria-label="Tabs" ref={strip}>
+    <nav className="tabstrip" aria-label="Browser tabs">
+      {/* A list of tabs, each with its own buttons, rather than ARIA tabs: a tab here holds more than one control. */}
+      <div className="tabstrip__tabs" role="list" ref={strip}>
         {items}
       </div>
       <button type="button" className="tabstrip__new" aria-label="New tab" data-tip="New tab" onClick={() => updateTabs((st) => openTab(st, '/'))}>
         <Plus size={18} strokeWidth={2} />
       </button>
-    </div>
+    </nav>
   );
 }
 
@@ -373,6 +378,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
   return (
     <div
       className="tab"
+      role="listitem"
       data-active={active || undefined}
       data-leaving={leaving || undefined}
       data-grouped={group ? true : undefined}
@@ -385,7 +391,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         if (e.button === 1) close();
       }}
     >
-      <button type="button" role="tab" aria-selected={active} className="tab__main" title={place.kind === 'app' ? coverAddress(tab.path) : place.title} onClick={() => updateTabs((st) => activate(st, tab.id))}>
+      <button type="button" aria-current={active ? 'page' : undefined} className="tab__main" title={place.kind === 'app' ? coverAddress(tab.path) : place.title} onClick={() => updateTabs((st) => activate(st, tab.id))}>
         <TabSymbol path={tab.path} />
         <span className="tab__title">{place.title}</span>
       </button>
