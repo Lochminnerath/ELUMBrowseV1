@@ -2,7 +2,7 @@
 
 .browser {
   --strip: color-mix(in srgb, var(--browse-mist) 70%, var(--surface));
-  height: 100dvh;
+  height: calc(100dvh - var(--host-badge-h));
   display: flex;
   flex-direction: column;
   background: var(--surface);
