@@ -1603,7 +1603,7 @@ export const COMMON_TROUBLES: Trouble[] = [
   },
   {
     problem: 'Does ELUM use AI?',
-    why: 'No. ELUM apps are built by people and run without AI. Nothing you write, send or make is used to train AI.',
+    why: 'No. ELUM apps run without AI, and what you make in them is made by you. Nothing you write, send or make is used to train AI.',
     fix: ['Nothing to fix. If something ever looks like it was written by AI, let us know.'],
   },
   {

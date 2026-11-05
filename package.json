@@ -2,7 +2,7 @@
   "name": "elum-browse",
   "private": true,
   "version": "0.1.0",
-  "description": "ELUM Browse: web search without AI, built by people.",
+  "description": "ELUM Browse: web search without AI, made by you.",
   "type": "module",
   "scripts": {
     "dev": "vite",

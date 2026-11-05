@@ -1,7 +1,7 @@
 # ELUM Browse
 
 Search the web from the ELUM family. Results come from Google, without AI answers: no AI
-Overviews, no Gemini, and results that lead to AI chat products are left out. Built by people.
+Overviews, no Gemini, and results that lead to AI chat products are left out. Made by you.
 Runs without AI.
 
 Browse is one of the ELUM apps (with Write, Type, Make and ELUM Account). Every ELUM app shares
