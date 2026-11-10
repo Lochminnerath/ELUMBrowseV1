@@ -112,7 +112,7 @@ export function asWebAddress(query: string): string | null {
   }
 }
 
-export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'page';
+export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'settings' | 'page';
 
 export interface Place {
   kind: PlaceKind;
@@ -157,6 +157,7 @@ export function describe(path: string): Place {
     return { kind: 'docs', title: product ? `${product[0].toUpperCase()}${product.slice(1)} · Docs` : 'ELUM Docs' };
   }
   if (parts[0] === 'status') return { kind: 'status', title: 'ELUM status' };
+  if (parts[0] === 'settings') return { kind: 'settings', title: 'Settings' };
   if (parts.length === 0) return { kind: 'home', title: 'New tab' };
   return { kind: 'page', title: 'Browse' };
 }

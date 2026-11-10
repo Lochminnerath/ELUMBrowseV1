@@ -62,6 +62,13 @@ export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number
     };
   }, [url, nonce]);
 
+  // While the page is on its way, the tab's symbol moves (styles in browser.css).
+  useEffect(() => {
+    if (state.status !== 'loading') return;
+    document.documentElement.setAttribute('data-page-loading', '');
+    return () => document.documentElement.removeAttribute('data-page-loading');
+  }, [state.status]);
+
   // A picture in the reading view that will not load is left out rather than shown broken.
   const body = useRef<HTMLDivElement>(null);
   useEffect(() => {

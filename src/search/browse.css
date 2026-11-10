@@ -19,8 +19,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(12px);
+  /* Solid, so results never show through the bar as they scroll under it. */
+  background: var(--surface);
 }
 .browse-bar__brand {
   flex: none;
@@ -191,17 +191,6 @@
 }
 .browse-home__mark .brand-mark {
   position: relative;
-  animation: browse-float 6s ease-in-out infinite;
-}
-.browse-home__ring {
-  position: absolute;
-  inset: 22px;
-  border-radius: 50%;
-  border: 2px solid var(--browse-line);
-  animation: browse-ripple 3.6s ease-out infinite;
-}
-.browse-home__ring--late {
-  animation-delay: 1.8s;
 }
 .browse-home__title {
   margin: 0;
@@ -579,7 +568,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .browse-home__mark .brand-mark,
-  .browse-home__ring,
   .browse-result,
   .browse-recent__chip {
     animation: none;
@@ -898,4 +886,55 @@
   .browse-recent__chip {
     animation: none;
   }
+}
+
+/* Settings: pictures beside results can be turned off (Google's results and Browse's own). */
+.browse-results[data-no-pictures] .browse-result__thumb,
+.browse-results[data-no-pictures] .gsc-table-cell-thumbnail,
+.browse-results[data-no-pictures] .gs-image-box {
+  display: none !important;
+}
+.browse-bar__settings[aria-current='page'] {
+  color: var(--browse);
+}
+
+/* The home page's background, chosen in Settings. A picture gets a soft wash so the words read. */
+.browse--home {
+  background: var(--home-bg, var(--surface));
+  background-size: cover;
+  background-position: center;
+  transition: background 400ms ease;
+}
+.browse--home[data-bg-dark] .browse-home__title,
+.browse--home[data-bg-dark] .browse-foot,
+.browse--home[data-bg-dark] .browse-foot a,
+.browse--home[data-bg-dark] .browse-bar .icon-btn,
+.browse--home[data-bg-dark] .browse-bar .brand-mark,
+.browse--home[data-bg-dark] .browse-recent__clear {
+  color: #ffffff;
+}
+.browse--home[data-bg-dark] .browse-foot {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+.browse--home[data-bg-dark] .browse-foot .muted {
+  color: rgba(255, 255, 255, 0.75);
+}
+.browse--home[data-bg='picture'] {
+  background-image: linear-gradient(180deg, rgba(14, 18, 32, 0.25), rgba(14, 18, 32, 0.45)), var(--home-picture);
+}
+.browse--home[data-bg]:not([data-bg='plain']) .browse-bar,
+.browse--home[data-bg]:not([data-bg='plain']) .browse-foot {
+  background: transparent;
+}
+/* On a dark background (Night or a picture), the marks and buttons use their light versions. */
+.browse--home[data-bg-dark] .browse-bar .theme-light-only {
+  display: none !important;
+}
+.browse--home[data-bg-dark] .browse-bar .theme-dark-only {
+  display: block !important;
+}
+.browse--home[data-bg-dark] .browse-bar .elum-btn--secondary {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
 }

@@ -20,6 +20,13 @@ export function BrowseHeader({ children, compact }: { children?: ReactNode; comp
       </Link>
       <div className="browse-bar__middle">{children}</div>
       <div className="browse-bar__end">
+        <Link to="/settings" className="icon-btn icon-btn--round browse-bar__settings" aria-label="Settings" data-tip="Settings" aria-current={location.pathname === '/settings' ? 'page' : undefined}>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+            <path d="M4 7h9M17 7h3M4 17h3M11 17h9" />
+            <circle cx="15" cy="7" r="2.4" />
+            <circle cx="9" cy="17" r="2.4" />
+          </svg>
+        </Link>
         <ThemeToggle />
         <ElumLauncher />
         {status === 'signed-in' ? (

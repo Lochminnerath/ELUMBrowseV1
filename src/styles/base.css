@@ -354,3 +354,22 @@ img {
     animation-duration: 0ms !important;
   }
 }
+
+/* Less motion, chosen in Browse's Settings: the same as the device asking for reduced motion. */
+html[data-less-motion] *,
+html[data-less-motion] *::before,
+html[data-less-motion] *::after {
+  transition-duration: 0ms !important;
+  animation-duration: 0ms !important;
+  animation-iteration-count: 1 !important;
+}
+
+/* An accent chosen in Browse's Settings: its pale and line shades follow it. */
+html[data-accent] {
+  --browse-mist: color-mix(in srgb, var(--browse) 12%, #ffffff);
+  --browse-line: color-mix(in srgb, var(--browse) 38%, #ffffff);
+}
+html[data-accent][data-theme='dark'] {
+  --browse-mist: color-mix(in srgb, var(--browse) 18%, #0e1220);
+  --browse-line: color-mix(in srgb, var(--browse) 45%, #0e1220);
+}

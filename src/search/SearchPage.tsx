@@ -11,6 +11,7 @@ import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
 import { SupportLink } from '../components/SupportLink';
+import { useSettings } from '../settings/settings';
 
 type State =
   | { status: 'loading' }
@@ -31,6 +32,14 @@ export function SearchPage() {
   const [state, setState] = useState<State>({ status: 'loading' });
   const [more, setMore] = useState(false);
   const run = useRef(0);
+  const settings = useSettings();
+
+  // While results are on their way, Browse's symbols move: the lens in the box and the tab's disc.
+  useEffect(() => {
+    const busy = state.status === 'loading' || (state.status === 'element' && state.outcome === null);
+    document.documentElement.toggleAttribute('data-searching', busy);
+    return () => document.documentElement.removeAttribute('data-searching');
+  }, [state]);
 
   useEffect(() => {
     if (!q) {
@@ -82,6 +91,7 @@ export function SearchPage() {
 
       <main
         className="browse-results"
+        data-no-pictures={settings.pictures ? undefined : ''}
         aria-busy={state.status === 'loading'}
         onClickCapture={(e) => {
           // Results open inside Browse; Google's own pages, which refuse that, in a new window.
@@ -91,7 +101,7 @@ export function SearchPage() {
           if (!target) return;
           e.preventDefault();
           e.stopPropagation();
-          if (target.external) window.open(target.url, '_blank', 'noopener,noreferrer');
+          if (target.external || settings.openResults === 'window') window.open(target.url, '_blank', 'noopener,noreferrer');
           else openPage(target.url);
         }}
       >
@@ -120,7 +130,7 @@ export function SearchPage() {
                 onHidden={(hidden) => setState((s) => (s.status === 'element' && s.hidden !== hidden ? { ...s, hidden } : s))}
                 onError={(message) => setState({ status: 'error', message })}
                 onOutcome={(outcome) => setState((s) => (s.status === 'element' ? { ...s, outcome } : s))}
-                onOpen={openPage}
+                onOpen={(url) => (settings.openResults === 'window' ? window.open(url, '_blank', 'noopener,noreferrer') : openPage(url))}
               />
             </div>
             {(state.outcome === 'empty' || state.outcome === 'failed') && <NoGoogleResults q={q} kind={kind} failed={state.outcome === 'failed'} />}

@@ -1,4 +1,4 @@
-import { ChevronDown, Ellipsis, Plus, RotateCw, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Ellipsis, Plus, RotateCw, X } from 'lucide-react';
 import { useEffect, useRef, useState, type ComponentType, type CSSProperties, type FormEvent, type ReactNode } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { Menu, type MenuEntry } from '../components/Menu';
@@ -35,6 +35,7 @@ import {
   type Tab,
 } from './tabs';
 import { WebView } from './WebView';
+import { useSettings, writeSetting } from '../settings/settings';
 import './browser.css';
 
 export const SYMBOL_ICONS: Record<GroupSymbol, ComponentType<IconProps>> = {
@@ -213,6 +214,7 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
   const place = describe(tab.path);
   const address = coverAddress(tab.path);
   const [editing, setEditing] = useState<string | null>(null);
+  const tucked = useSettings().addressBar === 'tucked';
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (editing?.trim()) go(editing);
@@ -225,6 +227,15 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
     if (place.kind === 'app') void openElsewhere(real, true);
     else window.open(real, '_blank', 'noopener,noreferrer');
   };
+  if (tucked) {
+    // Tucked away: only a small button over the page's corner, to bring the bar back.
+    return (
+      <button type="button" className="app-bar-tab" style={place.app ? ({ '--app': place.app.color } as CSSProperties) : undefined} onClick={() => writeSetting('addressBar', 'shown')} aria-label="Show the address bar" data-tip="Show the address bar">
+        <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
+        <span>{place.kind === 'app' ? place.label : address.replace(/^https?:\/\//, '').split('/')[0]}</span>
+      </button>
+    );
+  }
   return (
     <div className="app-bar" style={place.app ? ({ '--app': place.app.color } as CSSProperties) : undefined}>
       <button type="button" className="icon-btn app-bar__btn" aria-label="Reload" data-tip="Reload" onClick={onReload}>
@@ -259,6 +270,9 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
       >
         <Icons.OpenIcon size={16} />
         <span>Open in new window</span>
+      </button>
+      <button type="button" className="icon-btn app-bar__btn" aria-label="Hide the address bar" data-tip="Hide the address bar" onClick={() => writeSetting('addressBar', 'tucked')}>
+        <ChevronUp size={17} strokeWidth={1.75} />
       </button>
     </div>
   );

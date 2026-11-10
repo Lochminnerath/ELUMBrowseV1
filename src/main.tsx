@@ -5,6 +5,11 @@ import { App } from './App';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
+import { applyLook, applyMotion } from './settings/settings';
+
+// Less motion, if chosen in Settings, applies before the first paint.
+applyMotion();
+applyLook();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
