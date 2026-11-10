@@ -5,6 +5,8 @@ export const POLICY = {
   privacy: `${HOME_URL}/privacy`,
   ads: `${HOME_URL}/ads`,
   doNotSell: `${HOME_URL}/do-not-sell`,
+  terms: `${HOME_URL}/service-terms#browse`,
+  disclaimer: `${HOME_URL}/disclaimer`,
 };
 
 /** The links every disclaimer ends with. */
@@ -21,6 +23,14 @@ export function PolicyLinks() {
       <span aria-hidden="true"> · </span>
       <a href={POLICY.privacy} target="_blank" rel="noreferrer">
         Privacy
+      </a>
+      <span aria-hidden="true"> · </span>
+      <a href={POLICY.terms} target="_blank" rel="noreferrer">
+        Terms
+      </a>
+      <span aria-hidden="true"> · </span>
+      <a href={POLICY.disclaimer} target="_blank" rel="noreferrer">
+        Disclaimer
       </a>
     </span>
   );
