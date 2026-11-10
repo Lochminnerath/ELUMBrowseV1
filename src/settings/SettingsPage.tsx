@@ -4,7 +4,8 @@ import { BrowseHeader } from '../search/BrowseHeader';
 import { clearSearches, historyPaused, recentSearches, safeSearch, setHistoryPaused, setSafeSearch } from '../search/local';
 import { useTheme, type ThemePreference } from '../theme/ThemeProvider';
 import { ACCOUNT_HOME } from '../lib/elum';
-import { ACCENTS, BACKGROUNDS, readPicture, removePicture, savePicture, useSettings, writeSetting } from './settings';
+import { LiveBackground } from './LiveBackground';
+import { ACCENTS, BACKGROUNDS, NIGHT_BASE, readPicture, removePicture, savePicture, useSettings, writeSetting } from './settings';
 import '../search/browse.css';
 import './settings.css';
 
@@ -163,7 +164,7 @@ export function SettingsPage() {
           <div className="setting setting--wide">
             <div className="setting__words">
               <span className="setting__title">Home page background</span>
-              <span className="setting__text">A soft colour, a gradient, or a picture of your own. Your picture stays in this browser.</span>
+              <span className="setting__text">Live ones drift slowly in every ELUM colour. Or pick a soft colour, a gradient, or a picture of your own, which stays in this browser.</span>
             </div>
             <div className="look-grid" role="radiogroup" aria-label="Home page background">
               {BACKGROUNDS.map((b) => (
@@ -175,7 +176,14 @@ export function SettingsPage() {
                   className="look-grid__item"
                   onClick={() => writeSetting('background', b.id)}
                 >
-                  <span className="look-grid__swatch" style={{ background: b.css }} />
+                  <span className="look-grid__swatch" style={{ background: b.css }}>
+                    {b.live && (
+                      <>
+                        <LiveBackground colors={b.live} base={b.dark ? NIGHT_BASE : undefined} />
+                        <span className="look-grid__live">Live</span>
+                      </>
+                    )}
+                  </span>
                   {b.label}
                 </button>
               ))}

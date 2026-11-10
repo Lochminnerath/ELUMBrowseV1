@@ -236,3 +236,79 @@
   opacity: 0;
   cursor: pointer;
 }
+
+/* ---- Live backgrounds: soft colours drifting behind the page */
+:root {
+  --aurora-base: #fbfaff;
+}
+[data-theme='dark'] {
+  --aurora-base: #0e1220;
+}
+.live-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--aurora-base);
+}
+.live-bg i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--s);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 80%, transparent), transparent);
+  opacity: 0.6;
+  will-change: transform;
+  animation: live-drift var(--t) ease-in-out var(--d) infinite alternate;
+}
+[data-theme='dark'] .live-bg i {
+  opacity: 0.4;
+}
+@keyframes live-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(calc(var(--dx) * 0.6), calc(var(--dy) * -0.5)) scale(1.15);
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.92);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-bg i {
+    animation: none;
+  }
+}
+html[data-less-motion] .live-bg i,
+html[data-tab-hidden] .live-bg i {
+  animation-play-state: paused;
+}
+/* Small previews in Settings move too, a little faster so you can see they are live. */
+.look-grid__swatch .live-bg {
+  border-radius: inherit;
+}
+.look-grid__swatch .live-bg i {
+  width: calc(var(--s) * 0.35);
+  animation-duration: calc(var(--t) / 3);
+}
+.look-grid__swatch {
+  position: relative;
+  overflow: hidden;
+}
+.look-grid__live {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #141a2e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}

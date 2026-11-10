@@ -25,23 +25,54 @@ export interface BrowseSettings {
   strip: 'tint' | 'plain' | string;
 }
 
-export type BackgroundId = 'plain' | 'mist' | 'aurora' | 'sunrise' | 'ocean' | 'meadow' | 'night' | 'picture';
+export type BackgroundId = 'plain' | 'mist' | 'aurora' | 'bloom' | 'tide' | 'sunrise' | 'ocean' | 'meadow' | 'night' | 'picture';
 
-/** The home page backgrounds, light to dark. `dark` ones show the words in white. */
-export const BACKGROUNDS: { id: BackgroundId; label: string; css: string; dark?: boolean }[] = [
+/**
+ * The home page backgrounds. `live` ones have soft colours that drift slowly behind the page (they
+ * stand still with less motion); `css` is the still version, used for previews and reduced motion.
+ * `dark` ones show the words in white.
+ */
+export const BACKGROUNDS: { id: BackgroundId; label: string; css: string; live?: string[]; dark?: boolean }[] = [
+  {
+    id: 'aurora',
+    label: 'Aurora',
+    // Every ELUM app's colour, with softer shades between them.
+    live: ['#9b84ee', '#7093f8', '#48bfe3', '#3fc4a0', '#5ec46f', '#e9b949', '#f59a52', '#f06a5f', '#ec7fa9', '#d27fe0', '#c9bdf7', '#bacafc', '#ffd1e3', '#c7f0e3'],
+    css: 'radial-gradient(45% 45% at 15% 20%, #c9bdf7 0, transparent 70%), radial-gradient(40% 40% at 85% 25%, #ffd1e3 0, transparent 70%), radial-gradient(45% 45% at 70% 85%, #c7f0e3 0, transparent 70%), radial-gradient(35% 35% at 25% 80%, #fde4b8 0, transparent 70%), var(--aurora-base)',
+  },
+  {
+    id: 'bloom',
+    label: 'Bloom',
+    live: ['#ec7fa9', '#f59a52', '#e9b949', '#f06a5f', '#ffd1e3', '#fde4b8', '#d27fe0'],
+    css: 'radial-gradient(50% 50% at 20% 30%, #ffd1e3 0, transparent 70%), radial-gradient(50% 50% at 80% 70%, #fde4b8 0, transparent 70%), var(--aurora-base)',
+  },
+  {
+    id: 'tide',
+    label: 'Tide',
+    live: ['#48bfe3', '#7093f8', '#3fc4a0', '#bacafc', '#c7f0e3', '#9b84ee'],
+    css: 'radial-gradient(50% 50% at 25% 25%, #c9e8f7 0, transparent 70%), radial-gradient(50% 50% at 75% 75%, #c7f0e3 0, transparent 70%), var(--aurora-base)',
+  },
   { id: 'plain', label: 'Plain', css: 'var(--surface)' },
   { id: 'mist', label: 'Mist', css: 'linear-gradient(180deg, var(--browse-mist), var(--surface) 70%)' },
-  { id: 'aurora', label: 'Aurora', css: 'radial-gradient(60% 50% at 20% 20%, #c9bdf7 0, transparent 70%), radial-gradient(50% 50% at 85% 30%, #ffd1e3 0, transparent 70%), radial-gradient(60% 60% at 60% 90%, #c7f0e3 0, transparent 70%), #fbfaff' },
   { id: 'sunrise', label: 'Sunrise', css: 'linear-gradient(160deg, #fff1e6 0%, #ffd9cf 45%, #f3d1f4 100%)' },
   { id: 'ocean', label: 'Ocean', css: 'linear-gradient(160deg, #e6f6ff 0%, #c9e8f7 50%, #d9defc 100%)' },
   { id: 'meadow', label: 'Meadow', css: 'linear-gradient(160deg, #f1fbe9 0%, #d3f1dd 55%, #e8f6d3 100%)' },
-  { id: 'night', label: 'Night', css: 'radial-gradient(70% 60% at 70% 20%, #3b2f7a 0, transparent 70%), linear-gradient(180deg, #141a2e, #0b0f1c)', dark: true },
+  {
+    id: 'night',
+    label: 'Night',
+    live: ['#3b2f7a', '#3b5bd6', '#604590', '#187a5f', '#a8335f'],
+    css: 'radial-gradient(70% 60% at 70% 20%, #3b2f7a 0, transparent 70%), linear-gradient(180deg, #141a2e, #0b0f1c)',
+    dark: true,
+  },
 ];
+
+/** The dark ground under Night's drifting colours. */
+export const NIGHT_BASE = 'linear-gradient(180deg, #141a2e, #0b0f1c)';
 
 /** Accent colours: Browse violet first, then the other ELUM colours. */
 export const ACCENTS = ['#9b84ee', '#7093f8', '#3fc4a0', '#48bfe3', '#5ec46f', '#e9b949', '#f59a52', '#f06a5f', '#ec7fa9', '#d27fe0'];
 
-export const DEFAULT_SETTINGS: BrowseSettings = { openResults: 'tab', pictures: true, addressBar: 'shown', slash: true, motion: 'device', background: 'plain', accent: null, strip: 'tint' };
+export const DEFAULT_SETTINGS: BrowseSettings = { openResults: 'tab', pictures: true, addressBar: 'shown', slash: true, motion: 'device', background: 'aurora', accent: null, strip: 'tint' };
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
@@ -57,7 +88,7 @@ export function readSettings(): BrowseSettings {
       addressBar: raw.addressBar === 'tucked' ? 'tucked' : 'shown',
       slash: raw.slash !== false,
       motion: raw.motion === 'less' ? 'less' : 'device',
-      background: ([...BACKGROUNDS.map((b) => b.id), 'picture'] as string[]).includes(raw.background as string) ? (raw.background as BackgroundId) : 'plain',
+      background: ([...BACKGROUNDS.map((b) => b.id), 'picture'] as string[]).includes(raw.background as string) ? (raw.background as BackgroundId) : 'aurora',
       accent: typeof raw.accent === 'string' && HEX.test(raw.accent) ? raw.accent : null,
       strip: raw.strip === 'plain' || (typeof raw.strip === 'string' && HEX.test(raw.strip)) ? raw.strip : 'tint',
     };

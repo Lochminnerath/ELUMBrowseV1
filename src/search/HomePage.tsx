@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { BACKGROUNDS, readPicture, useSettings } from '../settings/settings';
+import { BACKGROUNDS, NIGHT_BASE, readPicture, useSettings } from '../settings/settings';
+import { LiveBackground } from '../settings/LiveBackground';
 import { Link } from 'react-router';
 import { useGo } from '../browser/BrowserShell';
 import { BrowseMark } from '../components/Brand';
@@ -27,6 +28,7 @@ export function HomePage() {
   const style = (picture ? { '--home-picture': `url("${picture}")` } : look ? { '--home-bg': look.css } : {}) as CSSProperties;
   return (
     <div className="browse browse--home" data-bg={picture ? 'picture' : (look?.id ?? 'plain')} data-bg-dark={picture || look?.dark ? '' : undefined} style={style}>
+      {look?.live && !picture && <LiveBackground colors={look.live} base={look.dark ? NIGHT_BASE : undefined} className="live-bg--page" />}
       <BrowseHeader />
       <main className="browse-home">
         <div className="browse-home__mark" aria-hidden="true">

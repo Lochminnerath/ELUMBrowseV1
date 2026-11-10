@@ -938,3 +938,13 @@
   border-color: rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.08);
 }
+
+/* A live background sits behind everything on the home page. */
+.browse--home {
+  position: relative;
+  isolation: isolate;
+}
+.browse--home > :not(.live-bg) {
+  position: relative;
+  z-index: 1;
+}

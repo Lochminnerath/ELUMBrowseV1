@@ -245,7 +245,7 @@ export const GUIDES: Record<ProductId, Guide[]> = {
         'Search: SafeSearch, pictures beside results, and whether / jumps to the search box.',
         'Pages and apps: open results in a Browse tab or a new window, and show the address bar over pages or tuck it away.',
         'Privacy: remember searches on this device, and clear them.',
-        'Look: the theme, a background for the home page, your accent colour, the colour of the tab strip, and less motion.',
+        'Look: the theme, a background for the home page (live ones like Aurora drift slowly in every ELUM colour, or use a picture of your own), your accent colour, the colour of the tab strip, and less motion.',
         'Settings are kept on this device only. Nothing you choose there is sent to ELUM.',
       ],
     },
