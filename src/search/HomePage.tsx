@@ -10,6 +10,7 @@ import { clearSearches, forgetSearch, recentSearches } from './local';
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { SupportLink } from '../components/SupportLink';
+import { SearchDisclosure } from '../components/Disclosure';
 
 /** Browse's front page: the mark, the box, and your recent searches from this browser. */
 export function HomePage() {
@@ -72,7 +73,7 @@ export function HomePage() {
         <span>
           Made by you. Runs without AI. <Link to="/settings">Settings</Link> · <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link> · <SupportLink>Support</SupportLink>
         </span>
-        <span className="muted">Searches go to Google to find results. ELUM does not keep them.</span>
+        <SearchDisclosure short />
       </footer>
     </div>
   );

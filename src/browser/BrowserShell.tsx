@@ -261,6 +261,11 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
           }}
         />
         {place.kind === 'app' && <span className="app-bar__badge">{place.label}</span>}
+        {place.kind === 'web' && (
+          <span className="app-bar__notice" data-tip="Not an ELUM site: what you enter here goes to this website and is not managed by ELUM. It may show its own ads.">
+            Not an ELUM site
+          </span>
+        )}
       </form>
       <button
         type="button"

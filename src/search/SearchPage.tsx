@@ -11,6 +11,7 @@ import { SearchBox } from './SearchBox';
 import './browse.css';
 import { useFavicon } from '../lib/favicon';
 import { SupportLink } from '../components/SupportLink';
+import { SearchDisclosure } from '../components/Disclosure';
 import { useSettings } from '../settings/settings';
 
 type State =
@@ -186,6 +187,7 @@ export function SearchPage() {
             (web results only, no AI Overview).
           </p>
         )}
+        {state.status !== 'loading' && <SearchDisclosure />}
       </main>
     </div>
   );

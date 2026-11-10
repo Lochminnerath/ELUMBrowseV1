@@ -117,7 +117,7 @@ export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number
       <div className="webview webview--reader">
         <p className="reader-note">
           <span className="reader-note__dot" aria-hidden="true" />
-          {new URL(page.url).hostname.replace(/^www\./, '')} does not let other sites show it, so Browse shows the article itself.{' '}
+          {new URL(page.url).hostname.replace(/^www\./, '')} does not let other sites show it, so Browse shows the article itself. It is not an ELUM site, so what you enter there is handled by that site, not by ELUM.{' '}
           <a href={page.url} target="_blank" rel="noreferrer">
             Open the original in a new window
           </a>

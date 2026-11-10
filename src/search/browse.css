@@ -948,3 +948,42 @@
   position: relative;
   z-index: 1;
 }
+
+/* Disclaimers: what happens to a search, ads, and other websites, with the policies. */
+.disclosure {
+  max-width: 720px;
+  margin: 16px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-muted);
+}
+.browse-foot .disclosure {
+  margin: 0;
+  text-align: right;
+}
+.policy-links a {
+  color: inherit;
+  text-decoration: underline;
+}
+.setting .policy-links {
+  font-size: 13px;
+  color: var(--action);
+}
+.app-bar__notice {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #e9b949 22%, var(--surface));
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: help;
+}
+@media (max-width: 640px) {
+  .app-bar__notice {
+    display: none;
+  }
+  .browse-foot .disclosure {
+    text-align: left;
+  }
+}

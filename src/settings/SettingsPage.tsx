@@ -5,6 +5,7 @@ import { clearSearches, historyPaused, recentSearches, safeSearch, setHistoryPau
 import { useTheme, type ThemePreference } from '../theme/ThemeProvider';
 import { ACCOUNT_HOME } from '../lib/elum';
 import { LiveBackground } from './LiveBackground';
+import { PolicyLinks } from '../components/Disclosure';
 import { ACCENTS, BACKGROUNDS, NIGHT_BASE, readPicture, removePicture, savePicture, useSettings, writeSetting } from './settings';
 import '../search/browse.css';
 import './settings.css';
@@ -146,6 +147,28 @@ export function SettingsPage() {
               Clear
             </button>
           </Row>
+        </Section>
+
+        <Section title="Your information" symbol="privacy">
+          <div className="setting setting--wide">
+            <div className="setting__words">
+              <span className="setting__title">Searches and ads</span>
+              <span className="setting__text">
+                Results come from Google, which processes your searches and the details your browser sends, and may use and share them under its own policies. Ads may be shown by
+                Google and other services. ELUM never sells or shares your personal information.
+              </span>
+            </div>
+            <PolicyLinks />
+          </div>
+          <div className="setting setting--wide">
+            <div className="setting__words">
+              <span className="setting__title">Websites that are not ELUM sites</span>
+              <span className="setting__text">
+                What you enter on other websites, such as forms or sign-ins, goes to those websites and is not managed by ELUM. Only ELUM sites, like the apps at elum.space, handle your
+                information under ELUM’s privacy policy.
+              </span>
+            </div>
+          </div>
         </Section>
 
         <Section title="Look" symbol="look">
