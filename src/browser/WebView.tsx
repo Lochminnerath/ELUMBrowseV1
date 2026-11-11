@@ -1,6 +1,7 @@
 import DOMPurify from 'dompurify';
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { api, errorMessage, type PageInfo } from '../api';
+import { secureAddress } from './places';
 import { Loader } from '../components/Loader';
 import './webview.css';
 import { SupportLink } from '../components/SupportLink';
@@ -33,7 +34,7 @@ function linkTarget(e: MouseEvent): string | null {
   if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return null;
   const a = (e.target as Element).closest('a[href]') as HTMLAnchorElement | null;
   if (!a || !/^https?:/i.test(a.href)) return null;
-  return a.href;
+  return secureAddress(a.href);
 }
 
 export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number; onNavigate(url: string): void }) {

@@ -987,3 +987,17 @@
     text-align: left;
   }
 }
+
+.trademark-notice {
+  flex-basis: 100%;
+  max-width: 720px;
+  margin: 10px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--ink-muted) 85%, transparent);
+}
+.browse-foot .trademark-notice {
+  margin: 4px 0 0;
+  text-align: center;
+  max-width: none;
+}

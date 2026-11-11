@@ -10,7 +10,7 @@ import { api } from '../api';
 import { useAuth } from '../auth/AuthProvider';
 import { Loader } from '../components/Loader';
 import { openElsewhere } from '../lib/elum';
-import { asWebAddress, coverAddress, describe, frameUrl, resolveElum, webPath } from './places';
+import { asWebAddress, coverAddress, describe, frameUrl, resolveElum, secureAddress, webPath } from './places';
 import {
   activate,
   closeGroup,
@@ -35,6 +35,7 @@ import {
   type Tab,
 } from './tabs';
 import { WebView } from './WebView';
+import { registerFrame, toggleTabAudio, useAudible } from './audible';
 import { useSettings, writeSetting } from '../settings/settings';
 import './browser.css';
 
@@ -156,13 +157,13 @@ function Surfaces({ activeId, onSurface, reloads }: { activeId: string; onSurfac
         if (place.kind === 'web' && place.webUrl) {
           return (
             <div key={t.id} className="browser__frame" hidden={t.id !== activeId}>
-              <WebView url={place.webUrl} nonce={reloads[t.id] ?? 0} onNavigate={openPage} />
+              <WebView url={secureAddress(place.webUrl)} nonce={reloads[t.id] ?? 0} onNavigate={openPage} />
             </div>
           );
         }
         const src = frameUrl(t.path);
         if (!src) return null;
-        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} src={src} title={place.label ?? place.title} signIn={place.app?.signIn !== false} hidden={t.id !== activeId} />;
+        return <AppFrame key={`${t.id}:${reloads[t.id] ?? 0}`} tabId={t.id} src={src} title={place.label ?? place.title} signIn={place.app?.signIn !== false} hidden={t.id !== activeId} />;
       })}
     </div>
   );
@@ -176,7 +177,10 @@ const signedFrames = new Set<string>();
  * opens in this visit, Browse asks ELUM Account for a one-time sign-in and loads the app through
  * it. The app keeps that sign-in for the rest of the visit, so later tabs load it directly.
  */
-function AppFrame({ src, title, hidden, signIn }: { src: string; title: string; hidden: boolean; signIn: boolean }) {
+function AppFrame({ tabId, src, title, hidden, signIn }: { tabId: string; src: string; title: string; hidden: boolean; signIn: boolean }) {
+  const frame = useRef<HTMLIFrameElement>(null);
+  const [frameWindow, setFrameWindow] = useState<Window | null>(null);
+  useEffect(() => registerFrame(frameWindow, tabId), [frameWindow, tabId]);
   const { status } = useAuth();
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
@@ -205,7 +209,18 @@ function AppFrame({ src, title, hidden, signIn }: { src: string; title: string; 
       </div>
     );
   }
-  return <iframe className="browser__frame" src={url} title={title} hidden={hidden} allow="clipboard-read; clipboard-write; fullscreen" allowFullScreen />;
+  return (
+    <iframe
+      ref={frame}
+      className="browser__frame"
+      src={url}
+      title={title}
+      hidden={hidden}
+      allow="clipboard-read; clipboard-write; fullscreen; autoplay"
+      allowFullScreen
+      onLoad={() => setFrameWindow(frame.current?.contentWindow ?? null)}
+    />
+  );
 }
 
 /** Over an app or a web page: its address, reload, and a window of its own. */
@@ -242,7 +257,16 @@ function AddressBar({ tab, onReload }: { tab: Tab; onReload(): void }) {
         <RotateCw size={17} strokeWidth={1.75} />
       </button>
       <form className="app-bar__address" onSubmit={submit} role="search">
-        <span className="app-bar__lock" aria-hidden="true">
+        <span
+          className="app-bar__lock"
+          role="img"
+          aria-label="Secure connection"
+          data-tip={
+            place.kind === 'app'
+              ? 'Secure connection to an ELUM site. Everything is encrypted with HTTPS.'
+              : 'Secure connection. Browse opens websites only over HTTPS, so what you see and send is encrypted.'
+          }
+        >
           <Icons.PrivateIcon size={16} />
         </span>
         <input
@@ -339,6 +363,7 @@ function TabStrip() {
 }
 
 function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: boolean }) {
+  const audible = useAudible(tab.id);
   const s = useTabs();
   const [menuOpen, setMenuOpen] = useState(false);
   const place = describe(tab.path);
@@ -394,6 +419,7 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
       className="tab"
       data-active={active || undefined}
       data-leaving={leaving || undefined}
+      data-audible={audible ? true : undefined}
       data-grouped={group ? true : undefined}
       style={color ? ({ '--group': color } as CSSProperties) : undefined}
       onContextMenu={(e) => {
@@ -408,6 +434,21 @@ function TabButton({ tab, group, active }: { tab: Tab; group?: Group; active: bo
         <TabSymbol path={tab.path} />
         <span className="tab__title">{place.title}</span>
       </button>
+      {audible && (
+        <button
+          type="button"
+          className="tab__audio"
+          aria-label={audible.title ? `Playing ${audible.title}. Pause` : 'Playing. Pause'}
+          title={audible.title ?? 'Playing'}
+          onClick={() => toggleTabAudio(tab.id)}
+        >
+          <span className="tab__bars" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+          </span>
+        </button>
+      )}
       <Menu
         label={`${place.title} tab`}
         items={items}

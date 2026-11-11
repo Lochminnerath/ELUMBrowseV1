@@ -10,7 +10,7 @@ import { clearSearches, forgetSearch, recentSearches } from './local';
 import { SearchBox } from './SearchBox';
 import './browse.css';
 import { SupportLink } from '../components/SupportLink';
-import { SearchDisclosure } from '../components/Disclosure';
+import { SearchDisclosure, TrademarkNotice } from '../components/Disclosure';
 
 /** Browse's front page: the mark, the box, and your recent searches from this browser. */
 export function HomePage() {
@@ -74,6 +74,7 @@ export function HomePage() {
           Made by you. Runs without AI. <Link to="/settings">Settings</Link> · <Link to="/docs">ELUM Docs</Link> · <Link to="/status">Status</Link> · <SupportLink>Support</SupportLink>
         </span>
         <SearchDisclosure short />
+        <TrademarkNotice />
       </footer>
     </div>
   );

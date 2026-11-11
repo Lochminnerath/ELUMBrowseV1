@@ -56,3 +56,13 @@ export function SearchDisclosure({ short = false }: { short?: boolean }) {
     </p>
   );
 }
+
+/** The trademark notice under every page of results. */
+export function TrademarkNotice() {
+  return (
+    <p className="trademark-notice">
+      Google and Google Search are trademarks of Google LLC. ELUM is not affiliated with, sponsored by or endorsed by Google LLC, and search results and
+      ads are provided by Google under its own terms. All other trademarks and names belong to their respective owners.
+    </p>
+  );
+}

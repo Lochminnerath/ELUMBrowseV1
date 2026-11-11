@@ -105,11 +105,19 @@ export function asWebAddress(query: string): string | null {
   const withScheme = /^https?:\/\//i.test(q) ? q : /^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}(:\d+)?([/?#].*)?$/i.test(q) ? `https://${q}` : null;
   if (!withScheme) return null;
   try {
-    const url = new URL(withScheme);
+    const url = new URL(secureAddress(withScheme));
     return url.hostname.includes('.') ? url.toString() : null;
   } catch {
     return null;
   }
+}
+
+/**
+ * Secure connections only: Browse opens every website over HTTPS. An http:// address is upgraded,
+ * the way browsers do in HTTPS-only mode, so what you read and type is encrypted on its way.
+ */
+export function secureAddress(address: string): string {
+  return address.replace(/^http:\/\//i, 'https://');
 }
 
 export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'settings' | 'page';
