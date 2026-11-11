@@ -5,6 +5,13 @@ import { App } from './App';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/components.css';
+import { applyLook, applyMotion } from './settings/settings';
+
+// Less motion, if chosen in Settings, applies before the first paint.
+applyMotion();
+applyLook();
+// Live backgrounds rest while the tab is out of sight.
+document.addEventListener('visibilitychange', () => document.documentElement.toggleAttribute('data-tab-hidden', document.hidden));
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

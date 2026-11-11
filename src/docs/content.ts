@@ -4,10 +4,10 @@
  * pages that show them are in DocsPages.tsx. Keep each step to something people can do today.
  */
 
-export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account' | 'inquire' | 'home';
+export type ProductId = 'write' | 'type' | 'make' | 'browse' | 'store' | 'account' | 'inquire' | 'tune' | 'code' | 'capture' | 'home';
 
-/** Every app with a page in the docs, including the ones still on the way. */
-export type DocsId = ProductId | 'tune';
+/** Every app with a page in the docs. */
+export type DocsId = ProductId;
 
 /** Which ELUM symbol a feature card shows (see components/icons/ElumIcons.tsx). */
 export type Symbol =
@@ -76,7 +76,7 @@ export const PRODUCTS: Words[] = [
     headline: 'Getting started with Write',
     intro: 'Write is where your documents live. Everything saves as you type, looks the same on every device, and is easy to share.',
     steps: [
-      { title: 'Start a document', text: 'Open Write and choose New document. It’s saved to your ELUM account right away, so there’s no save button to remember.' },
+      { title: 'Start a document', text: 'Open Write and choose New document. It is saved to your ELUM account right away, so there is no save button to remember.' },
       { title: 'Shape it your way', text: 'Pick a title, headings or quotes from the styles menu. Add lists, checklists, links, pictures and page breaks, and spelling checks as you go.' },
       { title: 'Share it', text: 'Choose Share and add anyone with an ELUM account. You can comment on any part of the text and reply to each other.' },
     ],
@@ -99,17 +99,17 @@ export const PRODUCTS: Words[] = [
     mist: '#e4f7f1',
     kind: 'Messages and email',
     headline: 'Getting started with Type',
-    intro: 'Type brings your messages and email into one calm inbox, with an ELUM address that’s all yours.',
+    intro: 'Type brings your messages and email into one calm inbox, with an ELUM address that is all yours.',
     steps: [
-      { title: 'Pick your address', text: 'When you sign up, choose a name for your ELUM Type address. It’s yours to keep, and you can sign in with it.' },
+      { title: 'Pick your address', text: 'When you sign up, choose a name for your ELUM Type address. It is yours to keep, and you can sign in with it.' },
       { title: 'Read and reply', text: 'Open a conversation to see every message together. Reply, reply to everyone or forward, and attach files from your device.' },
-      { title: 'Keep things calm', text: 'Archive what’s done, mark things unread to come back to later, and mute conversations that carry on without you.' },
+      { title: 'Keep things calm', text: 'Archive what is done, mark things unread to come back to later, and mute conversations that carry on without you.' },
     ],
     features: [
-      { symbol: 'verified', title: 'Know who it’s from', text: 'Messages from other ELUM accounts show the verified symbol, so you know who you’re talking to.' },
+      { symbol: 'verified', title: 'Know who it is from', text: 'Messages from other ELUM accounts show the verified symbol, so you know who you are talking to.' },
       { symbol: 'spam', title: 'Spam stays out', text: 'Report spam and it leaves your inbox. Change your mind and Not spam brings it back.' },
       { symbol: 'archive', title: 'Everything in its place', text: 'Inbox, Unread, Archived, Spam and Trash are one click apart, and Undo is there if you need it.' },
-      { symbol: 'private', title: 'Approve new sign-ins', text: 'With approvals on, a new device can’t get in until you pick its number on a device you trust.' },
+      { symbol: 'private', title: 'Approve new sign-ins', text: 'With approvals on, a new device cannot get in until you pick its number on a device you trust.' },
     ],
     tips: [
       'Contacts collects the people you write to, and marks the ones on ELUM.',
@@ -122,23 +122,26 @@ export const PRODUCTS: Words[] = [
     name: 'Make',
     color: '#ec7fa9',
     mist: '#fceaf1',
-    kind: 'Slides and posts',
+    kind: 'Design studio',
     headline: 'Getting started with Make',
-    intro: 'Make is for slides, posters and social posts. Design them on a real canvas and share them with anyone on ELUM.',
+    intro: 'Make is a design studio in your browser. Draw your own shapes with the pen, fill them with gradients, add shadows and blend modes, and design slides, posts, logos, business cards, app screens and web pages. Nothing in Make is made by AI.',
     steps: [
-      { title: 'Pick a size', text: 'Start with a presentation, a square or story post, a banner, a poster or a flyer, or begin from a template.' },
-      { title: 'Design it', text: 'Add text, shapes, lines, arrows and pictures. Guides help you line things up, and layers keep everything in order.' },
-      { title: 'Present or share', text: 'Present full screen, share with anyone who has an ELUM account, or download a page as a PNG or the whole design as a PDF.' },
+      { title: 'Pick a size or a template', text: 'Start with a presentation, a post, a story, a poster, a business card, a logo, a website or a phone screen, or begin from one of thirty templates.' },
+      { title: 'Design it', text: 'Add text, twelve shapes and pictures, or draw your own with the pen (P) and the brush (B). Give anything a gradient, a shadow, a blur or a blend mode.' },
+      { title: 'Present or share', text: 'Present full screen with links that click through, share with anyone who has an ELUM account, or download a page as a PNG or the whole design as a PDF.' },
     ],
     features: [
-      { symbol: 'present', title: 'Present', text: 'Your slides fill the screen until you press Esc. Use the arrow keys, the space bar or a click to move on.' },
-      { symbol: 'duplicate', title: 'Pages', text: 'Duplicate, reorder and delete pages, and add speaker notes to each one.' },
-      { symbol: 'private', title: 'Lock what’s finished', text: 'Lock anything you’re happy with so it stays put while you work around it.' },
+      { symbol: 'compose', title: 'The pen and the brush', text: 'Click to place points and draw any shape, or draw freehand. Double-click a drawing to move its points.' },
+      { symbol: 'star', title: 'Gradients and effects', text: 'Fill shapes with two colours, add soft shadows, blur, flips and ten blend modes.' },
+      { symbol: 'visible', title: 'Pictures at their best', text: 'Eight filters, sliders for light and colour, and shapes to show a picture inside.' },
+      { symbol: 'present', title: 'Present', text: 'Your slides fill the screen until you press Esc. Elements can link to a web page or to another page.' },
+      { symbol: 'duplicate', title: 'Pages and layers', text: 'Duplicate, reorder and delete pages, add speaker notes, and keep everything in order with layers.' },
       { symbol: 'saved', title: 'Undo anything', text: 'Every change saves as you go, and Undo can take any of them back.' },
     ],
     tips: [
-      'Hold Shift while you draw a line or arrow to keep it straight or at 45°.',
-      'While a design is open, your browser tab shows the Make design symbol.',
+      'Press P for the pen and B for the brush. Hold Shift with the pen for straight 45° lines.',
+      'Turn on the grid with Ctrl and the apostrophe key, and things snap to it as you move them.',
+      'Changing the page size can scale everything to fit, so a slide becomes a post in one step.',
       'Want to try an idea? Make a copy first and the original stays safe.',
     ],
   },
@@ -151,21 +154,23 @@ export const PRODUCTS: Words[] = [
     headline: 'Getting started with Browse',
     intro: 'Browse searches the web with results from Google, without the AI. Results that lead to AI chat products are left out.',
     steps: [
-      { title: 'Search', text: 'Type what you’re looking for and press Enter. You can press / from anywhere on the page to jump to the search box.' },
+      { title: 'Search', text: 'Type what you are looking for and press Enter. You can press / from anywhere on the page to jump to the search box.' },
       { title: 'Look through the results', text: 'Switch between All and Images. If Browse leaves a result out, it tells you.' },
-      { title: 'Make it yours', text: 'Turn SafeSearch on or off, and choose whether this device remembers your recent searches.' },
+      { title: 'Make it yours', text: 'Open Settings, the sliders symbol at the top, to choose SafeSearch, pictures beside results, where results open, the address bar, the theme and less motion.' },
     ],
     features: [
       { symbol: 'visible', title: 'Just the web', text: 'You get Google’s results without AI Overviews or Gemini.' },
       { symbol: 'private', title: 'Your searches stay with you', text: 'Recent searches are kept on this device only, and you can clear one or all of them whenever you like.' },
       { symbol: 'open', title: 'Your ELUM apps, right here', text: 'Type write, type, make, store, inquire or account, or an address like make.elum.space, and the app opens in a Browse tab. Open in new window gives it a window of its own.' },
-      { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and addresses you type open in a Browse tab. If a site won’t let other sites show it, you get a clean reading view instead, with the original one click away.' },
+      { symbol: 'visible', title: 'Pages open in Browse', text: 'Results and addresses you type open in a Browse tab. If a site will not let other sites show it, you get a clean reading view instead, with the original one click away.' },
       { symbol: 'star', title: 'Tabs and groups', text: 'Keep searches and apps open side by side. Right-click a tab to group it, then give the group a name, a colour and a symbol.' },
+      { symbol: 'private', title: 'Settings that stay with you', text: 'Settings are kept on this device only. Nothing you choose there is sent to ELUM.' },
     ],
     tips: [
       'Your recent searches show up as you type. Use the arrow keys to pick one.',
       'Meant to search the web, not open an app? Choose Search the web under the box.',
       'Click a group to fold it away. Your tabs and groups will still be there next time.',
+      'Want more of the page? Hide the address bar with the arrow at its end, and bring it back with the small button in the corner.',
       'Wondering if ELUM is working? The Status page checks every app.',
     ],
   },
@@ -176,17 +181,17 @@ export const PRODUCTS: Words[] = [
     mist: '#fcf5e1',
     kind: 'Apps and more',
     headline: 'Getting started with Store',
-    intro: 'Store is where you find every ELUM app. They’re all free with your ELUM account, and there are templates that open straight in Make.',
+    intro: 'Store is where you find every ELUM app. They are all free with your ELUM account, and there are templates that open straight in Make and Write.',
     steps: [
-      { title: 'Have a look around', text: 'Every app has a page that explains what it does, what’s new, and whether it’s working right now. Search finds apps and templates.' },
-      { title: 'Get an app', text: 'Choose Get and the app is added to your ELUM account. If you’re not signed in, Store asks you to sign in first and then finishes the job.' },
+      { title: 'Have a look around', text: 'Every app has a page that explains what it does, what’s new, and whether it is working right now. Search finds apps and templates.' },
+      { title: 'Get an app', text: 'Choose Get and the app is added to your ELUM account. If you are not signed in, Store asks you to sign in first and then finishes the job.' },
       { title: 'Open it', text: 'Open takes you straight to the app, already signed in. The arrow next to it opens the app in a Browse tab or its own window.' },
     ],
     features: [
-      { symbol: 'new', title: 'Templates for Make', text: 'Pick a pitch deck, lesson slides, a poster or a post, and Make opens with it ready to edit.' },
+      { symbol: 'new', title: 'Templates for Make and Write', text: 'Pick a pitch deck, a logo, an app screen, a letter or a resume, and it opens ready to edit.' },
       { symbol: 'saved', title: 'Your apps', text: 'See which apps are in your account and when you last used each one, on any device.' },
       { symbol: 'verified', title: 'Free with your account', text: 'Every ELUM app is free, and ELUM Account comes with every account.' },
-      { symbol: 'visible', title: 'Is it working?', text: 'Each app shows whether it’s working right now, using the same check as the Status page.' },
+      { symbol: 'visible', title: 'Is it working?', text: 'Each app shows whether it is working right now, using the same check as the Status page.' },
     ],
     tips: ['Press / to jump to Store’s search box.', 'Type store in Browse to open Store in a Browse tab.'],
   },
@@ -201,16 +206,16 @@ export const PRODUCTS: Words[] = [
     steps: [
       { title: 'Create your account', text: 'Sign up once with your own email or a new ELUM Type address. The same account works in every ELUM app.' },
       { title: 'Make it yours', text: 'Add your name and picture, your other addresses, and the people you know, sorted into circles like Family, Friends and Work.' },
-      { title: 'Keep it safe', text: 'Under Security, turn on approvals for new sign-ins and sign out any device you don’t use any more.' },
+      { title: 'Keep it safe', text: 'Under Security, turn on approvals for new sign-ins and sign out any device you do not use any more.' },
     ],
     features: [
-      { symbol: 'private', title: 'Approve new sign-ins', text: 'A new device has to wait until you pick its number on a device you’re already signed in to.' },
-      { symbol: 'invite', title: 'People and circles', text: 'Sort the people you know into circles like Family, Friends and Work, and block anyone you’d rather not hear from.' },
+      { symbol: 'private', title: 'Approve new sign-ins', text: 'A new device has to wait until you pick its number on a device you are already signed in to.' },
+      { symbol: 'invite', title: 'People and circles', text: 'Sort the people you know into circles like Family, Friends and Work, and block anyone you would rather not hear from.' },
       { symbol: 'star', title: 'Preferences', text: 'Choose 12 or 24 hour time, the first day of your week, the app you start in, and how much motion you like.' },
-      { symbol: 'warning', title: 'You’re in charge', text: 'Under Privacy, decide who can see your picture, find you by name and message you in Type. You can delete your account whenever you want.' },
+      { symbol: 'warning', title: 'You are in charge', text: 'Under Privacy, decide who can see your picture, find you by name and message you in Type. You can delete your account whenever you want.' },
     ],
     tips: [
-      'Sign in to one ELUM app and you’re signed in to all of them.',
+      'Sign in to one ELUM app and you are signed in to all of them.',
       'Notifications from every app come together in one place.',
       'The ring around your picture shows which ELUM apps are in your account.',
     ],
@@ -229,7 +234,7 @@ export const PRODUCTS: Words[] = [
       { title: 'Read the answers', text: 'Responses arrive as people send them. Open the form to read them one by one, or all together, and close the form when you have enough.' },
     ],
     features: [
-      { symbol: 'compose', title: 'Questions that fit', text: 'Short answers, long answers, choices and more. Mark a question as required and people can’t send the form without it.' },
+      { symbol: 'compose', title: 'Questions that fit', text: 'Short answers, long answers, choices and more. Mark a question as required and people cannot send the form without it.' },
       { symbol: 'link', title: 'One link to share', text: 'Anyone with the link can fill the form in. Signing in is optional for them.' },
       { symbol: 'visible', title: 'Questions that appear when they matter', text: 'Show a follow-up question only when someone gives a certain answer, so everyone sees just what applies to them.' },
       { symbol: 'private', title: 'You decide when it ends', text: 'Close a form and nobody can send any more answers. Open it again whenever you like.' },
@@ -247,7 +252,7 @@ export const PRODUCTS: Words[] = [
     mist: '#eef2ff',
     kind: 'The front door, and Support',
     headline: 'The ELUM home, and getting help',
-    intro: 'The ELUM home at elum.space is the public front door to ELUM: what we believe, every product, and how to reach support. You don’t need an account to look around.',
+    intro: 'The ELUM home at elum.space is the public front door to ELUM: what we believe, every product, and how to reach support. You do not need an account to look around.',
     steps: [
       { title: 'Look around', text: 'Open elum.space to read what ELUM is for. Products shows every app with a short description.' },
       { title: 'Find the right app', text: 'Each product has a page of its own with a link to open it. Your ELUM Account is the home base where you sign in.' },
@@ -271,12 +276,62 @@ export const PRODUCTS: Words[] = [
     color: '#48bfe3',
     mist: '#e3f5fb',
     kind: 'Music',
-    headline: 'Tune is on the way',
-    intro: 'Tune is ELUM’s music service. It isn’t open yet, and this page will show you how to get started as soon as it is.',
-    steps: [],
-    features: [],
-    tips: ['Keep an eye on ELUM Store. Tune will show up there, with a Get button, the day it opens.'],
-    soon: true,
+    headline: 'Getting started with Tune',
+    intro: 'Tune is ELUM’s music app. ELUM publishes the music and you choose every song: nothing picks what plays next for you. Tune is rolling out to people in the U.S. and Canada.',
+    steps: [
+      { title: 'Get Tune', text: 'Open ELUM Store, find Tune and choose Get. It is added to your ELUM account and opens signed in.' },
+      { title: 'Find something to play', text: 'Browse the home shelves and genres, or search for a song, an artist or an album.' },
+      { title: 'Make it yours', text: 'Save songs to your library, build playlists, and turn on crossfade for smooth changes between songs.' },
+    ],
+    features: [
+      { symbol: 'visible', title: 'A player that fills the screen', text: 'Now playing opens big, in the colours of the album art.' },
+      { symbol: 'compose', title: 'Lyrics that follow along', text: 'Each line lights up as it is sung.' },
+      { symbol: 'saved', title: 'Your library and playlists', text: 'Save what you love and keep it in playlists, on every device you sign in to.' },
+      { symbol: 'open', title: 'Pick up anywhere', text: 'Start on your phone and carry on on your computer, right where you stopped.' },
+    ],
+    tips: ['Every song plays at the same loudness, so nothing jumps out at you.', 'Choose where the sound plays, such as your headphones or speakers, from the output button.'],
+  },
+  {
+    id: 'code',
+    name: 'Code',
+    color: '#d27fe0',
+    mist: '#f8eafb',
+    kind: 'Coding',
+    headline: 'Getting started with Code',
+    intro: 'Code is where you write and run code in your browser, in the languages you know, with every version of your project kept.',
+    steps: [
+      { title: 'Get Code', text: 'Open ELUM Store, find Code and choose Get. It is added to your ELUM account and opens signed in.' },
+      { title: 'Start a project', text: 'Choose a language and Code starts a project with a first file ready. Add files and folders as you go.' },
+      { title: 'Run it', text: 'Press Run and the output shows beside your code. Web pages show in a live preview.' },
+    ],
+    features: [
+      { symbol: 'compose', title: 'An editor for every language', text: 'Colours for your code, line numbers, and the keys you expect.' },
+      { symbol: 'open', title: 'Run in the browser', text: 'Nothing to install. Your code runs and its output appears straight away.' },
+      { symbol: 'saved', title: 'Every version kept', text: 'Code keeps the versions of your project, so you can look back and put one back.' },
+      { symbol: 'attach', title: 'Your own files', text: 'Upload files to use in a project, kept in your ELUM account.' },
+    ],
+    tips: ['Your projects save as you type, to your ELUM account.', 'No AI writes or finishes code for you. Every line is yours.'],
+  },
+  {
+    id: 'capture',
+    name: 'Capture',
+    color: '#5ec46f',
+    mist: '#e8f7ea',
+    kind: 'Photos and videos',
+    headline: 'Getting started with Capture',
+    intro: 'Capture keeps your photos and videos, sorted by the day they were taken. Edit without losing the original, gather albums, and share them with people or by link.',
+    steps: [
+      { title: 'Get Capture', text: 'Open ELUM Store, find Capture and choose Get. It is added to your ELUM account and opens signed in.' },
+      { title: 'Add your photos', text: 'Drop photos and videos onto your library, or choose Upload. They are sorted by the day they were taken.' },
+      { title: 'Edit and share', text: 'Crop, straighten and adjust a photo, gather photos into albums, and share an album with people or by link.' },
+    ],
+    features: [
+      { symbol: 'saved', title: 'Your library', text: 'Every photo and video in one place, by the day it was taken.' },
+      { symbol: 'compose', title: 'Edit without losing the original', text: 'Your changes sit on top of the photo, and the original is always there to go back to.' },
+      { symbol: 'star', title: 'Albums', text: 'Gather the photos that belong together, and add to them any time.' },
+      { symbol: 'share', title: 'Share by album or link', text: 'Share with people on ELUM, or make a link for anyone you choose.' },
+    ],
+    tips: ['Capture keeps almost any file, not only photos and videos.', 'Nothing in Capture is chosen, sorted or edited by AI.'],
   },
 ];
 

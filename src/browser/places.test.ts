@@ -84,7 +84,8 @@ group('web pages', () => {
   it('reads typed addresses, and leaves searches alone', () => {
     expect(asWebAddress('wikipedia.org')).toBe('https://wikipedia.org/');
     expect(asWebAddress('en.wikipedia.org/wiki/Red_fox')).toBe('https://en.wikipedia.org/wiki/Red_fox');
-    expect(asWebAddress('http://example.com/a?b=1')).toBe('http://example.com/a?b=1');
+    // Secure connections only: http:// is opened over HTTPS.
+    expect(asWebAddress('http://example.com/a?b=1')).toBe('https://example.com/a?b=1');
     expect(asWebAddress('red fox')).toBeNull();
     expect(asWebAddress('node.js')).toBe('https://node.js/');
     expect(asWebAddress('hello')).toBeNull();
