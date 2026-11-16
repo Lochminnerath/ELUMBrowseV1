@@ -9,6 +9,7 @@ import { SupportLink } from '../components/SupportLink';
 import { ACCOUNT_HOME, INQUIRE_URL, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LIVE_PRODUCTS, PRODUCTS, type DocsId, type Feature, type LiveProduct, type ProductId, type Symbol } from './content';
+import { sceneFor, StepPicture } from './StepPicture';
 import { COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES, type Trouble } from './help';
 import { CloseUp, DevicePair, Phone, SHOTS, useActiveStep, useMotionOk, useScrollEffects, type Crop, type Shot } from './motion';
 import './docs.css';
@@ -172,7 +173,7 @@ const CROPS: Record<ShotId, Crop> = {
   make: { shot: SHOTS.make.desktop[1], x: 0.3, y: 0.1, w: 0.5, h: 0.55, title: 'A real canvas', text: 'Your slide sits on a canvas with guides, layers and pages around it.' },
   browse: { shot: SHOTS.browse.desktop[0], x: 0.27, y: 0.18, w: 0.46, h: 0.3, title: 'Just the web', text: 'One box, Google’s results, and no AI answers on top.' },
   store: { shot: SHOTS.store.desktop[0], x: 0.08, y: 0.44, w: 0.8, h: 0.52, title: 'Every app, one tap away', text: 'Each app has a card with Get, so adding one to your account takes a second.' },
-  account: { shot: SHOTS.account.desktop[0], x: 0.32, y: 0.06, w: 0.52, h: 0.52, title: 'You, everywhere', text: 'Your name, picture, people and privacy, in one place for every app.' },
+  account: { shot: SHOTS.account.desktop[0], x: 0.32, y: 0.06, w: 0.52, h: 0.52, title: 'You, everywhere', text: 'Your name, picture, people and privacy, shared by every app.' },
 };
 
 /** Which screen each first step shows: its index in that app's shots. */
@@ -671,9 +672,13 @@ function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductI
                 </p>
                 <div>
                   <span className="docs-trouble__label">How to fix it</span>
-                  <ol>
-                    {t.fix.map((f) => (
-                      <li key={f}>{f}</li>
+                  <ol className="docs-fix">
+                    {t.fix.map((f, k) => (
+                      <li key={f}>
+                        <span className="docs-fix__text">{f}</span>
+                        {/* One picture per kind in an answer: the first step that needs it. */}
+                        {t.fix.findIndex((x) => sceneFor(x) === sceneFor(f)) === k && <StepPicture step={f} />}
+                      </li>
                     ))}
                   </ol>
                 </div>

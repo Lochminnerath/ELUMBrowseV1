@@ -216,7 +216,7 @@ export const PRODUCTS: Words[] = [
     ],
     tips: [
       'Sign in to one ELUM app and you are signed in to all of them.',
-      'Notifications from every app come together in one place.',
+      'Notifications from every app arrive in the same bell.',
       'The ring around your picture shows which ELUM apps are in your account.',
     ],
   },
@@ -259,7 +259,7 @@ export const PRODUCTS: Words[] = [
       { title: 'Ask for help', text: 'Choose Contact support from the home, from Docs, or from any screen where something went wrong. It opens the support form with the details filled in.' },
     ],
     features: [
-      { symbol: 'open', title: 'The front door', text: 'Everything about ELUM in one place, with no sign-in needed to read it.' },
+      { symbol: 'open', title: 'The front door', text: 'Everything about ELUM, open to read without signing in.' },
       { symbol: 'verified', title: 'Accounts is home base', text: 'You sign in through ELUM Account. The ELUM home is where you start, not where you log in.' },
       { symbol: 'send', title: 'Support, from anywhere', text: 'Contact support appears wherever something goes wrong. It tells us which app you were in and what the screen said.' },
       { symbol: 'warning', title: 'Answers first', text: 'Troubleshooting in Docs has answers for the most common problems, so you may not need to wait for anyone.' },
@@ -326,7 +326,7 @@ export const PRODUCTS: Words[] = [
       { title: 'Edit and share', text: 'Crop, straighten and adjust a photo, gather photos into albums, and share an album with people or by link.' },
     ],
     features: [
-      { symbol: 'saved', title: 'Your library', text: 'Every photo and video in one place, by the day it was taken.' },
+      { symbol: 'saved', title: 'Your library', text: 'Every photo and video, sorted by the day it was taken.' },
       { symbol: 'compose', title: 'Edit without losing the original', text: 'Your changes sit on top of the photo, and the original is always there to go back to.' },
       { symbol: 'star', title: 'Albums', text: 'Gather the photos that belong together, and add to them any time.' },
       { symbol: 'share', title: 'Share by album or link', text: 'Share with people on ELUM, or make a link for anyone you choose.' },
