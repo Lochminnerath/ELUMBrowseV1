@@ -1,3 +1,4 @@
+import { ELUM_APPS } from '../lib/platform';
 import { useEffect, useMemo, useRef, type ComponentType, type CSSProperties, type ReactNode } from 'react';
 import { Link, Navigate, NavLink, useLocation, useNavigate, useParams, useSearchParams } from 'react-router';
 import { ElumLockup } from '../components/Brand';
@@ -8,16 +9,29 @@ import { SupportLink } from '../components/SupportLink';
 import { ACCOUNT_HOME, INQUIRE_URL, MAKE_URL, openElsewhere, STORE_URL, TYPE_URL, WRITE_URL } from '../lib/elum';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { LIVE_PRODUCTS, PRODUCTS, type DocsId, type Feature, type LiveProduct, type ProductId, type Symbol } from './content';
+import { sceneFor, StepPicture } from './StepPicture';
 import { COMMON_TROUBLES, GUIDES, searchTroubles, TROUBLES, type Trouble } from './help';
 import { CloseUp, DevicePair, Phone, SHOTS, useActiveStep, useMotionOk, useScrollEffects, type Crop, type Shot } from './motion';
 import './docs.css';
 import './showcase.css';
 
-const URLS: Record<Exclude<ProductId, 'home'>, string> = { write: WRITE_URL, type: TYPE_URL, make: MAKE_URL, browse: '/', store: STORE_URL, account: ACCOUNT_HOME, inquire: INQUIRE_URL };
+const appUrl = (id: string) => ELUM_APPS.find((a) => a.id === id)?.url ?? '/';
+const URLS: Record<Exclude<ProductId, 'home'>, string> = {
+  write: WRITE_URL,
+  type: TYPE_URL,
+  make: MAKE_URL,
+  browse: '/',
+  store: STORE_URL,
+  account: ACCOUNT_HOME,
+  inquire: INQUIRE_URL,
+  tune: appUrl('tune'),
+  code: appUrl('code'),
+  capture: appUrl('capture'),
+};
 
-/** The apps with screenshots in the docs. Inquire and the ELUM home show their steps without a device. */
-type ShotId = Exclude<ProductId, 'inquire' | 'home'>;
-const hasShots = (id: ProductId): id is ShotId => id !== 'inquire' && id !== 'home';
+/** The apps with screenshots in the docs. The others show their steps without a device. */
+type ShotId = Exclude<ProductId, 'inquire' | 'home' | 'tune' | 'code' | 'capture'>;
+const hasShots = (id: ProductId): id is ShotId => !['inquire', 'home', 'tune', 'code', 'capture'].includes(id);
 
 /** The URL where New to ELUM? people should start: Products on the ELUM home. */
 const START_URL = 'https://elum.netlify.app/products';
@@ -132,7 +146,7 @@ function DocsShell({ children }: { children: ReactNode }) {
       <footer className="docs-foot">
         <span>Made by you. Runs without AI.</span>
         <span className="muted">
-          ELUM Write, Type, Make, Browse, Store, Account and Inquire. Tune is coming soon. <SupportLink app="browse" from="/docs">Contact support</SupportLink>
+          ELUM Write, Type, Make, Browse, Store, Account, Inquire, Tune, Code and Capture. <SupportLink app="browse" from="/docs">Contact support</SupportLink>
         </span>
       </footer>
     </div>
@@ -155,11 +169,11 @@ function FeatureCard({ feature, color, i = 0 }: { feature: Feature; color?: stri
 /** A close-up of one feature in each app, from its own screenshots. */
 const CROPS: Record<ShotId, Crop> = {
   write: { shot: SHOTS.write.desktop[1], x: 0.6, y: 0, w: 0.4, h: 0.3, title: 'Share it, talk it over', text: 'Share sits at the top of every document, and comments open right beside the text.' },
-  type: { shot: SHOTS.type.desktop[1], x: 0.66, y: 0, w: 0.34, h: 0.3, title: 'Know who it’s from', text: 'Messages from other ELUM accounts carry the verified symbol, right next to the name.' },
+  type: { shot: SHOTS.type.desktop[1], x: 0.66, y: 0, w: 0.34, h: 0.3, title: 'Know who it is from', text: 'Messages from other ELUM accounts carry the verified symbol, right next to the name.' },
   make: { shot: SHOTS.make.desktop[1], x: 0.3, y: 0.1, w: 0.5, h: 0.55, title: 'A real canvas', text: 'Your slide sits on a canvas with guides, layers and pages around it.' },
   browse: { shot: SHOTS.browse.desktop[0], x: 0.27, y: 0.18, w: 0.46, h: 0.3, title: 'Just the web', text: 'One box, Google’s results, and no AI answers on top.' },
   store: { shot: SHOTS.store.desktop[0], x: 0.08, y: 0.44, w: 0.8, h: 0.52, title: 'Every app, one tap away', text: 'Each app has a card with Get, so adding one to your account takes a second.' },
-  account: { shot: SHOTS.account.desktop[0], x: 0.32, y: 0.06, w: 0.52, h: 0.52, title: 'You, everywhere', text: 'Your name, picture, people and privacy, in one place for every app.' },
+  account: { shot: SHOTS.account.desktop[0], x: 0.32, y: 0.06, w: 0.52, h: 0.52, title: 'You, everywhere', text: 'Your name, picture, people and privacy, shared by every app.' },
 };
 
 /** Which screen each first step shows: its index in that app's shots. */
@@ -243,7 +257,7 @@ function ApprovalCloseUp() {
     <section className="sc-split sc-split--flip" aria-labelledby="sc-approve">
       <div className="sc-split__text" data-reveal="rise">
         <p className="docs-eyebrow">Approve new sign-ins</p>
-        <h2 id="sc-approve" className="sc-big">Pick the number. You’re in.</h2>
+        <h2 id="sc-approve" className="sc-big">Pick the number. You are in.</h2>
         <p className="docs-lede">
           With approvals on, a new device waits until you pick its number on a device you already use. Devices on the same Wi-Fi get the question first, and an email link works when no other device is near.
         </p>
@@ -272,7 +286,7 @@ function ApprovalCloseUp() {
             </span>
             <span>86</span>
           </span>
-          <span className="sc-approve__no">No, it’s not me</span>
+          <span className="sc-approve__no">No, it is not me</span>
         </div>
       </div>
     </section>
@@ -289,7 +303,7 @@ function SupportBlock({ app, code, id }: { app: string; code?: string; id?: stri
       </span>
       <div className="docs-support__text">
         <h2 id={`${id ?? 'docs-support'}-title`}>Still stuck? Tell us what happened</h2>
-        <p>The support form opens already filled in with the app. Add what you were doing and what the screen said, and send it. You don’t need to be signed in.</p>
+        <p>The support form opens already filled in with the app. Add what you were doing and what the screen said, and send it. You do not need to be signed in.</p>
       </div>
       <SupportLink app={app} code={code} from={pathname + search} className="elum-btn elum-btn--primary docs-support__button">
         Contact support
@@ -649,7 +663,7 @@ function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductI
               <div className="docs-trouble__body">
                 {t.says && (
                   <p className="docs-trouble__says">
-                    <span className="docs-trouble__label">What you’ll see</span>“{t.says}”
+                    <span className="docs-trouble__label">What you will see</span>“{t.says}”
                   </p>
                 )}
                 <p>
@@ -658,9 +672,13 @@ function TroubleList({ troubles, apps }: { troubles: Trouble[]; apps?: (ProductI
                 </p>
                 <div>
                   <span className="docs-trouble__label">How to fix it</span>
-                  <ol>
-                    {t.fix.map((f) => (
-                      <li key={f}>{f}</li>
+                  <ol className="docs-fix">
+                    {t.fix.map((f, k) => (
+                      <li key={f}>
+                        <span className="docs-fix__text">{f}</span>
+                        {/* One picture per kind in an answer: the first step that needs it. */}
+                        {t.fix.findIndex((x) => sceneFor(x) === sceneFor(f)) === k && <StepPicture step={f} />}
+                      </li>
                     ))}
                   </ol>
                 </div>
@@ -694,7 +712,7 @@ export function TroubleshootingPage() {
         <div className="docs-hero__text">
           <p className="docs-eyebrow">ELUM Docs</p>
           <h1>Troubleshooting</h1>
-          <p className="docs-lede">Describe your problem, or type the message you’re seeing. Each answer explains why it happens and how to fix it.</p>
+          <p className="docs-lede">Describe your problem, or type the message you are seeing. Each answer explains why it happens and how to fix it.</p>
           <p className="docs-hero__actions">
             <SupportLink app={supportApp} from="/docs/troubleshooting" button>
               Contact support
@@ -708,7 +726,7 @@ export function TroubleshootingPage() {
           type="search"
           value={q}
           onChange={(e) => set({ q: e.target.value })}
-          placeholder="What’s going wrong?"
+          placeholder="What is going wrong?"
           aria-label="Search troubleshooting"
         />
         <div className="segmented docs-help-apps" role="group" aria-label="Which app">
@@ -726,7 +744,7 @@ export function TroubleshootingPage() {
         <TroubleList troubles={found.map((x) => x.trouble)} apps={found.map((x) => x.product)} />
       ) : (
         <div className="docs-help-none">
-          <h2>We couldn’t find an answer for that</h2>
+          <h2>We could not find an answer for that</h2>
           <p>Try fewer words, or check the Status page to see whether something is down.</p>
           <Link to="/status" className="elum-btn elum-btn--primary">
             ELUM Status

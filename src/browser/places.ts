@@ -105,14 +105,22 @@ export function asWebAddress(query: string): string | null {
   const withScheme = /^https?:\/\//i.test(q) ? q : /^[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,24}(:\d+)?([/?#].*)?$/i.test(q) ? `https://${q}` : null;
   if (!withScheme) return null;
   try {
-    const url = new URL(withScheme);
+    const url = new URL(secureAddress(withScheme));
     return url.hostname.includes('.') ? url.toString() : null;
   } catch {
     return null;
   }
 }
 
-export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'page';
+/**
+ * Secure connections only: Browse opens every website over HTTPS. An http:// address is upgraded,
+ * the way browsers do in HTTPS-only mode, so what you read and type is encrypted on its way.
+ */
+export function secureAddress(address: string): string {
+  return address.replace(/^http:\/\//i, 'https://');
+}
+
+export type PlaceKind = 'home' | 'search' | 'app' | 'web' | 'docs' | 'status' | 'settings' | 'page';
 
 export interface Place {
   kind: PlaceKind;
@@ -157,6 +165,7 @@ export function describe(path: string): Place {
     return { kind: 'docs', title: product ? `${product[0].toUpperCase()}${product.slice(1)} · Docs` : 'ELUM Docs' };
   }
   if (parts[0] === 'status') return { kind: 'status', title: 'ELUM status' };
+  if (parts[0] === 'settings') return { kind: 'settings', title: 'Settings' };
   if (parts.length === 0) return { kind: 'home', title: 'New tab' };
   return { kind: 'page', title: 'Browse' };
 }

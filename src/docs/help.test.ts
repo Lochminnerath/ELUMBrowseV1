@@ -58,13 +58,13 @@ describe('ELUM Docs help', () => {
     expect(new Set(common).size).toBe(common.length);
   });
 
-  it('shows Tune as coming soon, with nothing it can’t do yet', () => {
-    const tune = PRODUCTS.find((p) => p.id === 'tune');
-    expect(tune?.soon).toBe(true);
-    expect(tune?.color).toBe('#48bfe3');
-    expect(tune?.steps).toEqual([]);
-    expect(tune?.features).toEqual([]);
-    expect(LIVE_PRODUCTS.some((p) => p.id === ('tune' as string))).toBe(false);
+  it('shows Tune, Code and Capture as open, with guides', () => {
+    for (const id of ['tune', 'code', 'capture'] as const) {
+      const p = PRODUCTS.find((x) => x.id === id);
+      expect(p?.soon, id).toBeFalsy();
+      expect(p?.steps.length, id).toBeGreaterThanOrEqual(3);
+      expect(LIVE_PRODUCTS.some((x) => x.id === id), id).toBe(true);
+    }
   });
 
   it('answers the questions people ask most', () => {

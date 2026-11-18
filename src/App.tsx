@@ -1,3 +1,4 @@
+import { SettingsPage } from './settings/SettingsPage';
 import { BrowserRouter, Link, Route, Routes } from 'react-router';
 import { AuthProvider } from './auth/AuthProvider';
 import { QuietSignIn } from './auth/QuietSignIn';
@@ -31,6 +32,7 @@ export function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/status" element={<StatusPage />} />
+                <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/docs" element={<DocsHome />} />
                 <Route path="/docs/troubleshooting" element={<TroubleshootingPage />} />
                 <Route path="/docs/:product" element={<ProductDoc />} />

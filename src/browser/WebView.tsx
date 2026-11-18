@@ -1,6 +1,7 @@
 import DOMPurify from 'dompurify';
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { api, errorMessage, type PageInfo } from '../api';
+import { secureAddress } from './places';
 import { Loader } from '../components/Loader';
 import './webview.css';
 import { SupportLink } from '../components/SupportLink';
@@ -33,7 +34,7 @@ function linkTarget(e: MouseEvent): string | null {
   if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return null;
   const a = (e.target as Element).closest('a[href]') as HTMLAnchorElement | null;
   if (!a || !/^https?:/i.test(a.href)) return null;
-  return a.href;
+  return secureAddress(a.href);
 }
 
 export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number; onNavigate(url: string): void }) {
@@ -61,6 +62,13 @@ export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number
       live = false;
     };
   }, [url, nonce]);
+
+  // While the page is on its way, the tab's symbol moves (styles in browser.css).
+  useEffect(() => {
+    if (state.status !== 'loading') return;
+    document.documentElement.setAttribute('data-page-loading', '');
+    return () => document.documentElement.removeAttribute('data-page-loading');
+  }, [state.status]);
 
   // A picture in the reading view that will not load is left out rather than shown broken.
   const body = useRef<HTMLDivElement>(null);
@@ -110,7 +118,7 @@ export function WebView({ url, nonce, onNavigate }: { url: string; nonce: number
       <div className="webview webview--reader">
         <p className="reader-note">
           <span className="reader-note__dot" aria-hidden="true" />
-          {new URL(page.url).hostname.replace(/^www\./, '')} does not let other sites show it, so Browse shows the article itself.{' '}
+          {new URL(page.url).hostname.replace(/^www\./, '')} does not let other sites show it, so Browse shows the article itself. It is not an ELUM site, so what you enter there is handled by that site, not by ELUM.{' '}
           <a href={page.url} target="_blank" rel="noreferrer">
             Open the original in a new window
           </a>

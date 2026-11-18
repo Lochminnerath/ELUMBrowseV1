@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { coverAddress, describe, resolveElum } from '../browser/places';
 import { recentSearches } from './local';
+import { readSettings } from '../settings/settings';
 
 interface SearchBoxProps {
   initial?: string;
@@ -34,7 +35,7 @@ export function SearchBox({ initial = '', size = 'large', autoFocus, onSearch }:
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing = e.target instanceof HTMLElement && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName);
-      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) {
+      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && readSettings().slash) {
         e.preventDefault();
         input.current?.focus();
         input.current?.select();
@@ -77,7 +78,7 @@ export function SearchBox({ initial = '', size = 'large', autoFocus, onSearch }:
       <span className="searchbox__mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="22" height="22">
           <circle cx="10" cy="10" r="6.6" fill="none" stroke="currentColor" strokeWidth="1.9" />
-          <circle cx="17" cy="17" r="3.6" fill="var(--browse)" />
+          <circle className="searchbox__orbit" cx="17" cy="17" r="3.6" fill="var(--browse)" />
         </svg>
       </span>
       <input

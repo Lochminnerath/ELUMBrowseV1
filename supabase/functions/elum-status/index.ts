@@ -88,6 +88,21 @@ async function checkAll(): Promise<Status> {
       await res.body?.cancel();
       return res.status;
     }, 'Search, sign-in between apps and mail'),
+    // Tune's songs live in their own storage: can Tune reach it and sign a link to a song?
+    probe('music', 'Music streaming', 'platform', async (signal) => {
+      const res = await fetch(`${supabaseUrl}/functions/v1/tune-files`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', apikey: anon },
+        body: JSON.stringify({ action: 'health' }),
+        signal,
+      });
+      if (!res.ok) {
+        await res.body?.cancel();
+        return res.status;
+      }
+      const health = (await res.json().catch(() => null)) as { reachable?: boolean; probe?: string } | null;
+      return health?.reachable && health.probe ? 200 : 503;
+    }, 'Songs and albums in Tune'),
     probe('google', 'Google search', 'search', async (signal) => {
       const res = await fetch(`https://cse.google.com/cse.js?cx=${encodeURIComponent(cx)}`, { signal });
       await res.body?.cancel();

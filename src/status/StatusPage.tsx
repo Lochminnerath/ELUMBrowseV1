@@ -23,6 +23,9 @@ const GROUPS: { id: StatusCheck['group']; title: string }[] = [
   { id: 'search', title: 'Search' },
 ];
 
+/** Parts under the apps that belong to one app show that app's mark. */
+const MARK_FOR: Record<string, string> = { music: 'tune' };
+
 /** Symbols for the parts under the apps. Apps show their own marks. */
 const SYMBOLS: Record<string, ComponentType<IconProps>> = {
   auth: PrivateIcon,
@@ -116,13 +119,14 @@ export function StatusPage() {
 
 function CheckRow({ check: c, index }: { check: StatusCheck; index: number }) {
   const Symbol = SYMBOLS[c.id];
+  const mark = APP_MARKS.has(c.id) ? c.id : MARK_FOR[c.id];
   return (
     <li className="status-row" data-health={c.health} style={{ '--i': index } as CSSProperties}>
       <span className="status-row__mark" aria-hidden="true">
-        {APP_MARKS.has(c.id) ? (
+        {mark ? (
           <>
-            <img className="theme-light-only" src={`/brand/apps/${c.id}.svg`} alt="" />
-            <img className="theme-dark-only" src={`/brand/apps/${c.id}-reversed.svg`} alt="" />
+            <img className="theme-light-only" src={`/brand/apps/${mark}.svg`} alt="" />
+            <img className="theme-dark-only" src={`/brand/apps/${mark}-reversed.svg`} alt="" />
           </>
         ) : Symbol ? (
           <Symbol size={22} />
